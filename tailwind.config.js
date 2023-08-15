@@ -2,6 +2,7 @@ const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './src/components/**/*.{js,ts,jsx,tsx}',
     './src/layouts/**/*.{js,ts,jsx,tsx}',
@@ -155,12 +156,12 @@ module.exports = {
         middle: '1.1rem',
         normal: '1.2rem',
         big: '1.3rem',
-        h1: '3rem',
-        h2: '2.5rem',
-        h3: '2.25rem',
-        h4: '2rem',
-        h5: '1.75rem',
-        h6: '1.5rem',
+        h1: '2.4rem',
+        h2: '2.2rem',
+        h3: '2rem',
+        h4: '1.8rem',
+        h5: '1.6rem',
+        h6: '1.4rem',
       },
     },
   },

@@ -2,6 +2,7 @@ import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 import remarkGfm from 'remark-gfm';
 import remarkUnwrapImages from 'remark-unwrap-images';
 import rehypePrism from 'rehype-prism-plus';
+import rehypeCodeTitles from 'rehype-code-titles';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -33,6 +34,7 @@ export default makeSource({
     ],
     rehypePlugins: [
       rehypePrism,
+      rehypeCodeTitles,
     ],
   },
 });

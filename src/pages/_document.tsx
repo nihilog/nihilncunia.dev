@@ -17,6 +17,7 @@ class NextDocument extends Document {
             rel='stylesheet'
             href='https://use.fontawesome.com/releases/v5.15.4/css/all.css'
           />
+          <link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />
         </Head>
         <body>
           <Main />

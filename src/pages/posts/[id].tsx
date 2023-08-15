@@ -11,7 +11,15 @@ interface Props {
 export default function PostPage({ post, }: Props) {
   return (
     <>
-      <AppLayout title='글'>
+      <AppLayout
+        title='글'
+        type='article'
+        created={post.created}
+        updated={post.updated}
+        section={post.category}
+        tags={post.tags.join(',')}
+        author='NIHILncunia'
+      >
         <PostMD content={post.body.code} />
       </AppLayout>
     </>

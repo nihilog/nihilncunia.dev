@@ -14,14 +14,16 @@ export default function IndexPage({ posts, }: Props) {
     <>
       <AppLayout title='홈'>
         <H>최근 포스트</H>
-        <PostList posts={posts} />
+        <PostList posts={posts} page='index' />
       </AppLayout>
     </>
   );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = allPosts.slice(0, 6);
+  const posts = allPosts
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 6);
 
   return {
     props: {

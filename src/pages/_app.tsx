@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
 import { Providers } from '@/layouts';
-import '@/styles/tailwind.css';
+import '@/styles/tailwind.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/theme.css';
 

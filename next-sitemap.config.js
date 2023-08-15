@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'http://localhost:3000',
+  siteUrl: 'https://nihilncunia.dev',
   generateRobotsTxt: true,
   sitemapSize: 7000,
   changefreq: 'daily',

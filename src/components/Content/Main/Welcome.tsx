@@ -11,7 +11,7 @@ interface Props {
 export function Welcome({ styles, }: Props) {
   const style = {
     default: css([
-      tw`  `,
+      tw` p-2 bg-blue-100 text-justify break-all text-black-base mb-4 rounded-1 shadow-md border border-blue-200 `,
       styles,
     ]),
   };

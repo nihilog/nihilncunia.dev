@@ -15,7 +15,8 @@ export function Main({ styles, children, }: Props) {
 
   const style = {
     default: css([
-      tw` flex flex-row gap-10 `,
+      size.width >= 1024 && tw` flex flex-row `,
+      tw` gap-10 my-5 w-full `,
       styles,
     ]),
   };
@@ -23,7 +24,7 @@ export function Main({ styles, children, }: Props) {
   return (
     <>
       <main css={style.default}>
-        {size.width >= 1000 && (
+        {size.width >= 1024 && (
           <Side />
         )}
         <Content>

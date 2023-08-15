@@ -24,7 +24,7 @@ export function Content({ children, styles, }: Props) {
     <>
       <div css={style.default}>
         <Welcome />
-        {size.width < 1000 && (
+        {size.width < 1024 && (
           <Menu align='horizontal' />
         )}
         {children}

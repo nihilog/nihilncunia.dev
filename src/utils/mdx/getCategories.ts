@@ -6,7 +6,9 @@ type ICategories = {
 };
 
 export const getCategories = () => {
-  const categories = allPosts.map((post) => post.category);
+  const categories = allPosts
+    .sort((a, b) => b.id - a.id)
+    .map((post) => post.category);
 
   return categories.reduce((pre: ICategories[], curr) => {
     const findItem = pre.find((item) => item.name === curr);

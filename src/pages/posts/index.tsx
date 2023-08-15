@@ -13,7 +13,7 @@ export default function PostListPage({ posts, }: Props) {
   return (
     <>
       <AppLayout title='포스트 목록'>
-        <H>포스트 총 {posts.length}건</H>
+        <H>전체 포스트 총 {posts.length}건</H>
         <PostList posts={posts} />
       </AppLayout>
     </>
@@ -21,9 +21,13 @@ export default function PostListPage({ posts, }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  const posts = allPosts.sort((a, b) => {
+    return b.id - a.id;
+  });
+
   return {
     props: {
-      posts: allPosts,
+      posts,
     },
   };
 };

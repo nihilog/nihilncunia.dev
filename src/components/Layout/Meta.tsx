@@ -18,7 +18,7 @@ export function Meta({ meta, }: IMetaProps) {
   const siteDescription = description || configData.description;
   const siteURL = `${configData.url}${url}`;
   const siteKeywords = keywords || configData.keywords;
-  const siteImage = image || `${configData.url}${configData.image}`;
+  const siteImage = image || configData.image;
   const siteType = type || configData.type;
 
   return (

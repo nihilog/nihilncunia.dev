@@ -1,0 +1,35 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url(https://fonts.cdnfonts.com/css/cascadia-code);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+* {
+  @apply box-border p-0 m-0 font-sans tracking-[-1px];
+}
+
+pre, code {
+  @apply font-code;
+
+  & span {
+    font-family: inherit;
+  }
+}
+
+body {
+  @apply max-w-[1206px] mx-auto text-small mf-md:text-middle mf-lg:text-big px-2 bg-[#e5e7eb] dark:bg-black-600;
+}
+
+::-webkit-scrollbar {
+  @apply h-2 w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-blue-200 rounded-1;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-500 rounded-1;
+}
