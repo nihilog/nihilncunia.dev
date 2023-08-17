@@ -4,7 +4,6 @@ import { Post, allPosts } from '@contentlayer';
 import { getCategories } from '@/utils/mdx';
 import { AppLayout } from '@/layouts';
 import { PostList } from '@/components/Content/Main';
-import { H } from '@/components/Base';
 
 interface Props {
   posts: Post[];
@@ -15,8 +14,7 @@ export default function CategoryPage({ posts, category, }: Props) {
   return (
     <>
       <AppLayout title={`${category} 관련 포스트`}>
-        <H>{`"${category}"`} 관련 포스트 총 {posts.length}건</H>
-        <PostList posts={posts} />
+        <PostList listName={`"${category}" 관련 포스트 총 ${posts.length}건`} posts={posts} />
       </AppLayout>
     </>
   );

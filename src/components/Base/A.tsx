@@ -22,7 +22,9 @@ export function A({
 
   return (
     <>
-      <Link href={href} css={style.default} aria-label={label}>{children}</Link>
+      <Link href={href} css={style.default} aria-label={label}>
+        {children}
+      </Link>
     </>
   );
 }

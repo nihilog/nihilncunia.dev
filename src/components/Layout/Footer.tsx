@@ -1,22 +1,75 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
+import { Icon } from '@iconify/react';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
 }
 
+interface FooterLink {
+  href: string;
+  label: string;
+  icon: string;
+}
+
+const footerLinks: FooterLink[] = [
+  { href: 'mailto:nihil_ncunia@naver.com', label: 'Email', icon: 'mdi:email-outline', },
+  { href: 'https://www.instagram.com/nihil_illust/', label: 'Instagram', icon: 'mdi:instagram', },
+  { href: 'https://github.com/NIHILncunia', label: 'Github', icon: 'mdi:github', },
+];
+
 export function Footer({ styles, }: Props) {
+  const startYear = 2023;
+  const nowYear = new Date().getFullYear();
+
+  const year = useMemo(() => {
+    return startYear < nowYear
+      ? `${startYear}-${nowYear}`
+      : startYear;
+  }, [ nowYear, ]);
+
   const style = {
     default: css([
-      tw`  `,
+      tw` space-y-2 mb-2 `,
       styles,
+    ]),
+    copy: css([
+      tw` p-3 border border-black-200 shadow-md bg-white text-black-base `,
+      tw` [small]:( flex items-center justify-center gap-1 font-900 text-[90%] ) `,
+    ]),
+    linkContainer: css([
+      tw` flex flex-row justify-center gap-3 `,
+    ]),
+    link: css([
+      tw` border border-black-200 text-black-base p-2 bg-white text-[140%] shadow-md transition-all duration-200 `,
+      tw` hover:( bg-blue-500 border-blue-500 text-white ) `,
     ]),
   };
 
   return (
     <>
-      <footer css={style.default}>Footer</footer>
+      <footer css={style.default}>
+        <div css={style.linkContainer}>
+          {footerLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              aria-label={link.label}
+              target='_blank'
+              rel='noreferrer noopener'
+              css={style.link}
+            >
+              <Icon icon={link.icon} />
+            </a>
+          ))}
+        </div>
+        <div css={style.copy}>
+          <small>
+            <Icon icon='ic:round-copyright' /> {year}. NIHILncunia.
+          </small>
+        </div>
+      </footer>
     </>
   );
 }

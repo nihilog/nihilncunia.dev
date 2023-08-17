@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
+import tw, { css } from 'twin.macro';
 
 interface Props {
   href: string;
@@ -27,8 +28,14 @@ export function MenuItem({
     }
   }, [ category, router.query, icon, ]);
 
+  const style = {
+    default: css([
+      router.query.category === category && tw` bg-blue-500! border-blue-500! text-white! `,
+    ]),
+  };
+
   return (
-    <Link href={href} data-category={category} className={selected}>
+    <Link href={href} data-category={category} className={selected} css={style.default}>
       <Icon icon={linkIcon} /> {category} ({count})
     </Link>
   );

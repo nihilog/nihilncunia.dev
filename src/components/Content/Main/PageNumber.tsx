@@ -12,8 +12,8 @@ interface Props {
 export function PageNumber({ number, currentPage, styles, }: Props) {
   const style = {
     default: css([
-      tw` p-1 px-3 bg-white rounded-1 border border-black-200 hover:( bg-blue-200 no-underline border-blue-200 ) shadow-md `,
-      currentPage === number && tw` text-white bg-blue-500 border-blue-500 cursor-default hover:( bg-blue-500 no-underline text-white border-blue-500 ) `,
+      tw` px-3 flex items-center justify-center border border-black-200 bg-white shadow-md hover:( bg-blue-400 border-blue-400 text-white no-underline ) `,
+      currentPage === number && tw` bg-blue-500 border-blue-500 text-white hover:( bg-blue-500 border-blue-500 no-underline text-white ) `,
       styles,
     ]),
   };
