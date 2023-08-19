@@ -1,7 +1,6 @@
 import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
-import { Welcome } from '@/components/Content/Main';
 
 interface Props {
   children: React.ReactNode;
@@ -19,7 +18,6 @@ export function Content({ children, styles, }: Props) {
   return (
     <>
       <div css={style.default}>
-        <Welcome />
         {children}
       </div>
     </>

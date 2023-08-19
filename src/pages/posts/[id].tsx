@@ -20,7 +20,7 @@ export default function PostPage({ post, }: Props) {
         tags={post.tags.join(',')}
         author='NIHILncunia'
       >
-        <PostMD content={post.body.code} />
+        <PostMD content={post.body.code} post={post} />
       </AppLayout>
     </>
   );

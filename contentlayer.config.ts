@@ -2,7 +2,8 @@ import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 import remarkGfm from 'remark-gfm';
 import remarkUnwrapImages from 'remark-unwrap-images';
 import rehypePrism from 'rehype-prism-plus';
-import rehypeCodeTitles from 'rehype-code-titles';
+import remarkCodeTitles from 'remark-code-titles';
+import rehypePrettyCode, { Options } from 'rehype-pretty-code';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -23,6 +24,10 @@ export const Post = defineDocumentType(() => ({
   },
 }));
 
+const options: Options = {
+  theme: 'github-dark',
+};
+
 export default makeSource({
   contentDirPath: 'posts',
   contentDirInclude: [ '2023', '2024', '2025', ],
@@ -31,10 +36,11 @@ export default makeSource({
     remarkPlugins: [
       remarkGfm,
       remarkUnwrapImages,
+      remarkCodeTitles,
     ],
     rehypePlugins: [
-      rehypePrism,
-      rehypeCodeTitles,
+      // [ rehypePrism, { showLineNumbers: true, }, ],
+      [ rehypePrettyCode, options, ],
     ],
   },
 });

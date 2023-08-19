@@ -1,0 +1,31 @@
+.nihil-codeblock pre {
+  padding: 8px;
+}
+
+.nihil-codeblock pre > code {
+  overflow-x: auto;
+  outline: none;
+  display: grid;
+  counter-reset: line;
+  padding: 8px 0;
+
+  & > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    text-align: right;
+    width: 2rem;
+    margin-right: 1rem;
+    text-align: right;
+    color: theme('colors.black.300');
+  }
+
+  & > span {
+    border-left: 4px solid #24292e;
+  }
+
+  & > [data-highlighted-line] {
+    background-color: theme('colors.blue.200 / 20%');
+    border-left: 4px solid theme('colors.blue.300');
+  }
+}

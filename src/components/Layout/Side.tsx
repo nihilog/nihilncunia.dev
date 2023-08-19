@@ -57,8 +57,8 @@ export function Side({ styles, }: Props) {
 
   const style = {
     default: css([
-      tw` w-[250px] p-3 flex flex-col gap-5 border border-black-200 shadow-lg shadow-black-base/50 bg-white self-start overflow-y-auto transition-all duration-200 `,
-      windowSize.width < 1024 && tw` fixed left-2 top-16 z-10 `,
+      tw` w-[250px] flex flex-col gap-5 self-start transition-all duration-200 `,
+      windowSize.width < 1024 && tw` fixed left-2 top-16 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 `,
       windowSize.width < 1024 && (css`
         transform: translateX(${position}) ${scrollY > 100 && 'translateY(-8px)'};
       `),

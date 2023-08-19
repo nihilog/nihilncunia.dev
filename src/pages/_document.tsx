@@ -13,11 +13,7 @@ class NextDocument extends Document {
     return (
       <Html lang='ko'>
         <Head>
-          <link
-            rel='stylesheet'
-            href='https://use.fontawesome.com/releases/v5.15.4/css/all.css'
-          />
-          <link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />
+          <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
         </Head>
         <body>
           <Main />

@@ -4,7 +4,7 @@ import { AppProps } from 'next/app';
 import { Providers } from '@/layouts';
 import '@/styles/tailwind.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import '@/styles/theme.css';
+import '@/styles/code-block.scss';
 
 const App = ({ Component, pageProps, }: AppProps) => (
   <Providers>

@@ -23,9 +23,9 @@ export function H({
 
   const style = {
     default: css([
-      tw` leading-[1] `,
-      type === 'post' && tw`  `,
-      type === 'normal' && tw` text-black-base font-black `,
+      tw` leading-[1] text-black-base `,
+      type === 'post' && tw` font-black p-2 px-3 border-l-[12px] border-blue-600 `,
+      type === 'normal' && tw` font-black `,
       type === 'postlist' && tw` text-justify break-all mt-[-10px] `,
       size[Heading],
       styles,

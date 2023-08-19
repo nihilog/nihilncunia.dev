@@ -1,13 +1,3 @@
-/**
- * Gruvbox dark theme
- *
- * Adapted from a theme based on:
- * Vim Gruvbox dark Theme (https://github.com/morhetz/gruvbox)
- *
- * @author Azat S. <to@azat.io>
- * @version 1.0
- */
-
 code[class*="language-"],
 pre[class*="language-"] {
   color: #ebdbb2;
@@ -52,6 +42,7 @@ code[class*="language-"] ::selection {
 :not(pre)>code[class*="language-"],
 pre[class*="language-"] {
   background: #1d2021;
+  padding: theme('padding.3');
   /* bg0_h */
 }
 

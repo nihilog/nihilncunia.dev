@@ -68,7 +68,7 @@ export function Header({ styles, }: Props) {
 
   const style = {
     default: css([
-      tw` shadow-md relative z-10 `,
+      tw` relative z-10 `,
       styles,
     ]),
     toggleDark: css([
@@ -80,8 +80,8 @@ export function Header({ styles, }: Props) {
     ]),
     version: tw` flex items-center flex-1 shrink-0 p-2 bg-white text-black-base font-black `,
     headerBottom: css([
-      tw` mt-2 flex divide-x divide-black-200 border border-black-200 `,
-      scrollY > 139 && tw` fixed top-0 mt-0 left-0 shadow-md shadow-black-base/50 w-full z-10 `,
+      tw` mt-2 flex divide-x divide-black-200 border border-black-200 shadow-md `,
+      scrollY > 139 && tw` fixed top-0 mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
     ]),
   };
 
