@@ -19,7 +19,7 @@ interface Props {
 
 export function Side({ styles, }: Props) {
   const [ scrollY, setScrollY, ] = useState(0);
-  const [ position, setPosition, ] = useState('0%');
+  const [ position, setPosition, ] = useState('-105%');
   const { isOpen, } = useAppSelector((state) => state.dark);
 
   const postsCount = allPosts.length;

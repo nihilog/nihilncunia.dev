@@ -35,7 +35,7 @@ export function PostMD({ post, content, styles, }: Props) {
       tw`  `,
       styles,
     ]),
-    post: tw` p-3 bg-white border border-black-200 space-y-5 mb-5 shadow-md mt-5 `,
+    post: tw` p-3 bg-white border border-black-200 space-y-8 mb-5 shadow-md mt-5 `,
     postInfo: tw` p-3 bg-white border border-t-0 border-black-200 shadow-md mb-5 `,
     title: tw` p-3 bg-black-base text-white `,
     category: css([
@@ -58,9 +58,9 @@ export function PostMD({ post, content, styles, }: Props) {
           <H
             level='h1'
             type='normal'
-            styles={tw`text-white text-justify break-all`}
+            styles={tw`text-white text-justify break-all flex items-center gap-2`}
           >
-            {post.title}
+            <Icon icon='mdi:comment' /> {post.title}
           </H>
         </div>
 

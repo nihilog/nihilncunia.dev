@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface IDarkMode {
   isDark: boolean;
@@ -20,8 +20,11 @@ const darkModeReducer = createSlice({
     toggleMenu(state) {
       state.isOpen = !state.isOpen;
     },
+    setIsOpen(state, { payload, }: PayloadAction<{value: boolean}>) {
+      state.isOpen = payload.value;
+    },
   },
 });
 
-export const { toggleDarkMode, toggleMenu, } = darkModeReducer.actions;
+export const { toggleDarkMode, toggleMenu, setIsOpen, } = darkModeReducer.actions;
 export default darkModeReducer.reducer;

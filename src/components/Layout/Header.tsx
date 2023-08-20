@@ -5,10 +5,11 @@ import tw, { TwStyle, css, styled } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
+import { useRouter } from 'next/router';
 import nihilLogo from '@/images/nihilncunia-dev.png';
 import nihilLogoDark from '@/images/nihilncunia-dev-dark.png';
 import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
-import { toggleDarkMode, toggleMenu } from '@/reducers/dark.reducer';
+import { setIsOpen, toggleDarkMode, toggleMenu } from '@/reducers/dark.reducer';
 import { configData } from '@/data';
 import { useReSize } from '@/hooks';
 
@@ -28,6 +29,7 @@ export function Header({ styles, }: Props) {
   const dispatch = useAppDispatch();
   const windowSize = useReSize();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const onClickDarkMode = useCallback(
     () => {
@@ -42,6 +44,10 @@ export function Header({ styles, }: Props) {
     },
     []
   );
+
+  useEffect(() => {
+    dispatch(setIsOpen({ value: false, }));
+  }, [ router.asPath, ]);
 
   useEffect(() => {
     if (isDark) {

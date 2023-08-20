@@ -1,8 +1,8 @@
 import React from 'react';
 import { MDXComponents } from 'mdx/types';
 import { Footer } from '@/components/Layout';
-import { CodeBlock } from '../Post';
-import { H } from '@/components/Base';
+import { CodeBlock, Message } from '../Post';
+import { Code, H, P } from '@/components/Base';
 
 /** 여기에 필요한 항목들을 넣는다. */
 export const CustomMDX: MDXComponents = {
@@ -21,6 +21,13 @@ export const CustomMDX: MDXComponents = {
   h5: (props) => (
     <H level='h6' type='post'>{props.children}</H>
   ),
+  p: (props) => (
+    <P>{props.children}</P>
+  ),
+  code: (props) => (
+    <Code>{props.children}</Code>
+  ),
   Footer,
   CodeBlock,
+  Message,
 };
