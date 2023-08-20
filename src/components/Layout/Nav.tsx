@@ -15,14 +15,18 @@ export function Nav({ name, children, styles, }: Props) {
 
   const style = {
     default: css([
-      tw` w-full flex flex-col gap-2 `,
+      tw` w-full flex flex-col gap-2 [span]:( transition-all duration-200 ) `,
       windowSize.width < 1024 && tw` shadow-none `,
       (css`
         a {
           ${tw`p-2 flex flex-row items-center gap-1 bg-white border border-black-200 transition-all duration-200 text-black-base shadow-md `};
 
           &:hover {
-            ${tw`bg-blue-400 border-blue-400 text-white`};
+            ${tw`text-blue-600 border-blue-500 bg-blue-100`};
+
+            & span {
+              ${tw`bg-blue-600 text-white `};
+            }
           }
         }
       `),

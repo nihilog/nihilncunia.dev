@@ -4,13 +4,14 @@ import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { allPosts } from '@contentlayer';
-import { MenuItem } from '../Content';
+import { CategoryItem } from '../Content';
 import { Nav } from './Nav';
 import { linksData } from '@/data';
-import { getCategories } from '@/utils/mdx';
+import { getCategories, getSeries } from '@/utils/mdx';
 import { useReSize } from '@/hooks';
 import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
 import { toggleMenu } from '@/reducers/dark.reducer';
+import { SeriesItem } from '../Content/SeriesItem';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
@@ -23,6 +24,7 @@ export function Side({ styles, }: Props) {
 
   const postsCount = allPosts.length;
   const categories = getCategories();
+  const serieses = getSeries();
   const windowSize = useReSize();
   const dispatch = useAppDispatch();
 
@@ -67,6 +69,9 @@ export function Side({ styles, }: Props) {
     background: css([
       tw` bg-black-base/70 w-screen h-screen fixed top-0 left-0 z-[1] `,
     ]),
+    count: css([
+      tw` text-[90%] inline-flex items-center justify-center py-1 px-2 ml-1 bg-black-300 text-white leading-[1] rounded-2 `,
+    ]),
   };
 
   return (
@@ -84,10 +89,22 @@ export function Side({ styles, }: Props) {
           ))}
         </Nav>
 
+        <Nav name='시리즈'>
+          {serieses.map((series) => (
+            <SeriesItem
+              key={series.name}
+              href={`/series/${series.name}`}
+              series={series.name}
+              icon='fontisto:list-1'
+              count={series.count}
+            />
+          ))}
+        </Nav>
+
         <Nav name='카테고리'>
-          <Link href='/posts'><Icon icon='bxs:category' /> 전체 포스트 ({postsCount})</Link>
+          <Link href='/posts'><Icon icon='bxs:category' /> 전체 포스트 <span css={style.count}>{postsCount}</span></Link>
           {categories.map((category) => (
-            <MenuItem
+            <CategoryItem
               key={category.name}
               href={`/categories/${category.name}`}
               category={category.name}

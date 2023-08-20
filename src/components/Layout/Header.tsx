@@ -1,7 +1,7 @@
 import React, {
-  useCallback, useEffect, useState
+  useCallback, useEffect, useRef, useState
 } from 'react';
-import tw, { TwStyle, css } from 'twin.macro';
+import tw, { TwStyle, css, styled } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
@@ -20,11 +20,14 @@ export function Header({ styles, }: Props) {
   const [ imageSrc, setImageSrc, ] = useState('');
   const [ icon, setIcon, ] = useState('');
   const [ scrollY, setScrollY, ] = useState(0);
+  const [ bottomHeight, setBottomHeight, ] = useState(0);
+
   const { isDark, } = useAppSelector(
     (state) => state.dark
   );
   const dispatch = useAppDispatch();
   const windowSize = useReSize();
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const onClickDarkMode = useCallback(
     () => {
@@ -53,6 +56,8 @@ export function Header({ styles, }: Props) {
   }, [ isDark, ]);
 
   useEffect(() => {
+    setBottomHeight(bottomRef.current.clientHeight);
+
     const scrollEvent = () => {
       setScrollY(window.scrollY);
     };
@@ -95,7 +100,10 @@ export function Header({ styles, }: Props) {
             </Link>
           </div>
         )}
-        <div css={style.headerBottom}>
+        {scrollY > 139 && (
+          <DummyDiv bottomHeight={bottomHeight} />
+        )}
+        <div css={style.headerBottom} ref={bottomRef}>
           {windowSize.width < 1024 && (
             <button css={style.menu} onClick={onClickOpen}>
               <Icon icon='mingcute:menu-fill' />
@@ -116,3 +124,7 @@ export function Header({ styles, }: Props) {
     </>
   );
 }
+
+const DummyDiv = styled.div<{bottomHeight: number}>`
+  height: ${(props) => props.bottomHeight}px;
+`;

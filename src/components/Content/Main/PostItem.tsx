@@ -19,7 +19,7 @@ export function PostItem({ post, direction = 'right', }: Props) {
 
   const style = {
     box: css([
-      tw` p-3 bg-white flex flex-row gap-5 `,
+      tw` p-3 bg-white flex flex-row gap-5 shadow-md border border-black-200 `,
       windowSize.width < 600 && tw` flex-col `,
     ]),
     info: css([
@@ -47,7 +47,7 @@ export function PostItem({ post, direction = 'right', }: Props) {
         <div css={style.info}>
           <H level='h3' type='postlist'>
             <A href={`/posts/${post.id}`}>
-              <span tw='text-[70%]'>{post.title}</span>
+              <span tw='text-[60%] mf-sm:text-[70%]'>{post.title}</span>
             </A>
           </H>
           <p tw='flex-1 shrink-0 text-[90%] text-black-base'>{post.description}</p>

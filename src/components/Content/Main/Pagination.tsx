@@ -58,7 +58,7 @@ export function Pagination({ posts, query, styles, }: Props) {
     ]),
     enable: css([
       tw` p-2 border border-black-200 bg-white inline-flex items-center justify-center transition-all duration-200 shadow-md `,
-      tw` hover:( bg-blue-400 border-blue-400 text-white ) `,
+      tw` hover:( text-blue-600 border-blue-500 bg-blue-100 ) `,
     ]),
   };
 

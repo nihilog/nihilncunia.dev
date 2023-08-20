@@ -1,14 +1,17 @@
 import { allPosts } from '@contentlayer';
 
-export type ITags = {
+type ISeries = {
   name: string;
   count: number;
 };
 
-export const getTags = () => {
-  const tags = [ ...new Set(...allPosts.map((post) => post.tags)), ];
+export const getSeries = () => {
+  const categories = allPosts
+    .filter((post) => post.seriesName)
+    .sort((a, b) => b.id - a.id)
+    .map((post) => post.seriesName);
 
-  return tags.reduce((pre: ITags[], curr) => {
+  return categories.reduce((pre: ISeries[], curr) => {
     const findItem = pre.find((item) => item.name === curr);
 
     if (findItem) {

@@ -5,4 +5,7 @@ export const linksData: { href: string; as: string; label: string; icon: string;
   {
     href: '/about', as: '/about', label: '소개', icon: 'mdi:about',
   },
+  {
+    href: '/tags', as: '/tags', label: '태그 클라우드', icon: 'ph:hash-bold',
+  },
 ];

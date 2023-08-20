@@ -12,7 +12,7 @@ interface Props {
 export function PageNumber({ number, currentPage, styles, }: Props) {
   const style = {
     default: css([
-      tw` px-3 flex items-center justify-center border border-black-200 bg-white shadow-md hover:( bg-blue-400 border-blue-400 text-white no-underline ) transition-all duration-200 `,
+      tw` px-3 flex items-center justify-center border border-black-200 bg-white shadow-md hover:( text-blue-600 border-blue-500 bg-blue-100 no-underline ) transition-all duration-200 `,
       currentPage === number && tw` bg-blue-500 border-blue-500 text-white hover:( bg-blue-500 border-blue-500 no-underline text-white ) `,
       styles,
     ]),

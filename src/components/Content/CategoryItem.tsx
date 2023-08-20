@@ -11,7 +11,7 @@ interface Props {
   icon: string;
 }
 
-export function MenuItem({
+export function CategoryItem({
   href, category, count, icon,
 }: Props) {
   const [ selected, setSelected, ] = useState('');
@@ -30,13 +30,17 @@ export function MenuItem({
 
   const style = {
     default: css([
-      router.query.category === category && tw` bg-blue-500! border-blue-500! text-white! `,
+      router.query.category === category && tw` bg-blue-500! border-blue-500! text-white! hover:( [span]:( bg-white! text-blue-500! ) ) `,
+    ]),
+    count: css([
+      tw` text-[90%] inline-flex items-center justify-center py-1 px-2 ml-1 bg-black-300 text-white leading-[1] rounded-2 `,
+      router.query.category === category && tw` bg-white text-blue-600 font-500 `,
     ]),
   };
 
   return (
     <Link href={href} data-category={category} className={selected} css={style.default}>
-      <Icon icon={linkIcon} /> {category} ({count})
+      <Icon icon={linkIcon} /> {category} <span css={style.count}>{count}</span>
     </Link>
   );
 }

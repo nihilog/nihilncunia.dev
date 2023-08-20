@@ -11,12 +11,28 @@ interface FooterLink {
   href: string;
   label: string;
   icon: string;
+  target: string;
 }
 
 const footerLinks: FooterLink[] = [
-  { href: 'mailto:nihil_ncunia@naver.com', label: 'Email', icon: 'mdi:email-outline', },
-  { href: 'https://www.instagram.com/nihil_illust/', label: 'Instagram', icon: 'mdi:instagram', },
-  { href: 'https://github.com/NIHILncunia', label: 'Github', icon: 'mdi:github', },
+  {
+    href: 'mailto:nihil_ncunia@naver.com',
+    target: '_self',
+    label: 'Email',
+    icon: 'mdi:email-outline',
+  },
+  {
+    href: 'https://www.instagram.com/nihil_illust/',
+    target: '_blank',
+    label: 'Instagram',
+    icon: 'mdi:instagram',
+  },
+  {
+    href: 'https://github.com/NIHILncunia',
+    target: '_blank',
+    label: 'Github',
+    icon: 'mdi:github',
+  },
 ];
 
 export function Footer({ styles, }: Props) {
@@ -43,7 +59,7 @@ export function Footer({ styles, }: Props) {
     ]),
     link: css([
       tw` border border-black-200 text-black-base p-2 bg-white text-[140%] shadow-md transition-all duration-200 `,
-      tw` hover:( bg-blue-500 border-blue-500 text-white ) `,
+      tw` hover:( text-blue-600 border-blue-500 bg-blue-100 ) `,
     ]),
   };
 
@@ -56,7 +72,7 @@ export function Footer({ styles, }: Props) {
               key={link.href}
               href={link.href}
               aria-label={link.label}
-              target='_blank'
+              target={link.target}
               rel='noreferrer noopener'
               css={style.link}
             >

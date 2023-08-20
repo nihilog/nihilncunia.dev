@@ -1,20 +1,20 @@
 import React from 'react';
-import { GetStaticPaths, GetStaticProps } from 'next';
 import { Post, allPosts } from '@contentlayer';
-import { getCategories } from '@/utils/mdx';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { AppLayout } from '@/layouts';
 import { PostList } from '@/components/Content/Main';
+import { getSeries } from '@/utils/mdx';
 
 interface Props {
+  series: string;
   posts: Post[];
-  category: string;
 }
 
-export default function CategoryPage({ posts, category, }: Props) {
+export default function SeriesPage({ series, posts, }: Props) {
   return (
     <>
-      <AppLayout title={`${category} 관련 포스트`}>
-        <PostList listName={`"${category}" 관련 포스트 총 ${posts.length}건`} posts={posts} />
+      <AppLayout title={`"${series}" 시리즈 관련 포스트`}>
+        <PostList listName={`"${series}" 시리즈 관련 포스트 총 ${posts.length}건`} posts={posts} series />
       </AppLayout>
     </>
   );
@@ -22,9 +22,9 @@ export default function CategoryPage({ posts, category, }: Props) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: getCategories().map((item) => ({
+    paths: getSeries().map((item) => ({
       params: {
-        category: item.name,
+        series: item.name,
       },
     })),
     fallback: false,
@@ -33,19 +33,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 type Params = {
   params: {
-    category: string;
+    series: string;
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
   const posts = allPosts
-    .filter((post) => post.category === params.category)
-    .sort((a, b) => b.id - a.id);
+    .filter((post) => post.seriesName === params.series)
+    .sort((a, b) => a.seriesOrder - b.seriesOrder);
 
   return {
     props: {
       posts,
-      category: params.category,
+      series: params.series,
     },
   };
 };
