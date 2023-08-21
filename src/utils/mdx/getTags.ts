@@ -6,7 +6,12 @@ export type ITags = {
 };
 
 export const getTags = () => {
-  const tags = [ ...new Set(...allPosts.map((post) => post.tags)), ];
+  const tagsArray = allPosts.map((post) => (post.tags));
+  let tags = [];
+
+  tagsArray.forEach((tag) => {
+    tags = tags.concat(tag);
+  });
 
   return tags.reduce((pre: ITags[], curr) => {
     const findItem = pre.find((item) => item.name === curr);

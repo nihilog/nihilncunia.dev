@@ -7,7 +7,7 @@
 @tailwind variants;
 
 * {
-  @apply box-border p-0 m-0 font-sans tracking-[-1px];
+  @apply box-border p-0 m-0 font-sans tracking-[-1px] font-500;
 }
 
 pre, code {

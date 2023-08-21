@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useState
+} from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
@@ -8,7 +10,6 @@ import { CategoryItem } from '../Content';
 import { Nav } from './Nav';
 import { linksData } from '@/data';
 import { getCategories, getSeries } from '@/utils/mdx';
-import { useReSize } from '@/hooks';
 import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
 import { toggleMenu } from '@/reducers/dark.reducer';
 import { SeriesItem } from '../Content/SeriesItem';
@@ -19,13 +20,12 @@ interface Props {
 
 export function Side({ styles, }: Props) {
   const [ scrollY, setScrollY, ] = useState(0);
-  const [ position, setPosition, ] = useState('-105%');
-  const { isOpen, } = useAppSelector((state) => state.dark);
+  // // const [ position, setPosition, ] = useState('0%');
+  const { isOpen, width, } = useAppSelector((state) => state.dark);
 
   const postsCount = allPosts.length;
   const categories = getCategories();
   const serieses = getSeries();
-  const windowSize = useReSize();
   const dispatch = useAppDispatch();
 
   const onClickBackground = useCallback(
@@ -34,14 +34,6 @@ export function Side({ styles, }: Props) {
     },
     []
   );
-
-  useEffect(() => {
-    if (isOpen) {
-      setPosition('0%');
-    } else {
-      setPosition('-105%');
-    }
-  }, [ isOpen, ]);
 
   useEffect(() => {
     const scrollEvent = () => {
@@ -60,10 +52,10 @@ export function Side({ styles, }: Props) {
   const style = {
     default: css([
       tw` w-[250px] flex flex-col gap-5 self-start transition-all duration-200 `,
-      windowSize.width < 1024 && tw` fixed left-2 top-16 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 `,
-      windowSize.width < 1024 && (css`
-        transform: translateX(${position}) ${scrollY > 100 && 'translateY(-8px)'};
-      `),
+      width >= 1024 && tw` [transform: translateX(0%)] `,
+      width < 1024 && tw` fixed left-2 top-16 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 `,
+      width < 1024 && !isOpen && tw` [transform: translateX(-105%) translateY(-8px)] opacity-0 `,
+      width < 1024 && isOpen && tw` [transform: translateX(0%) translateY(-8px)] opacity-100 `,
       styles,
     ]),
     background: css([

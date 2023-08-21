@@ -2,7 +2,7 @@ const { withContentlayer, } = require('next-contentlayer');
 
 /** @type {import('next').NextConfig} */
 const config = {
-  swcMinify: true,
+  swcMinify: false,
   distDir: 'build',
   // 정적 페이지의 결과물이 이 폴더에 생긴다.
   // basePath: '',

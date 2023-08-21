@@ -36,8 +36,8 @@ export function PostMD({ post, content, styles, }: Props) {
       styles,
     ]),
     post: tw` p-3 bg-white border border-black-200 space-y-8 mb-5 shadow-md mt-5 `,
-    postInfo: tw` p-3 bg-white border border-t-0 border-black-200 shadow-md mb-5 `,
-    title: tw` p-3 bg-black-base text-white `,
+    postInfo: tw` p-3 bg-white border border-black-200 shadow-md mb-5 `,
+    title: tw` p-3 bg-black-base text-white mb-2 shadow-md `,
     category: css([
       tw` p-1 px-2 bg-blue-500 text-white text-[90%] font-500 inline-flex items-center gap-1 `,
       tw` hover:( no-underline bg-blue-700 text-white ) `,
@@ -131,23 +131,19 @@ export function PostMD({ post, content, styles, }: Props) {
 
         {prevPost && (
           <>
-            <div tw='mt-5 p-3 text-white bg-black-base font-black flex flex-row gap-1 items-center'>
+            <div tw='mt-5 p-3 text-white bg-black-base font-black flex flex-row gap-1 items-center shadow-md mb-2'>
               <Icon icon='ic:twotone-keyboard-double-arrow-left' fontSize='130%' /> 이전 포스트
             </div>
-            <div tw='border border-t-0 border-black-200 shadow-md'>
-              <PostItem post={prevPost} direction='left' />
-            </div>
+            <PostItem post={prevPost} direction='left' />
           </>
         )}
 
         {nextPost && (
           <>
-            <div tw='mt-5 p-3 text-white bg-black-base font-black flex flex-row gap-1 items-center justify-end'>
+            <div tw='mt-5 p-3 text-white bg-black-base font-black flex flex-row gap-1 items-center justify-end shadow-md mb-2'>
               다음 포스트 <Icon icon='ic:twotone-keyboard-double-arrow-right' fontSize='130%' />
             </div>
-            <div tw='border border-t-0 border-black-200 shadow-md'>
-              <PostItem post={nextPost} />
-            </div>
+            <PostItem post={nextPost} />
           </>
         )}
       </article>

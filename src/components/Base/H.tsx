@@ -18,7 +18,7 @@ export function H({
     h3: tw` text-h3 `,
     h4: tw` text-h4 `,
     h5: tw` text-h5 `,
-    h6: tw` text-h6 `,
+    h6: tw` text-h6 font-700 `,
   };
 
   const style = {

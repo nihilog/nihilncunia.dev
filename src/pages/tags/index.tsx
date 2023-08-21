@@ -11,6 +11,7 @@ interface Props {
 }
 
 export default function TagCloudPage({ tags, }: Props) {
+  console.log(tags);
   const style = {
     listName: css([
       tw` p-3 bg-black-base text-white flex items-center gap-2 mb-2 shadow-md transition-all duration-200 `,

@@ -11,7 +11,6 @@ import nihilLogoDark from '@/images/nihilncunia-dev-dark.png';
 import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
 import { setIsOpen, toggleDarkMode, toggleMenu } from '@/reducers/dark.reducer';
 import { configData } from '@/data';
-import { useReSize } from '@/hooks';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
@@ -23,11 +22,10 @@ export function Header({ styles, }: Props) {
   const [ scrollY, setScrollY, ] = useState(0);
   const [ bottomHeight, setBottomHeight, ] = useState(0);
 
-  const { isDark, } = useAppSelector(
+  const { isDark, width, } = useAppSelector(
     (state) => state.dark
   );
   const dispatch = useAppDispatch();
-  const windowSize = useReSize();
   const bottomRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -92,25 +90,25 @@ export function Header({ styles, }: Props) {
     version: tw` flex items-center flex-1 shrink-0 p-2 bg-white text-black-base font-black `,
     headerBottom: css([
       tw` mt-2 flex divide-x divide-black-200 border border-black-200 shadow-md `,
-      scrollY > 139 && tw` fixed top-0 mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
+      width < 1024 && tw` fixed top-0 mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
     ]),
   };
 
   return (
     <>
       <header css={style.default}>
-        {windowSize.width >= 1024 && (
+        {width >= 1024 && (
           <div tw='mt-2 p-3 bg-white border border-black-200 shadow-md'>
             <Link href='/' aria-label='홈'>
               <img src={imageSrc} alt='니힐로그 로고' />
             </Link>
           </div>
         )}
-        {scrollY > 139 && (
+        {width < 1024 && (
           <DummyDiv bottomHeight={bottomHeight} />
         )}
         <div css={style.headerBottom} ref={bottomRef}>
-          {windowSize.width < 1024 && (
+          {width < 1024 && (
             <button css={style.menu} onClick={onClickOpen}>
               <Icon icon='mingcute:menu-fill' />
             </button>

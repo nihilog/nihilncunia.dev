@@ -9,7 +9,7 @@ export const configData: IConfigData = {
   type: 'website',
   url: process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
-    : '',
+    : 'https://nihilog-dev.github.io/',
   image: setCover('https://drive.google.com/file/d/1nQEoPotztnvzB75XkK_XaTsauFwNBlYo/view?usp=drive_link'),
   postPerPage: 5,
   version: 'v0.0.0',

@@ -1,8 +1,12 @@
 import React from 'react';
 import { MDXComponents } from 'mdx/types';
 import { Footer } from '@/components/Layout';
-import { CodeBlock, Message } from '../Post';
-import { Code, H, P } from '@/components/Base';
+import {
+  CodeBlock, Image, Message, Youtube
+} from '../Post';
+import {
+  A, Code, H, P
+} from '@/components/Base';
 
 /** 여기에 필요한 항목들을 넣는다. */
 export const CustomMDX: MDXComponents = {
@@ -27,7 +31,15 @@ export const CustomMDX: MDXComponents = {
   code: (props) => (
     <Code>{props.children}</Code>
   ),
+  a: (props) => (
+    <A href={props.href} type='post' label={props.children as string}>{props.children}</A>
+  ),
+  img: (props) => (
+    <Image src={props.src} alt={props.alt} />
+  ),
+  A,
   Footer,
   CodeBlock,
   Message,
+  Youtube,
 };
