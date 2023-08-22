@@ -2,6 +2,7 @@ import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
+import { Icon } from '@iconify/react';
 
 interface Props {
   href: string;
@@ -17,35 +18,13 @@ export function A({
 }: Props) {
   const style = {
     default: css([
-      tw` font-semibold text-blue-500 hover:( text-blue-700 underline ) `,
-      type === 'post' && (css`
-        &:before {
-          content: url('https://api.iconify.design/mingcute/link-fill.svg?color=%233898f9');
-          margin-right: 4px;
-        }
-
-        &:hover {
-          &:before {
-            content: url('https://api.iconify.design/mingcute/link-fill.svg?color=%231a64db');
-          }
-        }
-      `),
+      tw` font-semibold text-blue-500 inline-flex items-baseline hover:( text-blue-700 underline ) `,
+      type === 'post' && tw` [& > svg]:( self-center mr-[2px] pt-[2px] ) `,
       styles,
     ]),
     external: css([
-      tw` font-semibold text-green-500 hover:( underline text-green-600 ) `,
-      tw` after:( ml-1 ) `,
-      (css`
-        &:after {
-          content: url('https://api.iconify.design/iconamoon/link-external-bold.svg?color=%2322c55e');
-        }
-
-        &:hover {
-          &:after {
-            content: url('https://api.iconify.design/iconamoon/link-external-bold.svg?color=%2316a34a');
-          }
-        }
-      `),
+      tw` font-semibold text-green-500 inline-flex items-baseline hover:( underline text-green-600 ) `,
+      tw` [& > svg]:( self-center ml-1 pt-[2px] ) `,
     ]),
   };
 
@@ -59,11 +38,19 @@ export function A({
           aria-label={label}
           css={style.external}
         >
-          {children}
+          {children} <Icon icon='iconamoon:link-external-bold' fontSize='110%' />
         </a>
       ) : (
         <Link href={href} css={style.default} aria-label={label}>
-          {children}
+          {type === 'normal' ? (
+            <>
+              {children}
+            </>
+          ) : (
+            <>
+              <Icon icon='mingcute:link-fill' fontSize='110%' /> {children}
+            </>
+          )}
         </Link>
       )}
     </>

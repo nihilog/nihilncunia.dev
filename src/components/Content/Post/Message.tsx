@@ -9,13 +9,6 @@ interface Props {
   styles?: TwStyle | SerializedStyles;
 }
 
-const messageType = {
-  r: '경고',
-  g: '정보',
-  b: '안내',
-  y: '주의',
-};
-
 const messageIcon = {
   r: 'humbleicons:times',
   g: 'material-symbols:check',
@@ -26,23 +19,30 @@ const messageIcon = {
 export function Message({ color, children, styles, }: Props) {
   const style = {
     default: css([
-      tw` p-2 border `,
+      tw` border-2 `,
       tw` [p]:( text-justify break-all ) `,
-      color === 'r' && tw` border-red-400 bg-red-100 text-red-500 `,
-      color === 'g' && tw` border-green-500 bg-green-100 text-green-600 `,
-      color === 'b' && tw` border-blue-400 bg-blue-100 text-blue-500 `,
-      color === 'y' && tw` border-gold-600 bg-gold-100 text-gold-700 `,
+      color === 'r' && tw` border-red-500 bg-red-100 [p]:text-red-500! `,
+      color === 'g' && tw` border-green-600 bg-green-100 [p]:text-green-600! `,
+      color === 'b' && tw` border-blue-500 bg-blue-100 [p]:text-blue-500! `,
+      color === 'y' && tw` border-gold-600 bg-gold-100 [p]:text-gold-700! `,
       styles,
+    ]),
+    top: css([
+      tw` p-1 `,
+      color === 'r' && tw` bg-red-500 text-white `,
+      color === 'g' && tw` bg-green-600 text-white `,
+      color === 'b' && tw` bg-blue-500 text-white `,
+      color === 'y' && tw` bg-gold-600 text-white `,
     ]),
   };
 
   return (
     <>
       <div css={style.default}>
-        <div tw='font-black text-[110%] flex items-center gap-1 leading-[1] mb-2'>
-          <Icon icon={messageIcon[color]} fontSize='120%' /> {messageType[color]}
+        <div css={style.top}>
+          <Icon icon={messageIcon[color]} />
         </div>
-        <div tw='space-y-2 font-500'>
+        <div tw='space-y-2 p-2'>
           {children}
         </div>
       </div>

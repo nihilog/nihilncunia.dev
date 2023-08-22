@@ -1,13 +1,11 @@
 import React, {
-  useCallback, useEffect, useRef, useState
+  useCallback, useEffect, useMemo, useRef, useState
 } from 'react';
 import tw, { TwStyle, css, styled } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
-import nihilLogo from '@/images/nihilncunia-dev.png';
-import nihilLogoDark from '@/images/nihilncunia-dev-dark.png';
 import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
 import { setIsOpen, toggleDarkMode, toggleMenu } from '@/reducers/dark.reducer';
 import { configData } from '@/data';
@@ -17,7 +15,6 @@ interface Props {
 }
 
 export function Header({ styles, }: Props) {
-  const [ imageSrc, setImageSrc, ] = useState('');
   const [ icon, setIcon, ] = useState('');
   const [ scrollY, setScrollY, ] = useState(0);
   const [ bottomHeight, setBottomHeight, ] = useState(0);
@@ -43,6 +40,12 @@ export function Header({ styles, }: Props) {
     []
   );
 
+  const imageSrc = useMemo(() => {
+    return isDark
+      ? '/images/nihilncunia-dev-dark.png'
+      : '/images/nihilncunia-dev.png';
+  }, [ isDark, ]);
+
   useEffect(() => {
     dispatch(setIsOpen({ value: false, }));
   }, [ router.asPath, ]);
@@ -50,11 +53,9 @@ export function Header({ styles, }: Props) {
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
-      setImageSrc(nihilLogoDark.src);
       setIcon('material-symbols:dark-mode');
     } else {
       document.documentElement.classList.remove('dark');
-      setImageSrc(nihilLogo.src);
       setIcon('material-symbols:light-mode');
     }
   }, [ isDark, ]);

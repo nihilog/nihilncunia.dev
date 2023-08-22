@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
@@ -10,9 +10,13 @@ interface Props {
 }
 
 export function Image({ src, alt, styles, }: Props) {
+  const [ isPopup, setIsPopup, ] = useState(false);
+  const checkRef = useRef<HTMLInputElement>(null);
+
   const onClickExpand = useCallback(
     () => {
-      console.log('확대합니다.');
+      // console.log('확대합니다.');
+      setIsPopup((prev) => !prev);
     },
     []
   );
@@ -61,6 +65,16 @@ export function Image({ src, alt, styles, }: Props) {
         </div>
         <figcaption css={style.caption}><Icon icon='ri:image-fill' /> {alt}</figcaption>
       </figure>
+      {isPopup && (
+        <div tw='fixed top-0 left-0 w-screen h-screen z-30 bg-black-base/70' onClick={() => checkRef.current.click()} />
+      )}
+      <input
+        type='checkbox'
+        checked={isPopup}
+        onChange={onClickExpand}
+        ref={checkRef}
+      />
+
     </>
   );
 }
