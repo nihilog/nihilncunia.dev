@@ -2,6 +2,7 @@ import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
+import { A } from '@/components/Base';
 
 interface Props {
   cite?: string;
@@ -15,15 +16,12 @@ export function Q({
 }: Props) {
   const style = {
     default: css([
-      tw` p-2 bg-black-50 border border-black-200 inline-block text-black-base `,
+      tw` p-2 bg-black-50 border border-black-200 inline-block text-center text-black-base dark:( bg-black-600 border-black-400 text-white ) `,
       styles,
     ]),
     who: css([
       tw` flex gap-1 items-center `,
-      cite && tw` pr-3 mr-3 border-r-2 border-black-300 `,
-    ]),
-    cite: css([
-      tw` text-green-600 hover:underline hover:text-green-700 `,
+      cite && tw` pr-3 mr-3 border-r-[5px] border-black-200 `,
     ]),
     body: css([
       tw` inline-block [p]:text-center `,
@@ -34,17 +32,20 @@ export function Q({
   return (
     <>
       <blockquote css={style.default}>
+        <Icon
+          icon='fa-solid:quote-left'
+          tw='text-black-base dark:text-white mb-2'
+        />
+
         <div css={style.body}>
-          <Icon
-            icon='fa-solid:quote-left'
-            tw='text-black-base mb-2'
-          />
           {children}
-          <Icon
-            icon='fa-solid:quote-right'
-            tw='text-black-base ml-auto mt-2'
-          />
         </div>
+
+        <Icon
+          icon='fa-solid:quote-right'
+          tw='text-black-base dark:text-white ml-auto mt-2'
+        />
+
         <div css={style.bottom}>
           {who && (
             <div css={style.who}>
@@ -52,14 +53,7 @@ export function Q({
             </div>
           )}
           {cite && (
-            <a
-              href={cite}
-              target='_blank'
-              rel='noreferrer noopener'
-              css={style.cite}
-            >
-              [출처]
-            </a>
+            <A href={cite} external>[출처]</A>
           )}
         </div>
       </blockquote>

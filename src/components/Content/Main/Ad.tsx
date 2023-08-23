@@ -33,7 +33,7 @@ export function Ad({ position, styles, }: Props) {
 
   const style = {
     default: css([
-      tw` bg-white border border-black-200 shadow-md mt-5 `,
+      tw` bg-white border border-black-200 shadow-md mt-5 dark:( bg-black-500 border-black-400 text-white ) `,
       tw` [ins]:( min-h-[100px] max-h-[280px] ) `,
       styles,
     ]),

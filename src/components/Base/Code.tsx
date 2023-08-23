@@ -10,7 +10,7 @@ interface Props {
 export function Code({ children, styles, }: Props) {
   const style = {
     default: css([
-      tw` px-1 break-all bg-blue-100 rounded-1 text-blue-700 `,
+      tw` px-1 break-all bg-blue-100 rounded-1 text-blue-700 dark:( bg-yellow-200 text-black-base ) `,
       styles,
     ]),
   };

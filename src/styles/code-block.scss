@@ -3,6 +3,9 @@
 }
 
 .nihil-codeblock pre > code {
+  &:is(.dark &) {
+    background-color: inherit;
+  }
   background-color: inherit;
   overflow-x: auto;
   outline: none;

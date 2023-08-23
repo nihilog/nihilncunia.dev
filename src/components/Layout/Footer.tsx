@@ -51,15 +51,15 @@ export function Footer({ styles, }: Props) {
       styles,
     ]),
     copy: css([
-      tw` p-3 border border-black-200 shadow-md bg-white text-black-base `,
+      tw` p-3 border border-black-200 shadow-md bg-white text-black-base dark:( bg-black-500 border-black-400 text-white ) `,
       tw` [small]:( flex items-center justify-center gap-1 font-900 text-[90%] ) `,
     ]),
     linkContainer: css([
       tw` flex flex-row justify-center gap-3 `,
     ]),
     link: css([
-      tw` border border-black-200 text-black-base p-2 bg-white text-[140%] shadow-md transition-all duration-200 `,
-      tw` hover:( text-blue-600 border-blue-500 bg-blue-100 ) `,
+      tw` border border-black-200 text-black-base dark:( bg-black-500 border-black-400 text-white ) p-2 bg-white text-[140%] shadow-md transition-all duration-200 `,
+      tw` hover:( text-blue-600 border-blue-500 bg-blue-100 dark:( border-yellow-300 text-yellow-300 bg-black-600 ) ) `,
     ]),
   };
 

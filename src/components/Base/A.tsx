@@ -18,12 +18,12 @@ export function A({
 }: Props) {
   const style = {
     default: css([
-      tw` font-semibold text-blue-500 inline-flex items-baseline hover:( text-blue-700 underline ) `,
+      tw` font-semibold border-b border-transparent text-blue-500 dark:text-yellow-300 inline-flex items-baseline hover:( text-blue-700 dark:text-gold-600 border-blue-700 dark:border-gold-600 ) `,
       type === 'post' && tw` [& > svg]:( self-center mr-[2px] pt-[2px] ) `,
       styles,
     ]),
     external: css([
-      tw` font-semibold text-green-500 inline-flex items-baseline hover:( underline text-green-600 ) `,
+      tw` font-semibold text-green-500 border-b border-transparent inline-flex items-baseline hover:( text-green-600 border-green-600 ) `,
       tw` [& > svg]:( self-center ml-1 pt-[2px] ) `,
     ]),
   };

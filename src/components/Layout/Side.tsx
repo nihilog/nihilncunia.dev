@@ -53,7 +53,7 @@ export function Side({ styles, }: Props) {
     default: css([
       tw` w-[250px] flex flex-col gap-5 self-start transition-all duration-200 `,
       width >= 1024 && tw` [transform: translateX(0%)] `,
-      width < 1024 && tw` fixed left-2 top-16 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 `,
+      width < 1024 && tw` fixed left-2 top-16 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 dark:( border-black-400 bg-black-base ) `,
       width < 1024 && !isOpen && tw` [transform: translateX(-105%) translateY(-8px)] opacity-0 `,
       width < 1024 && isOpen && tw` [transform: translateX(0%) translateY(-8px)] opacity-100 `,
       styles,
@@ -62,7 +62,7 @@ export function Side({ styles, }: Props) {
       tw` bg-black-base/70 w-screen h-screen fixed top-0 left-0 z-[1] `,
     ]),
     count: css([
-      tw` text-[90%] inline-flex items-center justify-center py-1 px-2 ml-1 bg-black-300 text-white leading-[1] rounded-2 `,
+      tw` text-[90%] inline-flex items-center justify-center py-1 px-2 ml-1 bg-black-300 dark:bg-black-400 text-white leading-[1] rounded-2 `,
     ]),
   };
 

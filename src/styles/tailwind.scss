@@ -33,3 +33,13 @@ body {
 ::-webkit-scrollbar-thumb {
   @apply bg-blue-500 rounded-1;
 }
+
+html.dark {
+  ::-webkit-scrollbar-track {
+    @apply rounded-1 bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-1 bg-yellow-400;
+  }
+}

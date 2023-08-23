@@ -10,7 +10,7 @@ interface Props {
 export function P({ children, styles, }: Props) {
   const style = {
     default: css([
-      tw` text-black-base text-justify break-all font-500 `,
+      tw` text-black-base dark:text-white text-justify break-all font-500 `,
       tw` [strong]:( font-900 ) `,
       tw` [em]:( mr-1 ) `,
       styles,

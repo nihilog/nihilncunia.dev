@@ -54,11 +54,11 @@ export function Pagination({ posts, query, styles, }: Props) {
       tw` flex items-stretch justify-center gap-1 `,
     ]),
     disable: css([
-      tw` p-2 border border-black-200 bg-black-50 inline-flex items-center justify-center text-black-300 shadow-md `,
+      tw` p-2 border border-black-200 bg-black-50 dark:( border-black-300 bg-black-400 text-black-300 ) inline-flex items-center justify-center text-black-300 shadow-md `,
     ]),
     enable: css([
-      tw` p-2 border border-black-200 bg-white inline-flex items-center justify-center transition-all duration-200 shadow-md `,
-      tw` hover:( text-blue-600 border-blue-500 bg-blue-100 ) `,
+      tw` p-2 border border-black-200 bg-white dark:( bg-black-500 border-black-400 ) inline-flex items-center justify-center transition-all duration-200 shadow-md `,
+      tw` hover:( text-blue-600 border-blue-500 bg-blue-100 dark:( border-yellow-300 text-yellow-300 bg-black-600 ) ) `,
     ]),
   };
 

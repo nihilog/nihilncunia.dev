@@ -30,11 +30,11 @@ export function CategoryItem({
 
   const style = {
     default: css([
-      router.query.category === category && tw` bg-blue-500! border-blue-500! text-white! hover:( [span]:( bg-white! text-blue-500! ) ) `,
+      router.query.category === category && tw` bg-blue-500! border-blue-500! text-white! dark:( bg-yellow-300! border-yellow-300! text-black-base! ) hover:( [span]:( bg-white! text-blue-600! ) ) hover:dark:( [span]:( bg-black-600! text-yellow-300! ) ) `,
     ]),
     count: css([
-      tw` text-[90%] inline-flex items-center justify-center py-1 px-2 ml-1 bg-black-300 text-white leading-[1] rounded-2 `,
-      router.query.category === category && tw` bg-white text-blue-600 font-500 `,
+      tw` text-[90%] inline-flex items-center justify-center py-1 px-2 ml-1 bg-black-300 dark:bg-black-400 text-white leading-[1] rounded-2 `,
+      router.query.category === category && tw` bg-white text-blue-600 dark:( bg-black-600 text-yellow-300 ) font-500 `,
     ]),
   };
 

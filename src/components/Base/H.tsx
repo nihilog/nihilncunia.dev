@@ -23,8 +23,8 @@ export function H({
 
   const style = {
     default: css([
-      tw` leading-[1] text-black-base `,
-      type === 'post' && tw` font-black p-2 px-3 border-l-[12px] border-blue-600 `,
+      tw` leading-[1] text-black-base dark:text-white `,
+      type === 'post' && tw` font-black p-2 px-3 border-l-[12px] border-blue-600 dark:border-yellow-300 `,
       type === 'normal' && tw` font-black `,
       type === 'postlist' && tw` text-justify break-all mt-[-10px] `,
       size[Heading],

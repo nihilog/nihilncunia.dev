@@ -53,10 +53,10 @@ export function Header({ styles, }: Props) {
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
-      setIcon('material-symbols:dark-mode');
+      setIcon('material-symbols:light-mode');
     } else {
       document.documentElement.classList.remove('dark');
-      setIcon('material-symbols:light-mode');
+      setIcon('material-symbols:dark-mode');
     }
   }, [ isDark, ]);
 
@@ -82,15 +82,15 @@ export function Header({ styles, }: Props) {
       styles,
     ]),
     toggleDark: css([
-      tw` w-[45px] aspect-square flex items-center justify-center bg-white shrink-0 `,
-      tw` text-blue-600 dark:text-yellow-400 [svg]:( text-[150%] ) `,
+      tw` w-[45px] aspect-square flex items-center justify-center bg-white shrink-0 dark:bg-black-500 `,
+      tw` text-black-base dark:text-white [svg]:( text-[150%] ) `,
     ]),
     menu: css([
-      tw` w-[45px] aspect-square flex items-center justify-center bg-white border-black-200 shrink-0 `,
+      tw` w-[45px] aspect-square flex items-center justify-center bg-white border-black-200 shrink-0 dark:( border-black-400 bg-black-500 text-white ) `,
     ]),
-    version: tw` flex items-center flex-1 shrink-0 p-2 bg-white text-black-base font-black `,
+    version: tw` flex items-center flex-1 shrink-0 p-2 bg-white text-black-base dark:( bg-black-500 text-white ) font-black `,
     headerBottom: css([
-      tw` mt-2 flex divide-x divide-black-200 border border-black-200 shadow-md `,
+      tw` mt-2 flex divide-x divide-black-200 border border-black-200 shadow-md dark:( divide-black-400 border-black-400 ) `,
       width < 1024 && tw` fixed top-0 mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
     ]),
   };
@@ -99,7 +99,7 @@ export function Header({ styles, }: Props) {
     <>
       <header css={style.default}>
         {width >= 1024 && (
-          <div tw='mt-2 p-3 bg-white border border-black-200 shadow-md'>
+          <div tw='mt-2 p-3 bg-white border border-black-200 shadow-md dark:( border-black-400 bg-black-500 )'>
             <Link href='/' aria-label='홈'>
               <img src={imageSrc} alt='니힐로그 로고' />
             </Link>
