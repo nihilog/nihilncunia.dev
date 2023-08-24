@@ -5,11 +5,11 @@ import { SerializedStyles } from '@emotion/react';
 import { Post } from '@contentlayer';
 import { useRouter } from 'next/router';
 import { Icon } from '@iconify/react';
-import { configData } from '@/data';
-import { A, H } from '@/components/Base';
+import { configData } from '@/src/data';
+import { A, H } from '@/src/components/Base';
 import { Pagination } from './Pagination';
 import { PostItem } from './PostItem';
-import { setCover } from '@/utils';
+import { setCover } from '@/src/utils';
 
 interface Props {
   posts: Post[];

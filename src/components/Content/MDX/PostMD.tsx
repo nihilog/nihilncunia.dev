@@ -6,11 +6,11 @@ import Giscus from '@giscus/react';
 import { Post, allPosts } from '@contentlayer';
 import { Icon } from '@iconify/react';
 import { CustomMDX } from './CustomMDX';
-import { A, H } from '@/components/Base';
-import { dateFormat } from '@/utils/date';
-import { setCover } from '@/utils';
+import { A, H } from '@/src/components/Base';
+import { dateFormat } from '@/src/utils/date';
+import { setCover } from '@/src/utils';
 import { Ad, PostItem } from '../Main';
-import { useAppSelector } from '@/hooks/rtk';
+import { useAppSelector } from '@/src/hooks/rtk';
 
 interface Props {
   post: Post;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { MDXComponents } from 'mdx/types';
-import { Footer } from '@/components/Layout';
+import { Footer } from '@/src/components/Layout';
 import {
   CodeBlock, Em, Image, Li, Message, Ol, Q, Strike, Strong, Ul, Youtube
 } from '../Post';
 import {
   A, Code, H, P
-} from '@/components/Base';
+} from '@/src/components/Base';
 
 /** 여기에 필요한 항목들을 넣는다. */
 export const CustomMDX: MDXComponents = {

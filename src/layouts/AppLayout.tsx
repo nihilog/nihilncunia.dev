@@ -2,8 +2,8 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import {
   Footer, Header, Main, Meta
-} from '@/components/Layout';
-import { IAppLayoutProps, IMetaData } from '@/types/site.types';
+} from '@/src/components/Layout';
+import { IAppLayoutProps, IMetaData } from '@/src/types/site.types';
 
 export function AppLayout({
   children, title, description, keywords, author, image, created, updated, tags, type, section,

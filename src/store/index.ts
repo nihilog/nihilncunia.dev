@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
-import darkModeReducer from '@/reducers/dark.reducer';
+import darkModeReducer from '@/src/reducers/dark.reducer';
 
 const createNoopStorage = () => {
   return {

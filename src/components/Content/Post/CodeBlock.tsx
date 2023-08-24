@@ -2,7 +2,7 @@ import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
-import { codeBlockColor } from '@/data';
+import { codeBlockColor } from '@/src/data';
 
 interface Props {
   title?: string;

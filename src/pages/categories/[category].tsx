@@ -1,9 +1,9 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { Post, allPosts } from '@contentlayer';
-import { getCategories } from '@/utils/mdx';
-import { AppLayout } from '@/layouts';
-import { PostList } from '@/components/Content/Main';
+import { getCategories } from '@/src/utils/mdx';
+import { AppLayout } from '@/src/layouts';
+import { PostList } from '@/src/components/Content/Main';
 
 interface Props {
   posts: Post[];

@@ -7,48 +7,54 @@
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
     "paths": {
-      "@contentlayer": [
-        "./.contentlayer/generated"
-      ],
       "@/*": [
-        "./src/*"
+        "./*"
       ],
-      "@/components/*": [
-        "./src/components/*"
-      ],
-      "@/store/*": [
-        "./src/store/*"
-      ],
-      "@/styles/*": [
-        "./src/styles/*"
-      ],
-      "@/images/*": [
-        "./src/images/*"
-      ],
-      "@/hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@/reducers/*": [
-        "./src/reducers/*"
-      ],
-      "@/utils/*": [
-        "./src/utils/*"
-      ],
-      "@/pages/*": [
-        "src/pages/*"
-      ],
-      "@/data/*": [
-        "./src/data/*"
-      ],
-      "@/layouts/*": [
-        "./src/layouts/*"
-      ],
-      "@/actions/*": [
-        "./src/actions/*"
-      ],
-      "@/types/*": [
-        "./src/types/*"
+      "contentlayer/generated": [
+        "./.contentlayer/generated"
       ]
+      // "@/*": [
+      //   "./src/*"
+      // ],
+      // "@/components/*": [
+      //   "./src/components/*"
+      // ],
+      // "@/store/*": [
+      //   "./src/store/*"
+      // ],
+      // "@/styles/*": [
+      //   "./src/styles/*"
+      // ],
+      // "@/images/*": [
+      //   "./src/images/*"
+      // ],
+      // "@/hooks/*": [
+      //   "./src/hooks/*"
+      // ],
+      // "@/reducers/*": [
+      //   "./src/reducers/*"
+      // ],
+      // "@/utils/*": [
+      //   "./src/utils/*"
+      // ],
+      // "@/pages/*": [
+      //   "src/pages/*"
+      // ],
+      // "@/data/*": [
+      //   "./src/data/*"
+      // ],
+      // "@/layouts/*": [
+      //   "./src/layouts/*"
+      // ],
+      // "@/actions/*": [
+      //   "./src/actions/*"
+      // ],
+      // "@/types/*": [
+      //   "./src/types/*"
+      // ],
+      // "@contentlayer": [
+      //   "./.contentlayer/generated"
+      // ],
     },
     "lib": [
       "dom",

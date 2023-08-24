@@ -2,10 +2,10 @@ import React from 'react';
 import tw, { css } from 'twin.macro';
 import { Post } from '@contentlayer';
 import { Icon } from '@iconify/react';
-import { useReSize } from '@/hooks';
-import { A, H } from '@/components/Base';
-import { setCover } from '@/utils';
-import { setDate } from '@/utils/date';
+import { useReSize } from '@/src/hooks';
+import { A, H } from '@/src/components/Base';
+import { setCover } from '@/src/utils';
+import { setDate } from '@/src/utils/date';
 
 interface Props {
   post: Post;

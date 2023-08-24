@@ -1,10 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
-import { Providers } from '@/layouts';
-import '@/styles/tailwind.scss';
+import { Providers } from '@/src/layouts';
+import '@/src/styles/tailwind.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import '@/styles/code-block.scss';
+import '@/src/styles/code-block.scss';
 
 const App = ({ Component, pageProps, }: AppProps) => (
   <Providers>

@@ -3,9 +3,9 @@ import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
 import { Post } from '@contentlayer';
-import { A } from '@/components/Base';
+import { A } from '@/src/components/Base';
 import { PageNumber } from './PageNumber';
-import { configData } from '@/data';
+import { configData } from '@/src/data';
 import { PostPageQuery } from './PostList';
 
 interface Props {

@@ -2,7 +2,7 @@ import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
-import { useReSize } from '@/hooks';
+import { useReSize } from '@/src/hooks';
 
 interface Props {
   name: string;

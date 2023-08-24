@@ -1,6 +1,6 @@
 import React from 'react';
 import tw, { css } from 'twin.macro';
-import { AppLayout } from '@/layouts';
+import { AppLayout } from '@/src/layouts';
 
 const NotPound404 = () => {
   const style = {

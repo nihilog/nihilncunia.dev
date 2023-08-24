@@ -1,9 +1,9 @@
 import React from 'react';
 import { Post, allPosts } from '@contentlayer';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { AppLayout } from '@/layouts';
-import { PostList } from '@/components/Content/Main';
-import { getTags } from '@/utils/mdx';
+import { AppLayout } from '@/src/layouts';
+import { PostList } from '@/src/components/Content/Main';
+import { getTags } from '@/src/utils/mdx';
 
 interface Props {
   tag: string;

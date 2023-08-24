@@ -1,5 +1,5 @@
-import { IConfigData } from '@/types/site.types';
-import { setCover } from '@/utils';
+import { IConfigData } from '@/src/types/site.types';
+import { setCover } from '@/src/utils';
 
 export const configData: IConfigData = {
   title: '니힐로그 시즌3',

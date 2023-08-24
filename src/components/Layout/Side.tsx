@@ -8,10 +8,10 @@ import { Icon } from '@iconify/react';
 import { allPosts } from '@contentlayer';
 import { CategoryItem } from '../Content';
 import { Nav } from './Nav';
-import { linksData } from '@/data';
-import { getCategories, getSeries } from '@/utils/mdx';
-import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
-import { toggleMenu } from '@/reducers/dark.reducer';
+import { linksData } from '@/src/data';
+import { getCategories, getSeries } from '@/src/utils/mdx';
+import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
+import { toggleMenu } from '@/src/reducers/dark.reducer';
 import { SeriesItem } from '../Content/SeriesItem';
 
 interface Props {

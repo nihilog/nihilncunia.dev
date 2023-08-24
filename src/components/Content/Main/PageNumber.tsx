@@ -1,7 +1,7 @@
 import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
-import { A } from '@/components/Base';
+import { A } from '@/src/src/components/Base';
 
 interface Props {
   number: number;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from './rtk';
-import { setWindowSize } from '@/reducers/dark.reducer';
+import { setWindowSize } from '@/src/reducers/dark.reducer';
 
 export type SizeState = {
   width: number;

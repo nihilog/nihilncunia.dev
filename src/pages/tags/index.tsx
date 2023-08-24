@@ -2,9 +2,9 @@ import React from 'react';
 import tw, { css } from 'twin.macro';
 import { GetStaticProps } from 'next';
 import { Icon } from '@iconify/react';
-import { AppLayout } from '@/layouts';
-import { ITags, getTags } from '@/utils/mdx';
-import { A, H } from '@/components/Base';
+import { AppLayout } from '@/src/layouts';
+import { ITags, getTags } from '@/src/utils/mdx';
+import { A, H } from '@/src/components/Base';
 
 interface Props {
   tags: ITags[];

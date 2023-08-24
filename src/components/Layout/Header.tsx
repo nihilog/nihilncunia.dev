@@ -6,9 +6,9 @@ import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
-import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
-import { setIsOpen, toggleDarkMode, toggleMenu } from '@/reducers/dark.reducer';
-import { configData } from '@/data';
+import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
+import { setIsOpen, toggleDarkMode, toggleMenu } from '@/src/reducers/dark.reducer';
+import { configData } from '@/src/data';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;

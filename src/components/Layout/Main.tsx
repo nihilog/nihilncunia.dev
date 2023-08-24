@@ -1,9 +1,9 @@
 import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
-import { useReSize } from '@/hooks';
+import { useReSize } from '@/src/hooks';
 import { Side } from './Side';
-import { Content } from '@/layouts';
+import { Content } from '@/src/layouts';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;

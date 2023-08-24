@@ -1,8 +1,8 @@
 import React from 'react';
 import { Post, allPosts } from '@contentlayer';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { AppLayout } from '@/layouts';
-import { PostMD } from '@/components/Content/MDX';
+import { AppLayout } from '@/src/layouts';
+import { PostMD } from '@/src/components/Content/MDX';
 
 interface Props {
   post: Post;

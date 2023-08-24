@@ -1,7 +1,6 @@
 import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 import remarkGfm from 'remark-gfm';
 import remarkUnwrapImages from 'remark-unwrap-images';
-import rehypePrism from 'rehype-prism-plus';
 import remarkCodeTitles from 'remark-code-titles';
 import rehypePrettyCode, { Options } from 'rehype-pretty-code';
 
