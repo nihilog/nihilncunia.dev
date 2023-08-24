@@ -1,7 +1,7 @@
 import React from 'react';
 import tw, { css } from 'twin.macro';
-import { Post } from '@contentlayer';
 import { Icon } from '@iconify/react';
+import { Post } from '@/.contentlayer/generated';
 import { useReSize } from '@/src/hooks';
 import { A, H } from '@/src/components/Base';
 import { setCover } from '@/src/utils';

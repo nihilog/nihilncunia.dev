@@ -1,6 +1,6 @@
 import React from 'react';
-import { Post, allPosts } from '@contentlayer';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { Post, allPosts } from '@/.contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
 import { getSeries } from '@/src/utils/mdx';

@@ -1,4 +1,4 @@
-import { allPosts } from '@contentlayer';
+import { allPosts } from '@/.contentlayer/generated';
 
 type ISeries = {
   name: string;
