@@ -7,17 +7,17 @@ interface Props {
   styles?: TwStyle | SerializedStyles;
 }
 
-export function Code({ children, styles, }: Props) {
+export function Em({ children, styles, }: Props) {
   const style = {
     default: css([
-      tw` px-1 break-all bg-blue-100 rounded-1 text-blue-700 dark:( text-yellow-300 bg-black-600 ) `,
+      tw` text-inherit mr-1 `,
       styles,
     ]),
   };
 
   return (
     <>
-      <code css={style.default}>{children}</code>
+      <em css={style.default}>{children}</em>
     </>
   );
 }

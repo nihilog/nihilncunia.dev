@@ -83,7 +83,7 @@ export function Header({ styles, }: Props) {
     ]),
     toggleDark: css([
       tw` w-[45px] aspect-square flex items-center justify-center bg-white shrink-0 dark:bg-black-500 `,
-      tw` text-black-base dark:text-white [svg]:( text-[150%] ) `,
+      tw` text-blue-600 dark:text-yellow-300 [svg]:( text-[150%] ) `,
     ]),
     menu: css([
       tw` w-[45px] aspect-square flex items-center justify-center bg-white border-black-200 shrink-0 dark:( border-black-400 bg-black-500 text-white ) `,

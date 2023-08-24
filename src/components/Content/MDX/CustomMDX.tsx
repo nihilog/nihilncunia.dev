@@ -2,7 +2,7 @@ import React from 'react';
 import { MDXComponents } from 'mdx/types';
 import { Footer } from '@/components/Layout';
 import {
-  CodeBlock, Image, Message, Q, Youtube
+  CodeBlock, Em, Image, Li, Message, Ol, Q, Strike, Strong, Ul, Youtube
 } from '../Post';
 import {
   A, Code, H, P
@@ -36,6 +36,24 @@ export const CustomMDX: MDXComponents = {
   ),
   img: (props) => (
     <Image src={props.src} alt={props.alt} />
+  ),
+  ol: ({ children, }) => (
+    <Ol>{children}</Ol>
+  ),
+  ul: ({ children, }) => (
+    <Ul>{children}</Ul>
+  ),
+  li: ({ children, }) => (
+    <Li>{children}</Li>
+  ),
+  em: ({ children, }) => (
+    <Em>{children}</Em>
+  ),
+  strong: ({ children, }) => (
+    <Strong>{children}</Strong>
+  ),
+  del: ({ children, }) => (
+    <Strike>{children}</Strike>
   ),
   A,
   Footer,

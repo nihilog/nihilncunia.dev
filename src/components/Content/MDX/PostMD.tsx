@@ -10,6 +10,7 @@ import { A, H } from '@/components/Base';
 import { dateFormat } from '@/utils/date';
 import { setCover } from '@/utils';
 import { Ad, PostItem } from '../Main';
+import { useAppSelector } from '@/hooks/rtk';
 
 interface Props {
   post: Post;
@@ -18,6 +19,10 @@ interface Props {
 }
 
 export function PostMD({ post, content, styles, }: Props) {
+  const isDark = useAppSelector(
+    (state) => state.dark.isDark
+  );
+
   const MDXComponent = useMDXComponent(content);
 
   const cover = post.cover || 'https://drive.google.com/file/d/1iF4WE-zae-TyU4A4s-yrqhHU4XQyPhfR/view?usp=drive_link';
@@ -49,6 +54,13 @@ export function PostMD({ post, content, styles, }: Props) {
       tw` transition-all duration-200 `,
     ]),
     infoTitle: tw` text-black-base shrink-0 basis-[60px] mf-sm:basis-[80px] mf-md:basis-[90px] mf-lg:basis-[100px] dark:text-white `,
+    postNavi: css([
+      tw` mt-5 p-3 text-white bg-black-base font-black flex flex-row gap-1 items-center shadow-md mb-2 dark:( bg-black-600 text-yellow-300 ) `,
+    ]),
+    section: tw` flex items-center gap-2 pt-2 text-black-base dark:text-white `,
+    giscus: css([
+      tw` p-3 border border-black-200 shadow-md text-black-base bg-white dark:( border-black-400 bg-black-500 text-white ) `,
+    ]),
   };
 
   return (
@@ -72,7 +84,7 @@ export function PostMD({ post, content, styles, }: Props) {
               tw='border border-black-base/70 dark:border-white/50'
             />
           </div>
-          <div tw='flex items-center gap-2 pt-2 text-black-base dark:text-white'>
+          <div css={style.section}>
             <div css={style.infoTitle}>카테고리</div>
             <A
               href={`/categories/${post.category}`}
@@ -81,7 +93,7 @@ export function PostMD({ post, content, styles, }: Props) {
               <Icon icon='material-symbols:folder' /> {post.category}
             </A>
           </div>
-          <div tw='flex items-center gap-2 pt-2 text-black-base dark:text-white'>
+          <div css={style.section}>
             <div css={style.infoTitle}>태그</div>
             {post.tags.length > 0 && (
               <div tw='flex-1 shrink-0 flex items-center gap-2 flex-wrap'>
@@ -93,11 +105,11 @@ export function PostMD({ post, content, styles, }: Props) {
               </div>
             )}
           </div>
-          <div tw='flex items-center gap-2 pt-2 text-black-base dark:text-white'>
+          <div css={style.section}>
             <div css={style.infoTitle}>작성일자</div>
             <div>{dateFormat(post.created, 'YYYY-MM-DD HH:mm')}</div>
           </div>
-          <div tw='flex items-center gap-2 pt-2 text-black-base dark:text-white'>
+          <div css={style.section}>
             <div css={style.infoTitle}>수정일자</div>
             <div>{dateFormat(post.updated, 'YYYY-MM-DD HH:mm')}</div>
           </div>
@@ -109,7 +121,7 @@ export function PostMD({ post, content, styles, }: Props) {
           <MDXComponent components={CustomMDX} />
         </div>
 
-        <div tw='p-3 border border-black-200 shadow-md text-black-base bg-white'>
+        <div css={style.giscus}>
           <Giscus
             id='comments'
             repo='nihilog/nihilncunia.dev'
@@ -120,8 +132,8 @@ export function PostMD({ post, content, styles, }: Props) {
             strict='0'
             reactionsEnabled='1'
             emitMetadata='0'
-            inputPosition='bottom'
-            theme='preferred_color_scheme'
+            inputPosition='top'
+            theme={isDark ? 'dark_dimmed' : 'light'}
             lang='ko'
             loading='lazy'
           />
@@ -131,7 +143,7 @@ export function PostMD({ post, content, styles, }: Props) {
 
         {prevPost && (
           <>
-            <div tw='mt-5 p-3 text-white bg-black-base font-black flex flex-row gap-1 items-center shadow-md mb-2'>
+            <div css={style.postNavi}>
               <Icon icon='ic:twotone-keyboard-double-arrow-left' fontSize='130%' /> 이전 포스트
             </div>
             <PostItem post={prevPost} direction='left' />
@@ -140,7 +152,7 @@ export function PostMD({ post, content, styles, }: Props) {
 
         {nextPost && (
           <>
-            <div tw='mt-5 p-3 text-white bg-black-base font-black flex flex-row gap-1 items-center justify-end shadow-md mb-2'>
+            <div css={[ style.postNavi, tw` justify-end `, ]}>
               다음 포스트 <Icon icon='ic:twotone-keyboard-double-arrow-right' fontSize='130%' />
             </div>
             <PostItem post={nextPost} />

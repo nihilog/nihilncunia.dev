@@ -12,7 +12,7 @@ export default function PostPage({ post, }: Props) {
   return (
     <>
       <AppLayout
-        title='글'
+        title={post.title}
         type='article'
         created={post.created}
         updated={post.updated}
