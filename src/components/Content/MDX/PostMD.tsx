@@ -4,7 +4,7 @@ import { SerializedStyles } from '@emotion/react';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 import Giscus from '@giscus/react';
 import { Icon } from '@iconify/react';
-import { Post, allPosts } from '@/.contentlayer/generated';
+import { Post, allPosts } from 'contentlayer/generated';
 import { CustomMDX } from './CustomMDX';
 import { A, H } from '@/src/components/Base';
 import { dateFormat } from '@/src/utils/date';

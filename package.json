@@ -16,11 +16,11 @@
     "remove": "rm -rf node_modules/.cache && rm -rf build/",
     "preserve": "rm -rf ./.contentlayer",
     "serve": "yarn run preserve && yarn run remove && yarn run open && next dev",
-    "start": "yarn run preserve && yarn run remove && next build && yarn run open && next start",
+    "start": "yarn run preserve && yarn run build && yarn run open && next start",
     "build": "yarn run remove && next build",
     "backupgit": "mv ../web/.git ../backup",
     "restoregit": "mv ../backup/.git ../web",
-    "export": "yarn run backupgit && yarn run remove && next build && next export -o ../web/ && touch ../web/.nojekyll && yarn run restoregit && cd ../web && git add .",
+    "export": "yarn run backupgit && yarn run build && next export -o ../web/ && touch ../web/.nojekyll && yarn run restoregit && cd ../web && git add .",
     "clean": "yarn cache clean",
     "open": "start http://localhost:3000"
   },

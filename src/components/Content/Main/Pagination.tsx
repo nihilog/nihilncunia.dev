@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
-import { Post } from '@/.contentlayer/generated';
+import { Post } from 'contentlayer/generated';
 import { A } from '@/src/components/Base';
 import { PageNumber } from './PageNumber';
 import { configData } from '@/src/data';

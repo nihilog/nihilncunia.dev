@@ -4,7 +4,7 @@ import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { Icon } from '@iconify/react';
-import { Post } from '@/.contentlayer/generated';
+import { Post } from 'contentlayer/generated';
 import { configData } from '@/src/data';
 import { A, H } from '@/src/components/Base';
 import { Pagination } from './Pagination';

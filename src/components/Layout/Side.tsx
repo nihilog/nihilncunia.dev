@@ -5,7 +5,7 @@ import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
-import { allPosts } from '@/.contentlayer/generated';
+import { allPosts } from 'contentlayer/generated';
 import { CategoryItem } from '../Content';
 import { Nav } from './Nav';
 import { linksData } from '@/src/data';
