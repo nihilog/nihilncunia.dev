@@ -1,17 +1,17 @@
 {
-  "name": "nihil-next-mdx-template",
+  "name": "@nihilncunia/nihilogv3",
   "version": "1.0.0",
   "description": "Nextjs 편하게 쓰려고 만든 템플릿. 타입스크립트 기본 지원.",
   "main": "index.js",
   "proxy": "http://localhost:4000",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nihil-template/nihil-next-template.git"
+    "url": "git+https://github.com/nihilog/nihilogv3.git"
   },
   "bugs": {
-    "url": "https://github.com/nihil-template/nihil-next-template/issues"
+    "url": "https://github.com/nihilog/nihilogv3/issues"
   },
-  "homepage": "https://github.com/nihil-template/nihil-next-template#readme",
+  "homepage": "https://github.com/nihilog/nihilogv3#readme",
   "scripts": {
     "remove": "rm -rf node_modules/.cache && rm -rf build/",
     "preserve": "rm -rf ./.contentlayer",
