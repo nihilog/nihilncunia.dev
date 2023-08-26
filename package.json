@@ -17,12 +17,15 @@
     "preserve": "rm -rf ./.contentlayer",
     "serve": "yarn run preserve && yarn run remove && yarn run open && next dev",
     "start": "yarn run preserve && yarn run build && yarn run open && next start",
-    "build": "yarn run preserve && yarn run remove && next build && next-sitemap",
+    "build": "yarn run preserve && yarn run remove && next build",
+    "postbuild": "next-sitemap",
     "backupgit": "mv ../web/.git ../backup",
     "restoregit": "mv ../backup/.git ../web",
     "export": "yarn run backupgit && yarn run build && next export -o ../web/ && touch ../web/.nojekyll && yarn run restoregit && cd ../web && git add .",
     "clean": "yarn cache clean",
-    "open": "start http://localhost:3000"
+    "open": "start http://localhost:3000",
+    "v:build": "vercel build",
+    "v:prod": "vercel --prod"
   },
   "keywords": [],
   "author": "NIHILncunia",
@@ -59,7 +62,7 @@
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/mdx": "^2.0.7",
-    "@types/node": "^20.5.4",
+    "@types/node": "^20.5.6",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/uuid": "^9.0.2",
@@ -68,7 +71,7 @@
     "autoprefixer": "^10.4.15",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-twin": "^1.1.0",
-    "eslint": "^8.47.0",
+    "eslint": "^8.48.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-next": "^13.4.19",
     "eslint-plugin-html": "^7.1.0",
@@ -77,7 +80,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.4.28",
-    "rehype": "^12.0.1",
+    "rehype": "^13.0.0",
     "rehype-code-titles": "^1.2.0",
     "rehype-pretty-code": "^0.10.0",
     "rehype-prism-plus": "^1.6.3",
@@ -89,7 +92,7 @@
     "shiki": "^0.14.3",
     "tailwindcss": "^3.3.3",
     "twin.macro": "^3.4.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "babelMacros": {
     "twin": {
