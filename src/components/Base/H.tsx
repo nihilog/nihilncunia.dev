@@ -23,10 +23,14 @@ export function H({
 
   const style = {
     default: css([
-      tw` leading-[1] text-black-base dark:text-white `,
+      tw` leading-[1.2] text-black-base dark:text-white [span]:( flex items-center gap-2 text-[70%] mf-sm:text-[80%] mf-md:text-[90%] mf-lg:text-[100%] font-black ) `,
       type === 'post' && tw` font-black p-2 px-3 border-l-[12px] border-blue-600 dark:border-yellow-300 `,
       type === 'normal' && tw` font-black `,
-      type === 'postlist' && tw` text-justify break-all mt-[-10px] `,
+      type === 'postlist' && [
+        tw` [a]:( text-justify break-all p-2 border border-transparent bg-blue-100 flex items-center justify-start text-[60%] mf-sm:text-[70%] text-blue-600 transition-all duration-200 flex-1 shrink-0 ) `,
+        tw` [a:hover]:( bg-blue-500 text-white ) `,
+        tw` dark:( [a]:( border-yellow-300/30 text-yellow-300 bg-black-600 hover:( bg-yellow-300 text-black-base ) ) ) `,
+      ],
       size[Heading],
       styles,
     ]),
@@ -34,7 +38,9 @@ export function H({
 
   return (
     <>
-      <Heading css={style.default}>{children}</Heading>
+      <Heading css={style.default}>
+        <span>{children}</span>
+      </Heading>
     </>
   );
 }

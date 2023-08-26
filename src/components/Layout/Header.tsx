@@ -6,9 +6,11 @@ import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
 import { setIsOpen, toggleDarkMode, toggleMenu } from '@/src/reducers/dark.reducer';
 import { configData } from '@/src/data';
+import { textStyles } from '@/src/styles';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
@@ -101,7 +103,14 @@ export function Header({ styles, }: Props) {
         {width >= 1024 && (
           <div tw='mt-2 p-3 bg-white border border-black-200 shadow-md dark:( border-black-400 bg-black-500 )'>
             <Link href='/' aria-label='홈'>
-              <img src={imageSrc} alt='니힐로그 로고' />
+              <Image
+                src={imageSrc}
+                alt='니힐로그 로고'
+                width={0}
+                height={0}
+                layout='responsive'
+                tw='w-[400px]! h-auto'
+              />
             </Link>
           </div>
         )}
@@ -111,6 +120,7 @@ export function Header({ styles, }: Props) {
         <div css={style.headerBottom} ref={bottomRef}>
           {width < 1024 && (
             <button css={style.menu} onClick={onClickOpen}>
+              <span css={textStyles.hidden}>메뉴버튼</span>
               <Icon icon='mingcute:menu-fill' />
             </button>
           )}
@@ -122,6 +132,9 @@ export function Header({ styles, }: Props) {
             </p>
           </div>
           <button onClick={onClickDarkMode} css={style.toggleDark}>
+            <span css={textStyles.hidden}>
+              {isDark ? '라이트 모드로 보기' : '다크 모드로 보기'}
+            </span>
             <Icon icon={icon} />
           </button>
         </div>

@@ -7,7 +7,7 @@ export type ITags = {
 
 export const getTags = () => {
   const tagsArray = allPosts.map((post) => (post.tags));
-  let tags = [];
+  let tags: string[] = [];
 
   tagsArray.forEach((tag) => {
     tags = tags.concat(tag);

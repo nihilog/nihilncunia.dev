@@ -5,11 +5,10 @@ import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
-import { allPosts } from 'contentlayer/generated';
 import { CategoryItem } from '../Content';
 import { Nav } from './Nav';
 import { linksData } from '@/src/data';
-import { getCategories, getSeries } from '@/src/utils/mdx';
+import { getCategories, getListMetadata, getSeries } from '@/src/utils/mdx';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
 import { toggleMenu } from '@/src/reducers/dark.reducer';
 import { SeriesItem } from '../Content/SeriesItem';
@@ -23,7 +22,7 @@ export function Side({ styles, }: Props) {
   // // const [ position, setPosition, ] = useState('0%');
   const { isOpen, width, } = useAppSelector((state) => state.dark);
 
-  const postsCount = allPosts.length;
+  const postsCount = getListMetadata().length;
   const categories = getCategories();
   const serieses = getSeries();
   const dispatch = useAppDispatch();

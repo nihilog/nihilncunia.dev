@@ -6,18 +6,18 @@
   "proxy": "http://localhost:4000",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nihilog/nihilogv3.git"
+    "url": "git+https://github.com/nihilog/nihilncunia.dev.git"
   },
   "bugs": {
-    "url": "https://github.com/nihilog/nihilogv3/issues"
+    "url": "https://github.com/nihilog/nihilncunia.dev/issues"
   },
-  "homepage": "https://github.com/nihilog/nihilogv3#readme",
+  "homepage": "https://github.com/nihilog/nihilncunia.dev#readme",
   "scripts": {
     "remove": "rm -rf node_modules/.cache && rm -rf build/",
     "preserve": "rm -rf ./.contentlayer",
     "serve": "yarn run preserve && yarn run remove && yarn run open && next dev",
     "start": "yarn run preserve && yarn run build && yarn run open && next start",
-    "build": "yarn run remove && next build",
+    "build": "yarn run preserve && yarn run remove && next build && next-sitemap",
     "backupgit": "mv ../web/.git ../backup",
     "restoregit": "mv ../backup/.git ../web",
     "export": "yarn run backupgit && yarn run build && next export -o ../web/ && touch ../web/.nojekyll && yarn run restoregit && cd ../web && git add .",
@@ -48,6 +48,7 @@
     "react-youtube": "^10.1.0",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
+    "sharp": "^0.32.5",
     "universal-cookie": "^6.1.0",
     "uuid": "^9.0.0"
   },

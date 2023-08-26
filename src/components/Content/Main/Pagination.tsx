@@ -7,9 +7,10 @@ import { A } from '@/src/components/Base';
 import { PageNumber } from './PageNumber';
 import { configData } from '@/src/data';
 import { PostPageQuery } from './PostList';
+import { textStyles } from '@/src/styles';
 
 interface Props {
-  posts: Post[];
+  posts: Partial<Post>[];
   query: PostPageQuery;
   styles?: TwStyle | SerializedStyles;
 }
@@ -68,12 +69,14 @@ export function Pagination({ posts, query, styles, }: Props) {
         <div css={style.pagination}>
           {isFirst ? (
             <>
-              <span aria-label='first' css={style.disable}>
+              <div css={style.disable}>
+                <span css={textStyles.hidden}>처음 페이지</span>
                 <Icon icon='material-symbols:keyboard-double-arrow-left' fontSize='1.3rem' />
-              </span>
-              <span aria-label='prev' css={style.disable}>
+              </div>
+              <div aria-label='prev' css={style.disable}>
+                <span css={textStyles.hidden}>이전 페이지</span>
                 <Icon icon='material-symbols:chevron-left' fontSize='1.3rem' />
-              </span>
+              </div>
             </>
           ) : (
             <>
@@ -82,6 +85,7 @@ export function Pagination({ posts, query, styles, }: Props) {
                 label='first'
                 styles={style.enable}
               >
+                <span css={textStyles.hidden}>처음 페이지</span>
                 <Icon icon='material-symbols:keyboard-double-arrow-left' fontSize='1.3rem' />
               </A>
               <A
@@ -89,6 +93,7 @@ export function Pagination({ posts, query, styles, }: Props) {
                 label='prev'
                 styles={style.enable}
               >
+                <span css={textStyles.hidden}>이전 페이지</span>
                 <Icon icon='material-symbols:chevron-left' fontSize='1.3rem' />
               </A>
             </>
@@ -98,12 +103,14 @@ export function Pagination({ posts, query, styles, }: Props) {
           ))}
           {isLast ? (
             <>
-              <span aria-label='next' css={style.disable}>
+              <div aria-label='next' css={style.disable}>
+                <span css={textStyles.hidden}>다음 페이지</span>
                 <Icon icon='material-symbols:chevron-right' fontSize='1.3rem' />
-              </span>
-              <span aria-label='last' css={style.disable}>
+              </div>
+              <div aria-label='last' css={style.disable}>
+                <span css={textStyles.hidden}>마지막 페이지</span>
                 <Icon icon='material-symbols:keyboard-double-arrow-right' fontSize='1.3rem' />
-              </span>
+              </div>
             </>
           ) : (
             <>
@@ -112,6 +119,7 @@ export function Pagination({ posts, query, styles, }: Props) {
                 label='next'
                 styles={style.enable}
               >
+                <span css={textStyles.hidden}>다음 페이지</span>
                 <Icon icon='material-symbols:chevron-right' fontSize='1.3rem' />
               </A>
               <A
@@ -119,6 +127,7 @@ export function Pagination({ posts, query, styles, }: Props) {
                 label='last'
                 styles={style.enable}
               >
+                <span css={textStyles.hidden}>마지막 페이지</span>
                 <Icon icon='material-symbols:keyboard-double-arrow-right' fontSize='1.3rem' />
               </A>
             </>

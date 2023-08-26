@@ -27,9 +27,15 @@ const options: Options = {
   theme: 'github-dark',
 };
 
+const startYear = 2022;
+const endYear = new Date().getFullYear();
+const yearArray = new Array(1 + (endYear - startYear))
+  .fill(startYear)
+  .map((year: number, index) => (year + index).toString());
+
 export default makeSource({
   contentDirPath: 'posts',
-  contentDirInclude: [ '2023', '2024', '2025', ],
+  contentDirInclude: yearArray,
   documentTypes: [ Post, ],
   mdx: {
     remarkPlugins: [

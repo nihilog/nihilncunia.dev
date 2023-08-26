@@ -1,20 +1,20 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { Post } from 'contentlayer/generated';
+import { getArchive, getListMetadata } from '@/src/utils/mdx';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { getListMetadata, getSeries } from '@/src/utils/mdx';
 
 interface Props {
-  series: string;
-  posts: Post[];
+  posts: Partial<Post>[];
+  archive: string;
 }
 
-export default function SeriesPage({ series, posts, }: Props) {
+export default function ArchiveItemPage({ posts, archive, }: Props) {
   return (
     <>
-      <AppLayout title={`"${series}" 시리즈 관련 포스트`}>
-        <PostList listName={`"${series}" 시리즈 관련 포스트 총 ${posts.length}건`} posts={posts} series />
+      <AppLayout title={`${archive} 관련 포스트`}>
+        <PostList listName={`"${archive}" 관련 포스트 총 ${posts.length}건`} posts={posts} />
       </AppLayout>
     </>
   );
@@ -22,9 +22,9 @@ export default function SeriesPage({ series, posts, }: Props) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: getSeries().map((item) => ({
+    paths: getArchive().map((item) => ({
       params: {
-        series: item.name,
+        archive: item.name,
       },
     })),
     fallback: false,
@@ -33,19 +33,20 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 type Params = {
   params: {
-    series: string;
+    archive: string;
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
   const posts = getListMetadata()
-    .filter((post) => post.seriesName === params.series)
-    .sort((a, b) => a.seriesOrder - b.seriesOrder);
+    .filter((post) => (
+      post.created.startsWith(params.archive)
+    ));
 
   return {
     props: {
       posts,
-      series: params.series,
+      archive: params.archive,
     },
   };
 };

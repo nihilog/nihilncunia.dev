@@ -1,11 +1,12 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
-import { Post, allPosts } from 'contentlayer/generated';
+import { Post } from 'contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
+import { getListMetadata } from '../utils/mdx';
 
 interface Props {
-  posts: Post[];
+  posts: Partial<Post>[];
 }
 
 export default function IndexPage({ posts, }: Props) {
@@ -19,9 +20,7 @@ export default function IndexPage({ posts, }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = allPosts
-    .sort((a, b) => b.id - a.id)
-    .slice(0, 6);
+  const posts = getListMetadata(0, 6);
 
   return {
     props: {

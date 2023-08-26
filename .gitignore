@@ -107,6 +107,12 @@ dist
 # 웹스톰 설정 파일
 .idea/
 
-
 # Contentlayer
 .contentlayer
+
+# Sitemap file
+sitemap.xml
+sitemap-0.xml
+
+# Robots.txt
+robots.txt

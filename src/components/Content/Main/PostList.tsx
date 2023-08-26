@@ -12,7 +12,7 @@ import { PostItem } from './PostItem';
 import { setCover } from '@/src/utils';
 
 interface Props {
-  posts: Post[];
+  posts: Partial<Post>[];
   listName: string;
   page?: ('index' | 'list');
   series?: boolean;
@@ -72,9 +72,7 @@ export function PostList({
                 <div tw='flex flex-col gap-2 flex-1 shrink-0'>
                   <div>
                     <H level='h3' type='postlist'>
-                      <A href={`/posts/${post.id}`}>
-                        <span tw='text-[60%] mf-sm:text-[70%]'>{post.title}</span>
-                      </A>
+                      <A href={`/posts/${post.id}`} type='postlist'>{post.title}</A>
                     </H>
                   </div>
                   <div tw='flex-1 shrink-0 text-[90%] text-black-base dark:text-white'>{post.description}</div>

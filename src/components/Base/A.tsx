@@ -8,7 +8,7 @@ interface Props {
   href: string;
   children: React.ReactNode;
   label?: string;
-  type?: ('post' | 'normal');
+  type?: ('post' | 'normal' | 'postlist');
   external?: boolean;
   styles?: TwStyle | SerializedStyles;
 }
@@ -41,17 +41,23 @@ export function A({
           {children} <Icon icon='iconamoon:link-external-bold' fontSize='110%' />
         </a>
       ) : (
-        <Link href={href} css={style.default} aria-label={label}>
-          {type === 'normal' ? (
-            <>
-              {children}
-            </>
-          ) : (
-            <>
-              <Icon icon='mingcute:link-fill' fontSize='110%' /> {children}
-            </>
-          )}
-        </Link>
+        type === 'postlist' ? (
+          <Link href={href}>
+            {children}
+          </Link>
+        ) : (
+          <Link href={href} css={style.default} aria-label={label}>
+            {type === 'normal' ? (
+              <>
+                {children}
+              </>
+            ) : (
+              <>
+                <Icon icon='mingcute:link-fill' fontSize='110%' /> {children}
+              </>
+            )}
+          </Link>
+        )
       )}
     </>
   );

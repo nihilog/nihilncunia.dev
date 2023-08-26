@@ -1,13 +1,13 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Post, allPosts } from 'contentlayer/generated';
+import { Post } from 'contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { getTags } from '@/src/utils/mdx';
+import { getListMetadata, getTags } from '@/src/utils/mdx';
 
 interface Props {
   tag: string;
-  posts: Post[];
+  posts: Partial<Post>[];
 }
 
 export default function TagPage({ tag, posts, }: Props) {
@@ -38,7 +38,7 @@ type Params = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
-  const posts = allPosts
+  const posts = getListMetadata()
     .filter((post) => post.tags.includes(params.tag))
     .sort((a, b) => b.id - a.id);
 

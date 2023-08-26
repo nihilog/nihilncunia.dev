@@ -44,9 +44,6 @@ export function Li({ children, styles, }: Props) {
     ]),
   };
 
-  console.log(children);
-  console.log(cond);
-
   return (
     <>
       <li ref={liRef} css={style.default}>

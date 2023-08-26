@@ -1,18 +1,27 @@
+const siteUrl = 'https://nihilncunia.dev';
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://nihilncunia.dev',
+  siteUrl,
   generateRobotsTxt: true,
   sitemapSize: 7000,
   changefreq: 'daily',
   priority: 1,
-  exclude: [],
+  exclude: [
+    '/404',
+    '/server-sitemap.xml',
+  ],
   robotsTxtOptions: {
     policies: [
       {
         userAgent: '*',
-        allow: '/',
-        disallow: [],
+        disallow: [ '/404', ],
       },
+      { userAgent: '*', allow: '/', },
+    ],
+    additionalSitemaps: [
+      `${siteUrl}/sitemap.xml`,
+      `${siteUrl}/server-sitemap.xml`,
     ],
   },
 };

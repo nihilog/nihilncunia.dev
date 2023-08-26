@@ -1,7 +1,7 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Post, allPosts } from 'contentlayer/generated';
-import { getCategories } from '@/src/utils/mdx';
+import { Post } from 'contentlayer/generated';
+import { getCategories, getListMetadata } from '@/src/utils/mdx';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
 
@@ -38,7 +38,7 @@ type Params = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
-  const posts = allPosts
+  const posts = getListMetadata()
     .filter((post) => post.category === params.category)
     .sort((a, b) => b.id - a.id);
 

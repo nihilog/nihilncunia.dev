@@ -4,13 +4,14 @@ import { SerializedStyles } from '@emotion/react';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 import Giscus from '@giscus/react';
 import { Icon } from '@iconify/react';
-import { Post, allPosts } from 'contentlayer/generated';
+import { Post } from 'contentlayer/generated';
 import { CustomMDX } from './CustomMDX';
 import { A, H } from '@/src/components/Base';
 import { dateFormat } from '@/src/utils/date';
 import { setCover } from '@/src/utils';
-import { Ad, PostItem } from '../Main';
+import { Ad, OtherPosts, PostItem } from '../Main';
 import { useAppSelector } from '@/src/hooks/rtk';
+import { getListMetadata } from '@/src/utils/mdx';
 
 interface Props {
   post: Post;
@@ -27,6 +28,7 @@ export function PostMD({ post, content, styles, }: Props) {
 
   const cover = post.cover || 'https://drive.google.com/file/d/1iF4WE-zae-TyU4A4s-yrqhHU4XQyPhfR/view?usp=drive_link';
 
+  const allPosts = getListMetadata();
   const postIndex = allPosts.reverse().findIndex((target) => target.id === post.id);
 
   const prevIndex = (postIndex - 1) < 0 ? null : (postIndex - 1);
@@ -40,7 +42,7 @@ export function PostMD({ post, content, styles, }: Props) {
       tw`  `,
       styles,
     ]),
-    post: tw` p-3 bg-white border border-black-200 dark:( bg-black-500 border-black-400 text-white ) space-y-8 mb-5 shadow-md mt-5 `,
+    post: tw` p-3 bg-white border border-b-0 border-black-200 dark:( bg-black-500 border-black-400 text-white ) space-y-8 shadow-md mt-5 `,
     postInfo: tw` p-3 bg-white border border-black-200 shadow-md mb-5 dark:( bg-black-500 border-black-400 text-white ) `,
     title: tw` p-3 bg-black-base text-white dark:( bg-black-600 text-yellow-300 ) mb-2 shadow-md `,
     category: css([
@@ -120,6 +122,8 @@ export function PostMD({ post, content, styles, }: Props) {
         <div css={style.post}>
           <MDXComponent components={CustomMDX} />
         </div>
+
+        <OtherPosts category={post.category} />
 
         <div css={style.giscus}>
           <Giscus

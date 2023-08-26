@@ -12,5 +12,5 @@ export const configData: IConfigData = {
     : 'https://nihilncunia.dev/',
   image: setCover('https://drive.google.com/file/d/1nQEoPotztnvzB75XkK_XaTsauFwNBlYo/view?usp=drive_link'),
   postPerPage: 5,
-  version: 'v0.0.0',
+  version: 'v3.0.0',
 };

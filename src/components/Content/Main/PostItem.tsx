@@ -1,18 +1,20 @@
 import React from 'react';
-import tw, { css } from 'twin.macro';
+import tw, { TwStyle, css } from 'twin.macro';
 import { Icon } from '@iconify/react';
 import { Post } from 'contentlayer/generated';
+import { SerializedStyles } from '@emotion/react';
 import { useReSize } from '@/src/hooks';
 import { A, H } from '@/src/components/Base';
 import { setCover } from '@/src/utils';
 import { setDate } from '@/src/utils/date';
 
 interface Props {
-  post: Post;
+  post: Partial<Post>;
   direction?: ('left' | 'right');
+  styles?: TwStyle | SerializedStyles;
 }
 
-export function PostItem({ post, direction = 'right', }: Props) {
+export function PostItem({ post, direction = 'right', styles, }: Props) {
   const windowSize = useReSize();
 
   const cover = post.cover || 'https://drive.google.com/file/d/1iF4WE-zae-TyU4A4s-yrqhHU4XQyPhfR/view?usp=drive_link';
@@ -21,6 +23,7 @@ export function PostItem({ post, direction = 'right', }: Props) {
     box: css([
       tw` p-3 bg-white dark:bg-black-500 flex flex-row gap-5 shadow-md border border-black-200 dark:border-black-400 `,
       windowSize.width < 600 && tw` flex-col `,
+      styles,
     ]),
     info: css([
       tw` flex flex-col gap-2 flex-1 shrink-0 `,
@@ -46,9 +49,7 @@ export function PostItem({ post, direction = 'right', }: Props) {
       <div css={style.box}>
         <div css={style.info}>
           <H level='h3' type='postlist'>
-            <A href={`/posts/${post.id}`}>
-              <span tw='text-[60%] mf-sm:text-[70%]'>{post.title}</span>
-            </A>
+            <A href={`/posts/${post.id}`} type='postlist'>{post.title}</A>
           </H>
           <p tw='flex-1 shrink-0 text-[90%] text-black-base dark:text-white'>{post.description}</p>
           <div tw='flex flex-row justify-between items-center text-black-base dark:text-white'>
