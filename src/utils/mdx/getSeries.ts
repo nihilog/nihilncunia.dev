@@ -1,4 +1,4 @@
-import { allPosts } from 'contentlayer/generated';
+import { getListMetadata } from './getListMetadata';
 
 type ISeries = {
   name: string;
@@ -6,10 +6,10 @@ type ISeries = {
 };
 
 export const getSeries = () => {
-  const categories = allPosts
-    .filter((post) => post.seriesName)
+  const categories = getListMetadata()
+    .filter((post) => post.series.name)
     .sort((a, b) => b.id - a.id)
-    .map((post) => post.seriesName);
+    .map((post) => post.series.name);
 
   return categories.reduce((pre: ISeries[], curr) => {
     const findItem = pre.find((item) => item.name === curr);

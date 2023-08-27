@@ -63,7 +63,7 @@ export function Header({ styles, }: Props) {
   }, [ isDark, ]);
 
   useEffect(() => {
-    setBottomHeight(bottomRef.current.clientHeight);
+    setBottomHeight(bottomRef.current?.clientHeight);
 
     const scrollEvent = () => {
       setScrollY(window.scrollY);
@@ -93,7 +93,7 @@ export function Header({ styles, }: Props) {
     version: tw` flex items-center flex-1 shrink-0 p-2 bg-white text-black-base dark:( bg-black-500 text-white ) font-black `,
     headerBottom: css([
       tw` mt-2 flex divide-x divide-black-200 border border-black-200 shadow-md dark:( divide-black-400 border-black-400 ) `,
-      width < 1024 && tw` fixed top-0 mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
+      ((width < 1024) || (scrollY > 150)) && tw` fixed top-0 mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
     ]),
   };
 
@@ -114,7 +114,7 @@ export function Header({ styles, }: Props) {
             </Link>
           </div>
         )}
-        {width < 1024 && (
+        {((width < 1024) || (scrollY > 150)) && (
           <DummyDiv bottomHeight={bottomHeight} />
         )}
         <div css={style.headerBottom} ref={bottomRef}>

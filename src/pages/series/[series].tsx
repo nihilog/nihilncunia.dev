@@ -39,8 +39,8 @@ type Params = {
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
   const posts = getListMetadata()
-    .filter((post) => post.seriesName === params.series)
-    .sort((a, b) => a.seriesOrder - b.seriesOrder);
+    .filter((post) => post.series.name === params.series)
+    .sort((a, b) => a.series.order - b.series.order);
 
   return {
     props: {

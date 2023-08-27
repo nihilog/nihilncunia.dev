@@ -3,6 +3,9 @@
 # top-most EditorConfig file
 root = true
 
+[mdx]
+end_of_line = lf
+
 [*]
 indent_style = space
 indent_size = 2

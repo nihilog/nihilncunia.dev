@@ -1,4 +1,4 @@
-import { allPosts } from 'contentlayer/generated';
+import { getListMetadata } from './getListMetadata';
 
 export type ITags = {
   name: string;
@@ -6,7 +6,7 @@ export type ITags = {
 };
 
 export const getTags = () => {
-  const tagsArray = allPosts.map((post) => (post.tags));
+  const tagsArray = getListMetadata().map((post) => (post.tags));
   let tags: string[] = [];
 
   tagsArray.forEach((tag) => {

@@ -1,4 +1,4 @@
-import { allPosts } from 'contentlayer/generated';
+import { getListMetadata } from './getListMetadata';
 
 type ICategories = {
   name: string;
@@ -6,11 +6,12 @@ type ICategories = {
 };
 
 export const getCategories = () => {
-  const categories = allPosts
+  const categories = getListMetadata()
+    .filter((post) => post.category)
     .sort((a, b) => b.id - a.id)
     .map((post) => post.category);
 
-  return categories.reduce((pre: ICategories[], curr) => {
+  const categoriesObj = categories.reduce((pre: ICategories[], curr) => {
     const findItem = pre.find((item) => item.name === curr);
 
     if (findItem) {
@@ -21,4 +22,14 @@ export const getCategories = () => {
 
     return pre;
   }, []);
+
+  const noneCategories = getListMetadata()
+    .filter((post) => post.category === '');
+
+  categoriesObj.unshift({
+    name: '없음',
+    count: noneCategories.length,
+  });
+
+  return categoriesObj;
 };

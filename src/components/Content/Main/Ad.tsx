@@ -9,8 +9,8 @@ interface Props {
 }
 
 const adId = {
-  top: '7775831240',
-  bottom: '6837513463',
+  top: '2632794048',
+  bottom: '3494487568',
 };
 
 declare global {

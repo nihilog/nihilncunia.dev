@@ -54,10 +54,10 @@ export function PostItem({ post, direction = 'right', styles, }: Props) {
           <p tw='flex-1 shrink-0 text-[90%] text-black-base dark:text-white'>{post.description}</p>
           <div tw='flex flex-row justify-between items-center text-black-base dark:text-white'>
             <A
-              href={`/categories/${post.category}`}
+              href={`/categories/${post.category || '없음'}`}
               styles={style.category}
             >
-              <Icon icon='material-symbols:folder' /> {post.category}
+              <Icon icon='material-symbols:folder' /> {post.category || '없음'}
             </A>
             <p>{setDate(post.created)}</p>
           </div>

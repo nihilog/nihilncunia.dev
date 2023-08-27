@@ -23,15 +23,11 @@ export const getOtherPosts = (category: string) => {
     }
   }
 
-  console.log(postIndexs.length);
-
   const selectedPosts: Partial<Post>[] = [];
 
   postIndexs.forEach((number) => {
     selectedPosts.push(posts[number]);
   });
-
-  console.log(selectedPosts);
 
   return selectedPosts;
 };

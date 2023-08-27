@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "module": "ESNext",
-    "target": "ES5",
+    "target": "ESNext",
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",

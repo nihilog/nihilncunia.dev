@@ -89,10 +89,10 @@ export function PostMD({ post, content, styles, }: Props) {
           <div css={style.section}>
             <div css={style.infoTitle}>카테고리</div>
             <A
-              href={`/categories/${post.category}`}
+              href={`/categories/${post.category || '없음'}`}
               styles={style.category}
             >
-              <Icon icon='material-symbols:folder' /> {post.category}
+              <Icon icon='material-symbols:folder' /> {post.category || '없음'}
             </A>
           </div>
           <div css={style.section}>
