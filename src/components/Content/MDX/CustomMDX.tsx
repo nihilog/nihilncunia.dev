@@ -61,4 +61,5 @@ export const CustomMDX: MDXComponents = {
   Message,
   Youtube,
   Q,
+  Image,
 };

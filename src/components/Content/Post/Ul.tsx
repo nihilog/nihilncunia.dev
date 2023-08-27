@@ -23,7 +23,7 @@ export function Ul({ children, styles, }: Props) {
 
   const style = {
     default: css([
-      isFirst && tw` text-black-base border border-black-200 p-2 bg-black-50 dark:( bg-black-600 border-black-400 text-white ) `,
+      isFirst && tw` text-black-base border border-black-200 p-2 bg-black-50 dark:( bg-black-400 border-black-400 text-white ) `,
       !isFirst && tw` ml-5 `,
       styles,
     ]),

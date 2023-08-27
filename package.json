@@ -24,8 +24,7 @@
     "export": "yarn run backupgit && yarn run build && next export -o ../web/ && touch ../web/.nojekyll && yarn run restoregit && cd ../web && git add .",
     "clean": "yarn cache clean",
     "open": "start http://localhost:3000",
-    "v:build": "vercel build",
-    "v:prod": "vercel --prod"
+    "v:build": "vercel build && vercel --prod"
   },
   "keywords": [],
   "author": "NIHILncunia",

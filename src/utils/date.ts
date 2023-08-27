@@ -13,6 +13,7 @@ dayjs.locale(ko);
 export const useDate = dayjs;
 
 export const setDate = (date: number | string | Date) => {
+  // const computedDate = dayjs(date).toDate().getTime() - 32400000;
   const diff = dayjs().diff(date, 'days');
 
   if (diff >= 7) {
@@ -23,5 +24,6 @@ export const setDate = (date: number | string | Date) => {
 };
 
 export const dateFormat = (date: number | string | Date, format: string) => {
+  // const computedDate = dayjs(date).toDate().getTime() - 32400000;
   return dayjs(date).tz().format(format);
 };

@@ -8,6 +8,7 @@ type ICategories = {
 export const getCategories = () => {
   const categories = getListMetadata()
     .filter((post) => post.category)
+    .filter((post) => post.category !== '공지사항')
     .sort((a, b) => b.id - a.id)
     .map((post) => post.category);
 
@@ -27,8 +28,16 @@ export const getCategories = () => {
     .filter((post) => post.category === '');
 
   categoriesObj.unshift({
-    name: '없음',
+    name: '분류없음',
     count: noneCategories.length,
+  });
+
+  const notices = getListMetadata()
+    .filter((post) => post.category === '공지사항');
+
+  categoriesObj.unshift({
+    name: '공지사항',
+    count: notices.length,
   });
 
   return categoriesObj;
