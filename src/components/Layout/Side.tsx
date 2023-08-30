@@ -50,7 +50,7 @@ export function Side({ styles, }: Props) {
 
   const style = {
     default: css([
-      tw` w-[250px] flex flex-col gap-5 self-start transition-all duration-200 `,
+      tw` w-[250px] flex flex-col gap-5 self-start transition-all duration-200 shrink-0 `,
       width >= 1024 && tw` [transform: translateX(0%)] `,
       width < 1024 && tw` fixed left-2 top-16 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 dark:( border-black-400 bg-black-base ) `,
       width < 1024 && !isOpen && tw` [transform: translateX(-105%) translateY(-8px)] opacity-0 `,

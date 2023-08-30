@@ -10,7 +10,7 @@ interface Props {
 export function Content({ children, styles, }: Props) {
   const style = {
     default: css([
-      tw` flex flex-col gap-5 flex-1 shrink-0 `,
+      tw` flex flex-col gap-5 flex-1 shrink-0 min-w-0 `,
       styles,
     ]),
   };

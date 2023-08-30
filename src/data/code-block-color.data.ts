@@ -16,7 +16,7 @@ export const codeBlockColor: CodeBlockColor = {
   TYPESCRIPT: { color: '#ffffff', bgColor: '#007acc', icon: 'teenyicons:typescript-solid', },
   TSX: { color: '#ffffff', bgColor: '#007acc', icon: 'teenyicons:react-solid', },
   JSON: { color: '#ffffff', bgColor: '#888888', icon: 'mdi:code-json', },
-  BASH: { color: '#ffffff', bgColor: '#293036', icon: 'simple-icons:gnubash', },
+  BASH: { color: '#ffffff', bgColor: '#666666', icon: 'simple-icons:gnubash', },
   PYTHON: { color: '#ffd342', bgColor: '#3673a5', icon: 'simple-icons:python', },
   JAVA: { color: '#e76f00', bgColor: '#5382a1', icon: 'cib:java', },
   YAML: { color: '#ffffff', bgColor: '#888888', icon: 'simple-icons:yaml', },

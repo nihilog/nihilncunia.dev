@@ -5,7 +5,7 @@
     "target": "ESNext",
     "esModuleInterop": true,
     "jsx": "preserve",
-    "jsxImportSource": "@emotion/react",
+    // "jsxImportSource": "@emotion/react",
     "paths": {
       "@/*": [
         "./*"

@@ -18,6 +18,9 @@ const config = {
   images: {
     domains: [ 'https://nihilncunia.dev', ],
   },
+  experimental: {
+    largePageDataBytes: 128 * 100000,
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

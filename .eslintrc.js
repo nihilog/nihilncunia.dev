@@ -101,6 +101,7 @@ module.exports = {
     }, ],
 
     // 리액트 규칙
+    'react/react-in-jsx-scope': 'off',
     'react/jsx-curly-spacing': [ 'error', { when: 'never', children: true, }, ],
     'react/jsx-props-no-spreading': 'off',
     'react/forbid-prop-types': 'off',

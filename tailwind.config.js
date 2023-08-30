@@ -25,6 +25,7 @@ module.exports = {
         'mf-lg': { min: '1024px', },
       },
       borderRadius: {
+        half: '50%',
         0: '0px',
         px: '1px',
         0.5: '0.125rem',

@@ -100,7 +100,7 @@ export function Image({
       tw` dark:( border-yellow-300 text-yellow-300 bg-black-500 hover:( bg-yellow-300 text-black-base ) ) `,
     ]),
     imgBox: css([
-      tw` w-full mf-sm:max-w-[500px] mx-auto relative overflow-hidden block border-2 border-black-base/70 dark:border-white/70 mb-2 `,
+      tw` w-full mf-sm:max-w-[700px] mx-auto relative overflow-hidden block border-2 border-black-base/70 dark:border-white/70 mb-2 `,
       tw` hover:( [img]:( scale-[110%] ) ) `,
     ]),
     lightbox: css([
