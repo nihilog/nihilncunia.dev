@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
 import { setIsOpen, toggleDarkMode, toggleMenu } from '@/src/reducers/dark.reducer';
 import { configData } from '@/src/data';
 import { textStyles } from '@/src/styles';
+import { useScroll } from '@/src/hooks';
+import { ScrollProgressBar } from '../Content';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
@@ -18,7 +20,7 @@ interface Props {
 
 export function Header({ styles, }: Props) {
   const [ icon, setIcon, ] = useState('');
-  const [ scrollY, setScrollY, ] = useState(0);
+  const scroll = useScroll();
   const [ bottomHeight, setBottomHeight, ] = useState(0);
 
   const { isDark, width, } = useAppSelector(
@@ -63,20 +65,10 @@ export function Header({ styles, }: Props) {
   }, [ isDark, ]);
 
   useEffect(() => {
-    setBottomHeight(bottomRef.current?.clientHeight);
-
-    const scrollEvent = () => {
-      setScrollY(window.scrollY);
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', scrollEvent);
+    if (bottomRef.current) {
+      setBottomHeight(bottomRef.current.clientHeight + 10);
     }
-
-    return () => {
-      window.removeEventListener('scroll', scrollEvent);
-    };
-  }, [ scrollY, ]);
+  }, [ scroll.y, ]);
 
   const style = {
     default: css([
@@ -93,13 +85,18 @@ export function Header({ styles, }: Props) {
     version: tw` flex items-center flex-1 shrink-0 p-2 bg-white text-black-base dark:( bg-black-500 text-white ) font-black `,
     headerBottom: css([
       tw` mt-2 flex divide-x divide-black-200 border border-black-200 shadow-md dark:( divide-black-400 border-black-400 ) `,
-      ((width < 1024) || (scrollY > 150)) && tw` fixed top-0 mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
+      ((width < 1024) || (scroll.y > 150)) && tw` fixed mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
+      ((width < 1024) || (scroll.y > 150)) && router.asPath.includes('posts') && tw` top-[8px] `,
+      ((width < 1024) || (scroll.y > 150)) && !router.asPath.includes('posts') && tw` top-0 `,
     ]),
   };
 
   return (
     <>
       <header css={style.default}>
+        {router.asPath.includes('posts') && (
+          <ScrollProgressBar />
+        )}
         {width >= 1024 && (
           <div tw='mt-2 p-3 bg-white border border-black-200 shadow-md dark:( border-black-400 bg-black-500 )'>
             <Link href='/' aria-label='홈'>
@@ -114,7 +111,7 @@ export function Header({ styles, }: Props) {
             </Link>
           </div>
         )}
-        {((width < 1024) || (scrollY > 150)) && (
+        {((width < 1024) || (scroll.y > 150)) && (
           <DummyDiv bottomHeight={bottomHeight} />
         )}
         <div css={style.headerBottom} ref={bottomRef}>

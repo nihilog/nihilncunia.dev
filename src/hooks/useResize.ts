@@ -1,21 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './rtk';
 import { setWindowSize } from '@/src/reducers/dark.reducer';
-
-export type SizeState = {
-  width: number;
-  height: number;
-};
 
 export const useReSize = () => {
   const { width, height, } = useAppSelector(
     (state) => state.dark
   );
   const dispatch = useAppDispatch();
-  // const [ size, setSize, ] = useState<SizeState>({
-  //   width: null,
-  //   height: null,
-  // });
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -24,10 +15,6 @@ export const useReSize = () => {
           width: window.innerWidth,
           height: window.innerHeight,
         }));
-        // setSize({
-        //   width: window.innerWidth,
-        //   height: window.innerHeight,
-        // });
       };
 
       window.addEventListener('resize', reSize);
