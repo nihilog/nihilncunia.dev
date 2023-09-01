@@ -6,7 +6,7 @@ import { Providers } from '@/src/layouts';
 import '@/src/styles/tailwind.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/src/styles/code-block.scss';
-import { ADS_TRACKINGCODE, GA_TRACKING_ID } from '../data/gtag';
+import { GA_TRACKING_ID } from '../data/gtag';
 
 const App = ({ Component, pageProps, }: AppProps) => (
   <Providers>
@@ -24,20 +24,24 @@ const App = ({ Component, pageProps, }: AppProps) => (
     />
 
     <Script
+      async
+      src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9256396675875954'
+      crossOrigin='anonymous'
+    />
+
+    <Script
       id='gtag-init'
       strategy='afterInteractive'
-      dangerouslySetInnerHTML={{
-        __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_TRACKING_ID}', {
-              page_path: window.location.pathname,
-            });
-            gtag('config', '${ADS_TRACKINGCODE}');
-          `,
-      }}
-    />
+    >
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YBWM79C66F', {
+          page_path: window.location.pathname,
+        });
+      `}
+    </Script>
     <Component {...pageProps} />
   </Providers>
 );
