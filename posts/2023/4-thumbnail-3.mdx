@@ -293,6 +293,49 @@ export default function IndexPage() {
 
 이제 텍스트 입력하는 부분을 좀 더 다듬어야겠습니다. 입력란에 라벨도 만들어주고 개선을 해봅시다. 디자인에 조예가 있는 편은 아니라서 그냥 그럴듯하게만 만든 결과는 아래와 같습니다.
 
+<CodeBlock title='index.tsx'>
+```tsx
+export default function IndexPage() {
+  // ...
+
+  return (
+    <>
+      <div css={style.default}>
+        <div id='th-frame' css={style.frame}>
+          {/* ... */}
+        </div>
+
+        <div css={style.inputs}>
+          <label htmlFor='title' css={style.input}>
+            <span>제목</span>
+            <input
+              type='text'
+              id='title'
+              placeholder='제목'
+              value={title}
+              onChange={onChangeTitle}
+            />
+          </label>
+          <label htmlFor='sub-title' css={style.input}>
+            <span>부제</span>
+            <input
+              type='text'
+              id='sub-title'
+              placeholder='부제'
+              value={subTitle}
+              onChange={onChangeSubTitle}
+            />
+          </label>
+        </div>
+
+        {/* ... */}
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
 <Image src='https://drive.google.com/file/d/1wjAWlfqIy0gm3ybSQNqH24U4mWcjoxrb/view?usp=drive_link' alt='스타일 디자인 개선 결과' drive />
 
 입력란의 스타일을 확 바꿔서 포커싱이 되면 파란색 테두리가 아래에 나타나게끔 개선했습니다. 나중에 텍스트 쪽에도 배티할 요소가 많아지거나 하면 텍스트와 배경 부분을 따로 펼치고 접을 수 있게끔 만들어야겠다는 생각이 들었습니다.
