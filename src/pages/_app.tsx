@@ -21,6 +21,9 @@ const App = ({ Component, pageProps, }: AppProps) => (
         name='naver-site-verification'
         content='adb852945c57740b1e19ceafc8bdfa930e672f54'
       />
+      <meta name='robots' content='index, follow' />
+      <meta name='Yeti' content='index, follow' />
+      <meta name='NaverBot' content='index, follow' />
     </Head>
     <Script
       strategy='afterInteractive'

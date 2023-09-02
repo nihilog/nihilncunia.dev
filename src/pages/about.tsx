@@ -3,6 +3,7 @@ import tw, { css } from 'twin.macro';
 import { Icon } from '@iconify/react';
 import { AppLayout } from '@/src/layouts';
 import { A, H, P } from '../components/Base';
+import { Ad } from '../components/Content/Main';
 
 export default function AboutPage() {
   const style = {
@@ -39,6 +40,8 @@ export default function AboutPage() {
             <P><strong>Emotion & TailwindCSS</strong><br />스타일링은 두가지를 합쳐서 사용했습니다. 스타일드 컴포넌트같은 문법을 갖고 있는 <A href='https://emotion.sh/docs/introduction' external>Emotion</A>과 편리하게 스타일링을 할 수 있는 <A href='https://tailwindcss.com/' external>TailwindCSS</A>인데 이 두가지는 <A href='https://github.com/ben-rogerson/twin.macro' external>twin.macro</A>를 통해서 조합이 가능합니다. 이렇게 조합을 해서 편리하고 더 강력하게 스타일링을 할 수 있었습니다. 디자인에 조예가 있는 편은 아니라 훌륭하지는 못합니다.</P>
           </div>
         </div>
+
+        <Ad position='other' />
       </AppLayout>
     </>
   );

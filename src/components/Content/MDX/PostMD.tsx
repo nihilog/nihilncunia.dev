@@ -12,6 +12,7 @@ import { setCover } from '@/src/utils';
 import { Ad, OtherPosts, PostItem } from '../Main';
 import { useAppSelector } from '@/src/hooks/rtk';
 import { getListMetadata } from '@/src/utils/mdx';
+import { Fb } from '../Post';
 
 interface Props {
   post: Post;
@@ -42,7 +43,7 @@ export function PostMD({ post, content, styles, }: Props) {
       tw`  `,
       styles,
     ]),
-    post: tw` p-3 bg-white border border-b-0 border-black-200 dark:( bg-black-500 border-black-400 text-white ) space-y-8 shadow-md mt-5 `,
+    post: tw` p-3 pb-0 bg-white border border-b-0 border-black-200 dark:( bg-black-500 border-black-400 text-white ) space-y-8 shadow-md mt-5 `,
     postInfo: tw` p-3 bg-white border border-black-200 shadow-md mb-5 dark:( bg-black-500 border-black-400 text-white ) `,
     title: tw` p-3 bg-black-base text-white dark:( bg-black-600 text-yellow-300 ) mb-2 shadow-md `,
     category: css([
@@ -122,6 +123,8 @@ export function PostMD({ post, content, styles, }: Props) {
         <div css={style.post}>
           <MDXComponent components={CustomMDX} />
         </div>
+
+        <Fb />
 
         <OtherPosts category={post.category} />
 

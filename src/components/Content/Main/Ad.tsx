@@ -4,13 +4,14 @@ import { SerializedStyles } from '@emotion/react';
 import { useRouter } from 'next/router';
 
 interface Props {
-  position: ('top' | 'bottom');
+  position: ('top' | 'bottom' | 'other');
   styles?: TwStyle | SerializedStyles;
 }
 
 const adId = {
   top: '2632794048',
   bottom: '3494487568',
+  other: '5998792592',
 };
 
 declare global {
@@ -34,6 +35,7 @@ export function Ad({ position, styles, }: Props) {
   const style = {
     default: css([
       tw` bg-white border border-black-200 shadow-md mt-5 dark:( bg-black-500 border-black-400 text-white ) `,
+      position === 'other' && tw` mt-0! `,
       tw` [ins]:( min-h-[100px] max-h-[280px] ) `,
       styles,
     ]),

@@ -5,6 +5,7 @@ interface IDarkMode {
   isOpen: boolean;
   width: number;
   height: number;
+  headerHeight: number;
 }
 
 const initialState: IDarkMode = {
@@ -12,6 +13,7 @@ const initialState: IDarkMode = {
   isOpen: false,
   width: 0,
   height: 0,
+  headerHeight: 0,
 };
 
 const darkModeReducer = createSlice({
@@ -31,10 +33,13 @@ const darkModeReducer = createSlice({
       state.width = payload.width;
       state.height = payload.height;
     },
+    setHeaderHeight(state, { payload, }: PayloadAction<{ value: number }>) {
+      state.headerHeight = payload.value;
+    },
   },
 });
 
 export const {
-  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize,
+  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize, setHeaderHeight,
 } = darkModeReducer.actions;
 export default darkModeReducer.reducer;

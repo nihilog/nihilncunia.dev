@@ -101,7 +101,6 @@ export function Image({
     ]),
     imgBox: css([
       tw` w-full mf-sm:max-w-[700px] mx-auto relative overflow-hidden block border-2 border-black-base/70 dark:border-white/70 mb-2 `,
-      tw` hover:( [img]:( scale-[110%] ) ) `,
     ]),
     lightbox: css([
       tw` fixed z-40 top-0 left-0 bg-black-base/90 m-0! w-screen h-screen select-none `,

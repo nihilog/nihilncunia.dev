@@ -10,6 +10,7 @@ import { A, H } from '@/src/components/Base';
 import { Pagination } from './Pagination';
 import { PostItem } from './PostItem';
 import { setCover } from '@/src/utils';
+import { Ad } from './Ad';
 
 interface Props {
   posts: Partial<Post>[];
@@ -44,7 +45,7 @@ export function PostList({
 
   const style = {
     list: css([
-      tw` flex flex-col gap-2 mb-5 `,
+      tw` flex flex-col gap-2 `,
       styles,
     ]),
     listName: css([
@@ -87,6 +88,8 @@ export function PostList({
           ))}
         </div>
       </div>
+
+      <Ad position='other' />
 
       {page === 'list' && (
         <Pagination posts={posts} query={query} />

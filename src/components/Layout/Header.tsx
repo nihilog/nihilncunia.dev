@@ -1,7 +1,7 @@
 import React, {
   useCallback, useEffect, useMemo, useRef, useState
 } from 'react';
-import tw, { TwStyle, css, styled } from 'twin.macro';
+import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
@@ -20,8 +20,8 @@ interface Props {
 
 export function Header({ styles, }: Props) {
   const [ icon, setIcon, ] = useState('');
+
   const scroll = useScroll();
-  const [ bottomHeight, setBottomHeight, ] = useState(0);
 
   const { isDark, width, } = useAppSelector(
     (state) => state.dark
@@ -64,15 +64,9 @@ export function Header({ styles, }: Props) {
     }
   }, [ isDark, ]);
 
-  useEffect(() => {
-    if (bottomRef.current) {
-      setBottomHeight(bottomRef.current.clientHeight + 10);
-    }
-  }, [ scroll.y, ]);
-
   const style = {
     default: css([
-      tw` relative z-10 `,
+      tw` fixed top-0 left-0 z-10 w-full `,
       styles,
     ]),
     toggleDark: css([
@@ -82,24 +76,30 @@ export function Header({ styles, }: Props) {
     menu: css([
       tw` w-[45px] aspect-square flex items-center justify-center bg-white border-black-200 shrink-0 dark:( border-black-400 bg-black-500 text-white ) `,
     ]),
-    version: tw` flex items-center flex-1 shrink-0 p-2 bg-white text-black-base dark:( bg-black-500 text-white ) font-black `,
+    version: tw` flex items-center justify-center flex-1 shrink-0 p-2 bg-white text-black-base dark:( bg-black-500 text-white ) font-black [img]:( mf-sm:w-[250px]! ) `,
     headerBottom: css([
-      tw` mt-2 flex divide-x divide-black-200 border border-black-200 shadow-md dark:( divide-black-400 border-black-400 ) `,
-      ((width < 1024) || (scroll.y > 150)) && tw` fixed mt-0 left-0 shadow-lg shadow-black-base/50 w-full z-10 `,
-      ((width < 1024) || (scroll.y > 150)) && router.asPath.includes('posts') && tw` top-[8px] `,
-      ((width < 1024) || (scroll.y > 150)) && !router.asPath.includes('posts') && tw` top-0 `,
+      tw` flex border border-black-200 dark:border-black-400 divide-x divide-black-200 dark:divide-black-400 shadow-md transition-opacity duration-200 `,
+      scroll.y > 150
+        ? tw` opacity-50 hover:opacity-100 `
+        : tw` opacity-100 `,
     ]),
   };
 
   return (
     <>
-      <header css={style.default}>
+      <header id='app-header' css={style.default} ref={bottomRef}>
         {router.asPath.includes('posts') && (
           <ScrollProgressBar />
         )}
-        {width >= 1024 && (
-          <div tw='mt-2 p-3 bg-white border border-black-200 shadow-md dark:( border-black-400 bg-black-500 )'>
-            <Link href='/' aria-label='홈'>
+        <div css={style.headerBottom}>
+          {width < 1024 && (
+            <button css={style.menu} onClick={onClickOpen}>
+              <span css={textStyles.hidden}>메뉴버튼</span>
+              <Icon icon='mingcute:menu-fill' />
+            </button>
+          )}
+          <div css={style.version}>
+            <Link href='/' aria-label='홈' tw='flex flex-col mf-sm:flex-row items-center justify-center gap-2'>
               <Image
                 src={imageSrc}
                 alt='니힐로그 로고'
@@ -108,25 +108,8 @@ export function Header({ styles, }: Props) {
                 layout='responsive'
                 tw='w-[400px]! h-auto'
               />
+              <span>니힐로그 {configData.version}</span>
             </Link>
-          </div>
-        )}
-        {((width < 1024) || (scroll.y > 150)) && (
-          <DummyDiv bottomHeight={bottomHeight} />
-        )}
-        <div css={style.headerBottom} ref={bottomRef}>
-          {width < 1024 && (
-            <button css={style.menu} onClick={onClickOpen}>
-              <span css={textStyles.hidden}>메뉴버튼</span>
-              <Icon icon='mingcute:menu-fill' />
-            </button>
-          )}
-          <div css={style.version}>
-            <p>
-              <Link href='/' aria-label='홈'>
-                니힐로그 {configData.version}
-              </Link>
-            </p>
           </div>
           <button onClick={onClickDarkMode} css={style.toggleDark}>
             <span css={textStyles.hidden}>
@@ -139,7 +122,3 @@ export function Header({ styles, }: Props) {
     </>
   );
 }
-
-const DummyDiv = styled.div<{bottomHeight: number}>`
-  height: ${(props) => props.bottomHeight}px;
-`;

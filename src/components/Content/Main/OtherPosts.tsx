@@ -17,7 +17,7 @@ export function OtherPosts({ category, styles, }: Props) {
 
   const style = {
     default: css([
-      tw` p-3 pt-4 border border-t-0 border-black-200 dark:border-black-400 bg-white dark:bg-black-500 mb-5 shadow-md flex flex-col gap-2 `,
+      tw` p-3 pt-8 border border-t-0 border-black-200 dark:border-black-400 bg-white dark:bg-black-500 mb-5 shadow-md flex flex-col gap-2 `,
       tw` [h2]:( mb-7 ) `,
       styles,
     ]),

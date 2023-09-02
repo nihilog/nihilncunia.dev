@@ -19,7 +19,7 @@ const NotPound404 = () => {
 
   const style = {
     default: css([
-      tw` w-screen h-screen mt-[-8px] mx-[-8px] flex items-center justify-center [p]:( text-big mb-2 text-black-base ) dark:( [p]:( text-white ) ) `,
+      tw` h-screen mt-[-8px] mx-[-8px] flex items-center justify-center [p]:( text-big mb-2 text-black-base ) dark:( [p]:( text-white ) ) `,
     ]),
     heading: tw` text-black-base text-h1 font-black text-center mb-2 flex items-center justify-center leading-[1] dark:text-white `,
     container: css([

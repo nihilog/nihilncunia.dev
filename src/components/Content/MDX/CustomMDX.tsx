@@ -2,7 +2,7 @@ import React from 'react';
 import { MDXComponents } from 'mdx/types';
 import { Footer } from '@/src/components/Layout';
 import {
-  CodeBlock, Em, Image, Li, Message, Ol, Q, Strike, Strong, Ul, Youtube
+  CodeBlock, Em, Fn, Image, Li, Message, Ol, Q, Strike, Strong, Ul, Youtube
 } from '../Post';
 import {
   A, Code, H, P
@@ -62,4 +62,5 @@ export const CustomMDX: MDXComponents = {
   Youtube,
   Q,
   Image,
+  Fn,
 };

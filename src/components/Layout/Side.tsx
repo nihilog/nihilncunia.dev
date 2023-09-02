@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useEffect, useState
-} from 'react';
+import React, { useCallback } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
@@ -17,9 +15,7 @@ interface Props {
 }
 
 export function Side({ styles, }: Props) {
-  const [ scrollY, setScrollY, ] = useState(0);
-  // // const [ position, setPosition, ] = useState('0%');
-  const { isOpen, width, } = useAppSelector((state) => state.dark);
+  const { isOpen, width, headerHeight, } = useAppSelector((state) => state.dark);
 
   const postsCount = getListMetadata().length;
   const categories = getCategories();
@@ -33,27 +29,22 @@ export function Side({ styles, }: Props) {
     []
   );
 
-  useEffect(() => {
-    const scrollEvent = () => {
-      setScrollY(window.scrollY);
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', scrollEvent);
-    }
-
-    return () => {
-      window.removeEventListener('scroll', scrollEvent);
-    };
-  }, [ scrollY, ]);
-
   const style = {
     default: css([
       tw` w-[250px] flex flex-col gap-5 self-start transition-all duration-200 shrink-0 `,
       width >= 1024 && tw` [transform: translateX(0%)] `,
-      width < 1024 && tw` fixed left-2 top-16 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 dark:( border-black-400 bg-black-base ) `,
-      width < 1024 && !isOpen && tw` [transform: translateX(-105%) translateY(-8px)] opacity-0 `,
-      width < 1024 && isOpen && tw` [transform: translateX(0%) translateY(-8px)] opacity-100 `,
+      width < 1024 && tw` fixed left-2 z-10 p-3 border border-black-200 shadow-lg bg-white shadow-black-base/50 dark:( border-black-400 bg-black-base ) `,
+      width < 1024 && (css`
+        top: ${headerHeight + 16}px;
+      `),
+      width < 1024 && !isOpen && (css`
+        transform: translateX(-105%) translateY(-8px);
+        opacity: 0;
+      `),
+      width < 1024 && isOpen && (css`
+        transform: translateX(0%) translateY(-8px);
+        opacity: 100;
+      `),
       styles,
     ]),
     background: css([

@@ -9,3 +9,5 @@ export * from './Ol';
 export * from './Em';
 export * from './Strong';
 export * from './Strike';
+export * from './Fn';
+export * from './Fb';

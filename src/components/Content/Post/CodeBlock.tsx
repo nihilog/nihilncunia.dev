@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
@@ -7,6 +7,7 @@ import { codeBlockColor } from '@/src/data';
 interface Props {
   title?: string;
   children?: React.ReactNode;
+  fold?: boolean;
   styles?: TwStyle | SerializedStyles;
 }
 
@@ -22,10 +23,35 @@ interface CodeBlock {
 }
 
 export function CodeBlock({
-  title, children, styles,
+  title, children, fold = false, styles,
 }: Props) {
-  const language = (children as CodeBlock).props.children.props['data-language'].toUpperCase();
-  const color = codeBlockColor[language];
+  const [ isFold, setIsFold, ] = useState(fold);
+
+  const lang = useMemo(() => {
+    const findLang = (children as CodeBlock).props.children.props['data-language'].toUpperCase();
+    let result: string;
+
+    if (findLang === 'TS') {
+      result = 'TYPESCRIPT';
+    } else if (findLang === 'JS') {
+      result = 'JAVASCRIPT';
+    } else if ((findLang === 'JSX') || (findLang === 'TSX')) {
+      result = 'REACT';
+    } else {
+      result = findLang;
+    }
+
+    return result;
+  }, []);
+
+  const color = codeBlockColor[lang];
+
+  const onClickOpen = useCallback(
+    () => {
+      setIsFold((prev) => !prev);
+    },
+    []
+  );
 
   const style = {
     default: css([
@@ -35,13 +61,26 @@ export function CodeBlock({
           border-top-width: 0;
         }
       `),
+      lang === 'BASH' && tw` border border-black-400 `,
       styles,
     ]),
     codeTop: css([
-      tw` flex items-center `,
+      tw` flex items-center pl-2 `,
       (css`
         color: ${color.color};
         background-color: ${color.bgColor};
+
+        button {
+          padding: 4px;
+          background-color: ${color.color}80;
+          color: ${color.bgColor};
+          border-radius: 4px;
+          transition: background-color .3s;
+
+          &:hover {
+            background-color: ${color.color};
+          }
+        }
       `),
     ]),
     title: css([
@@ -56,6 +95,13 @@ export function CodeBlock({
     <>
       <div className='nihil-codeblock' css={style.default}>
         <div css={style.codeTop}>
+          <button onClick={onClickOpen}>
+            {isFold ? (
+              <Icon icon='ep:arrow-down-bold' />
+            ) : (
+              <Icon icon='ep:arrow-up-bold' />
+            )}
+          </button>
           <div css={style.title}>
             {title && (
               <><Icon icon='bx:file' /> {title}</>
@@ -63,16 +109,10 @@ export function CodeBlock({
           </div>
           <div css={style.lang}>
             <Icon icon={color.icon} />
-            {
-              language === 'TS'
-                ? 'TYPESCRIPT'
-                : language === 'JS'
-                  ? 'JAVASCRIPT'
-                  : language
-            }
+            {lang}
           </div>
         </div>
-        {children}
+        {!isFold && children}
       </div>
     </>
   );
