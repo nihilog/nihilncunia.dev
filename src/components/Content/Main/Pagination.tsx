@@ -3,6 +3,7 @@ import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
 import { Post } from 'contentlayer/generated';
+import { useRouter } from 'next/router';
 import { A } from '@/src/components/Base';
 import { PageNumber } from './PageNumber';
 import { configData } from '@/src/data';
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export function Pagination({ posts, query, styles, }: Props) {
+  const router = useRouter();
+
   const firstPage = 1;
   const lastPage = useMemo(() => {
     return Math.floor(((posts.length - 1) / configData.postPerPage) + 1);
@@ -44,7 +47,7 @@ export function Pagination({ posts, query, styles, }: Props) {
     }
 
     return numbers;
-  }, []);
+  }, [ router.asPath, ]);
 
   const style = {
     default: css([
@@ -65,75 +68,77 @@ export function Pagination({ posts, query, styles, }: Props) {
 
   return (
     <>
-      <div css={style.default}>
-        <div css={style.pagination}>
-          {isFirst ? (
-            <>
-              <div css={style.disable}>
-                <span css={textStyles.hidden}>처음 페이지</span>
-                <Icon icon='material-symbols:keyboard-double-arrow-left' fontSize='1.3rem' />
-              </div>
-              <div aria-label='prev' css={style.disable}>
-                <span css={textStyles.hidden}>이전 페이지</span>
-                <Icon icon='material-symbols:chevron-left' fontSize='1.3rem' />
-              </div>
-            </>
-          ) : (
-            <>
-              <A
-                href='?pageNumber=1'
-                label='first'
-                styles={style.enable}
-              >
-                <span css={textStyles.hidden}>처음 페이지</span>
-                <Icon icon='material-symbols:keyboard-double-arrow-left' fontSize='1.3rem' />
-              </A>
-              <A
-                href={`?pageNumber=${currentPage - 1}`}
-                label='prev'
-                styles={style.enable}
-              >
-                <span css={textStyles.hidden}>이전 페이지</span>
-                <Icon icon='material-symbols:chevron-left' fontSize='1.3rem' />
-              </A>
-            </>
-          )}
-          {pageNumbers.map((number) => (
-            <PageNumber key={number} number={number} currentPage={currentPage} />
-          ))}
-          {isLast ? (
-            <>
-              <div aria-label='next' css={style.disable}>
-                <span css={textStyles.hidden}>다음 페이지</span>
-                <Icon icon='material-symbols:chevron-right' fontSize='1.3rem' />
-              </div>
-              <div aria-label='last' css={style.disable}>
-                <span css={textStyles.hidden}>마지막 페이지</span>
-                <Icon icon='material-symbols:keyboard-double-arrow-right' fontSize='1.3rem' />
-              </div>
-            </>
-          ) : (
-            <>
-              <A
-                href={`?pageNumber=${currentPage + 1}`}
-                label='next'
-                styles={style.enable}
-              >
-                <span css={textStyles.hidden}>다음 페이지</span>
-                <Icon icon='material-symbols:chevron-right' fontSize='1.3rem' />
-              </A>
-              <A
-                href={`?pageNumber=${lastPage}`}
-                label='last'
-                styles={style.enable}
-              >
-                <span css={textStyles.hidden}>마지막 페이지</span>
-                <Icon icon='material-symbols:keyboard-double-arrow-right' fontSize='1.3rem' />
-              </A>
-            </>
-          )}
+      {posts.length > 0 && (
+        <div css={style.default}>
+          <div css={style.pagination}>
+            {isFirst ? (
+              <>
+                <div css={style.disable}>
+                  <span css={textStyles.hidden}>처음 페이지</span>
+                  <Icon icon='material-symbols:keyboard-double-arrow-left' fontSize='1.3rem' />
+                </div>
+                <div aria-label='prev' css={style.disable}>
+                  <span css={textStyles.hidden}>이전 페이지</span>
+                  <Icon icon='material-symbols:chevron-left' fontSize='1.3rem' />
+                </div>
+              </>
+            ) : (
+              <>
+                <A
+                  href='?pageNumber=1'
+                  label='first'
+                  styles={style.enable}
+                >
+                  <span css={textStyles.hidden}>처음 페이지</span>
+                  <Icon icon='material-symbols:keyboard-double-arrow-left' fontSize='1.3rem' />
+                </A>
+                <A
+                  href={`?pageNumber=${currentPage - 1}`}
+                  label='prev'
+                  styles={style.enable}
+                >
+                  <span css={textStyles.hidden}>이전 페이지</span>
+                  <Icon icon='material-symbols:chevron-left' fontSize='1.3rem' />
+                </A>
+              </>
+            )}
+            {pageNumbers.map((number) => (
+              <PageNumber key={number} number={number} currentPage={currentPage} />
+            ))}
+            {isLast ? (
+              <>
+                <div aria-label='next' css={style.disable}>
+                  <span css={textStyles.hidden}>다음 페이지</span>
+                  <Icon icon='material-symbols:chevron-right' fontSize='1.3rem' />
+                </div>
+                <div aria-label='last' css={style.disable}>
+                  <span css={textStyles.hidden}>마지막 페이지</span>
+                  <Icon icon='material-symbols:keyboard-double-arrow-right' fontSize='1.3rem' />
+                </div>
+              </>
+            ) : (
+              <>
+                <A
+                  href={`?pageNumber=${currentPage + 1}`}
+                  label='next'
+                  styles={style.enable}
+                >
+                  <span css={textStyles.hidden}>다음 페이지</span>
+                  <Icon icon='material-symbols:chevron-right' fontSize='1.3rem' />
+                </A>
+                <A
+                  href={`?pageNumber=${lastPage}`}
+                  label='last'
+                  styles={style.enable}
+                >
+                  <span css={textStyles.hidden}>마지막 페이지</span>
+                  <Icon icon='material-symbols:keyboard-double-arrow-right' fontSize='1.3rem' />
+                </A>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

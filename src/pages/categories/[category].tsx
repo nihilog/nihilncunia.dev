@@ -39,7 +39,7 @@ type Params = {
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
   const posts = getListMetadata()
-    .filter((post) => post.category === params.category)
+    .filter((post) => (post.category || '분류없음') === params.category)
     .sort((a, b) => b.id - a.id);
 
   return {

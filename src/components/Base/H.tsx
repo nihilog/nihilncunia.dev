@@ -27,8 +27,8 @@ export function H({
       type === 'post' && tw` font-black p-2 px-3 border-l-[12px] border-blue-600 dark:border-yellow-300 `,
       type === 'normal' && tw` font-black `,
       type === 'postlist' && [
-        tw` [a]:( text-justify break-all p-2 border border-transparent bg-blue-100 flex items-center justify-start text-[60%] mf-sm:text-[70%] text-blue-600 transition-all duration-200 flex-1 shrink-0 ) `,
-        tw` [a:hover]:( bg-blue-500 text-white ) `,
+        tw` [a]:( text-justify break-all p-2 border border-blue-200 bg-blue-100 flex items-center justify-start text-[60%] mf-sm:text-[70%] text-blue-600 transition-all duration-200 flex-1 shrink-0 ) `,
+        tw` [a:hover]:( bg-blue-500 text-white border-blue-500 ) `,
         tw` dark:( [a]:( border-yellow-300/30 text-yellow-300 bg-black-600 hover:( bg-yellow-300 text-black-base ) ) ) `,
       ],
       size[Heading],

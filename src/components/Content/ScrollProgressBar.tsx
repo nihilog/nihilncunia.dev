@@ -17,7 +17,7 @@ export function ScrollProgressBar({ styles, }: Props) {
         & > div {
           width: ${scroll.progress}%;
           height: 8px;
-          background-color: ${theme('colors.blue.400')};
+          background-color: ${theme('colors.blue.600')};
           transition: width .3s ease;
 
           &:is(.dark &) {

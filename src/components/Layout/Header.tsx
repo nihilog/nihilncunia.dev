@@ -88,7 +88,7 @@ export function Header({ styles, }: Props) {
   return (
     <>
       <header id='app-header' css={style.default} ref={bottomRef}>
-        {router.asPath.includes('posts') && (
+        {router.asPath.includes('posts/') && (
           <ScrollProgressBar />
         )}
         <div css={style.headerBottom}>

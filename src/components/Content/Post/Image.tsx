@@ -85,22 +85,22 @@ export function Image({
 
   const style = {
     container: css([
-      tw` text-center border border-black-200 bg-black-50 p-2 dark:( border-black-400 bg-black-400 text-white ) `,
+      tw` flex flex-col items-center justify-center border border-black-200 bg-black-50 p-2 dark:( border-black-400 bg-black-400 text-white ) `,
       styles,
     ]),
     caption: css([
       tw` inline-flex gap-2 items-center break-all text-[90%] text-black-500 dark:text-white `,
     ]),
     img: css([
-      tw` cursor-pointer transition-all duration-200 select-none `,
+      tw` inline-block mf-sm:max-w-full cursor-pointer transition-all duration-200 select-none `,
     ]),
     button: css([
-      tw` mt-5 p-2 border border-black-200 bg-white text-black-base transition-all duration-200 flex items-center justify-center gap-2 `,
-      tw` hover:( text-blue-600 border-blue-600 ) `,
+      tw` mt-5 p-2 border border-blue-200 bg-blue-100 text-blue-600 transition-all duration-200 flex items-center justify-center gap-2 `,
+      tw` hover:( border-blue-500 text-white bg-blue-500 ) `,
       tw` dark:( border-yellow-300 text-yellow-300 bg-black-500 hover:( bg-yellow-300 text-black-base ) ) `,
     ]),
     imgBox: css([
-      tw` w-full mf-sm:max-w-[700px] mx-auto relative overflow-hidden block border-2 border-black-base/70 dark:border-white/70 mb-2 `,
+      tw` mx-auto relative overflow-hidden inline-block border-2 border-black-base/70 dark:border-white/70 mb-2 `,
     ]),
     lightbox: css([
       tw` fixed z-40 top-0 left-0 bg-black-base/90 m-0! w-screen h-screen select-none `,

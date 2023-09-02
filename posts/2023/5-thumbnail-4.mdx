@@ -1,0 +1,710 @@
+---
+id: 5
+title: '썸네일 생성기 (4) 리덕스를 도입, 컴포넌트 분할'
+description: '리액트를 이용해서 간단한 기능을 가진 썸네일 생성기를 만들어보도록 합시다. 이번 글에서는 리덕스를 도입해서 전역적으로 스테이트를 관리할 수 있게끔 전환하는 시간을 가져봅니다.'
+cover: ''
+category: 'JavaScript'
+tags: ['썸네일 생성기', '자바스크립트', 'thumbnail', 'JavaScript', '리액트', 'React', '구글 API', '구글 클라우드 콘솔', 'Googleapis']
+series:
+  name: '썸네일 생성기 개발'
+  order: 4
+created: 2023-09-03 01:25:57
+updated: 2023-09-03 01:25:57
+published: yes
+---
+
+# 개요
+배경 관련 작업을 하려고 조금씩 살펴보다가 문득 떠오른 게 있었습니다. 이제 슬슬 컴포넌트들을 쪼개서 관리를 해야하는데 이럴 경우에 스테이트도 그에 맞게 관리를 해야한다는 것이었죠. 하지만 제가 정한 이 프로젝트의 컴포넌트 분할 계획은 두개의 컴포넌트에서 만들어지는 스테이트를 하나의 컴포넌트에서 활용하는 구조였습니다.
+
+컴포넌트와 컴포넌트가 부모 형제 사이가 아니기 때문에 스테이트를 전달할 방법이 없었다는 것이죠. 그래서 결론은 리덕스의 도입이었습니다. 리덕스 툴킷을 이용해서 중앙 저장소를 만들고 컴포넌트를 분할하는 것을 이 글에서 다루려고 합니다. 그럼 시작해봅시다.
+
+# 리덕스 환경 설정
+먼저 리덕스 환경을 구성하는 것부터 진행해보도록 합시다. 관련 패키지를 설치하고, 리듀서를 구성하고, 중앙 저장소인 스토어까지 만드는 과정을 간략하게 보여드리려고 합니다. 일단 리덕스가 필요한 이유는 위에서도 짧게 언급했는데, 컴포넌트가 분산되어 있어서 프롭스를 통해서 스테이트를 전달받을 수가 없습니다.
+
+리액트에서는 부모에서 자식에게 자산을 물려주는 식으로 프롭스를 전달하는데 이 프로젝트는 같은 계층의 컴포넌트끼리 스테이트를 사용해야하기 때문에 프롭스를 이용하는 것은 불가능하기 때문에 리덕스를 사용하는 것입니다. 리덕스는 중앙 저장소를 통해서 데이터를 관리하고 프롭스로의 스테이트 전달이 아닌 곧바로 중앙 저장소에서 호출하는 시스템이기 때문에 현재 프로젝트의 구조와 알맞습니다.
+
+<Image src='https://i.ibb.co/xCpxrC4/image.png' alt='리덕스를 사용하는 이유' />
+
+리덕스가 무엇인지 자체에 대해 설명하는 것은 여기서 다룰 내용은 아닌 것 같으니 이미지로 설명을 대체하고 이제 리덕스 사용 환경을 구축해보도록 합시다.
+
+## 리덕스 관련 패키지 설치
+
+<CodeBlock title=''>
+```bash
+yarn add @reduxjs/toolkit react-redux redux redux-persist
+```
+</CodeBlock>
+
+우선 관련 패키지를 설치해야합니다. 이 글에서는 리덕스 툴킷을 사용할 것이기 때문에 툴킷은 필수적으로 설치를 해줍니다. **redux-persist** 같은 경우에는 리덕스를 사용하면 스테이트의 값을 로컬스토리지에 저장해주는 기능을 합니다. 새로고침을 해도 그 데이터가 남아있는 것이죠.
+
+데이터를 저장은 해야 하는데 데이터베이스에 저장하기엔 뭐한 데이터의 경우에는 이걸 사용하는 편입니다. 설치를 진행하고나서 이제 리듀서를 만들어야합니다.
+
+<Image src='https://drive.google.com/file/d/1j_Tze5nEXReXvBQzR1SPGCRBLlULGw82/view?usp=drive_link' alt='리덕스 폴더 구조' drive />
+
+폴더 구조를 이렇게 해두었습니다. `src` 폴더 안에 `redux` 폴더를 만들고 그 안에 스토어와 리듀서를 둘 겁니다.
+
+## 리듀서 생성
+리듀서는 각각의 스테이트를 갖습니다. 그래서 기능에 따라 여러개의 리듀서를 만들고 리듀서별로 스테이트를 저장하고 관리할 수 있는 게 리덕스의 큰 특징입니다. 하지만 이 프로젝트는 큰 편은 아니고 하나의 리듀서만 있으면 될 것 같아서 하나의 리듀서만 만들어볼 것입니다.
+
+`app.reducer.ts` 파일을 열고 작성을 시작합니다.
+
+<CodeBlock title='app.reducer.ts'>
+```ts
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
+type AppState = {
+  bgType: ('color' | 'image');
+  title: string;
+  subTitle: string;
+  textColor: string;
+  bgColor: string;
+  imgSrc: string;
+}
+
+const initialState: AppState = {
+  bgType: 'color',
+  title: '제목을 입력하세요',
+  subTitle: '',
+  textColor: '#ffffff',
+  bgColor: '#333333',
+  imgSrc: '',
+};
+
+const appReducer = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    initState(state) {
+      state.bgType = 'color';
+      state.title = '제목을 입력하세요';
+      state.subTitle = '';
+      state.textColor = '#ffffff';
+      state.bgColor = '#333333';
+      state.imgSrc = '';
+    },
+    setBgType(
+      state,
+      { payload, }: PayloadAction<{value: ('color' | 'image')}>
+    ) {
+      state.bgType = payload.value;
+    },
+    setTitle(
+      state,
+      { payload, }: PayloadAction<{value: string}>
+    ) {
+      state.title = payload.value;
+    },
+    setSubTitle(
+      state,
+      { payload, }: PayloadAction<{value: string}>
+    ) {
+      state.subTitle = payload.value;
+    },
+    setTextColor(
+      state,
+      { payload, }: PayloadAction<{value: string}>
+    ) {
+      state.textColor = payload.value;
+    },
+    setBgColor(
+      state,
+      { payload, }: PayloadAction<{value: string}>
+    ) {
+      state.bgColor = payload.value;
+    },
+    setImg(
+      state,
+      { payload, }: PayloadAction<{value: string}>
+    ) {
+      state.imgSrc = payload.value;
+    },
+  },
+});
+
+export const {
+  initState, setBgType, setTitle, setSubTitle, setTextColor, setBgColor, setImg,
+} = appReducer.actions;
+export default appReducer.reducer;
+```
+</CodeBlock>
+
+리듀서는 이름, 스테이트 기본값, 액션으로 이루어져 있습니다. 리덕스 툴킷에서는 `createSlice` 함수를 이용해서 리듀서를 만듭니다. `initialState` 에는 여섯개의 스테이트를 만들어놨습니다. 제목과 부제, 배경 타입, 배경 색상, 이미지 주소, 텍스트 색상입니다. 나중에 더 늘어날 수도 있는데 일단은 이렇게만 만들어놨습니다.
+
+액션은 기본 스테이트로 돌려주는 액션 하나와 각 스테이트에 대응하는 액션 하나씩 해서 총 7개의 액션이 있습니다. 역시나 더 늘어날 수도 있습니다. 지금 당장에는 이렇게만 있으면 될 것 같네요.
+
+이렇게 만들어준 다음에는 `appReducer.actions` 에서 액션들을 분리시켜서 `export` 시켜주고 `appReducer.reducer` 도 `export` 시켜주면 됩니다.
+
+## 중앙 저장소 생성
+그 다음에는 **store**를 만들어야 합니다. 이 store에 **redux-persist**도 적용 할 겁니다. `store.ts` 파일을 열어서 작업을 시작합니다.
+
+<CodeBlock title='store.ts'>
+```ts
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
+import appReducer from './app.reducer';
+
+const createNoopStorage = () => {
+  return {
+    // eslint-disable-next-line no-unused-vars
+    getItem(_key: any) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: any, value: any) {
+      return Promise.resolve(value);
+    },
+    // eslint-disable-next-line no-unused-vars
+    removeItem(_key: any) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const storage = typeof window === 'undefined'
+  ? createNoopStorage()
+  : createWebStorage('local');
+
+const reducers = combineReducers({
+  app: appReducer,
+});
+
+const persistedReducer = persistReducer({
+  key: 'root',
+  storage,
+  whitelist: [ 'app', ],
+}, reducers);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: [],
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+</CodeBlock>
+
+스토어는 이렇게 만들면 되는데 간단하게 코드를 살펴보도록 하겠습니다.
+
+<CodeBlock title=''>
+```ts
+const reducers = combineReducers({
+  app: appReducer,
+});
+```
+</CodeBlock>
+
+먼저 `combineReducers` 함수를 이용해서 리듀서들을 하나로 합쳐주는 작업을 진행합니다. 리듀서가 여러개일 때에 사용하는 방법인데 굳이 하나임에도 이렇게 하는 이유는 리듀서가 추가될 수도 있기 때문입니다. 만일을 대비해서 미리 이렇게 만들어둔 것이죠.
+
+이렇게 만들어진 `reducers` 를 아래에서 사용합니다.
+
+<CodeBlock title=''>
+```ts
+const storage = typeof window === 'undefined'
+  ? createNoopStorage()
+  : createWebStorage('local');
+
+const persistedReducer = persistReducer({
+  key: 'root',
+  storage,
+  whitelist: [ 'app', ],
+}, reducers);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: [],
+});
+```
+</CodeBlock>
+
+`persistReducer` 함수는 어떤 리듀서를 로컬스토리지에 저장해서 관리할 것인가를 포함하는 데이터를 명시하는 역할을 합니다. 이런식으로 작성을 하면 되고 `configureStore` 함수를 통해서 스토어를 생성합니다.
+
+`createNoopStorage` 함수의 경우에는 **redux-persist** 가 제역할을 못하는 경우가 있어서 구글링을 통해서 발견한 해결책으로 나온 함수입니다.
+
+<CodeBlock title=''>
+```ts
+const createNoopStorage = () => {
+  return {
+    // eslint-disable-next-line no-unused-vars
+    getItem(_key: any) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: any, value: any) {
+      return Promise.resolve(value);
+    },
+    // eslint-disable-next-line no-unused-vars
+    removeItem(_key: any) {
+      return Promise.resolve();
+    },
+  };
+};
+```
+</CodeBlock>
+
+이렇게까지 하면 이제 만들어진 스토어와 함께 타입을 내보내기만 하면 됩니다.
+
+<CodeBlock title=''>
+```ts
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+</CodeBlock>
+
+리듀서에서 만든 액션들을 사용(dispatch)하기 위해서 필요한 `AppDispatch` 타입과 중앙 저장소에서 데이터를 가져올 때 필요한 `RootState` 타입을 내보내줍니다. 이제 마지막으로 커스텀 훅을 만들어서 스테이트와 액션을 편하게 사용할 수 있도록 준비해두는 일만 남았습니다.
+
+## 커스텀 훅 만들기
+
+<Image src='https://drive.google.com/file/d/1lxjgmOo2mCcQmHnIaF00qVbPEsT-0PKB/view?usp=drive_link' alt='커스텀 훅 폴더 구성' drive />
+
+먼저 폴더와 파일을 이렇게 만들어줍니다.
+
+`rtk.ts` 파일을 열고 아래의 내용을 작성합니다.
+
+<CodeBlock title='rtk.ts'>
+```ts
+import { useDispatch, useSelector } from 'react-redux';
+import type { TypedUseSelectorHook } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux';
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+```
+</CodeBlock>
+
+이제는 액션을 사용할 때 `useAppDispatch` 훅으로 사용하면 되고 스테이트를 가져올 때에는 `useAppSelector` 훅으로 가져오면 됩니다.
+
+## 마지막, Provider 설정하기
+
+마지막 작업을 위해서는 `pages` 폴더의 `_app.tsx` 파일을 열어서 수정 해야합니다.
+
+<CodeBlock title='_app.tsx'>
+```tsx
+import React from 'react';
+import Head from 'next/head';
+import { AppProps } from 'next/app';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+import { store } from '@/redux';
+import '@/styles/global.css';
+
+export const persistor = persistStore(store);
+
+const App = ({ Component, pageProps, }: AppProps) => (
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Head>
+        <meta charSet='UTF-8' />
+        <meta httpEquiv='X-UA-Compatible' content='ie=edge' />
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1.0'
+        />
+      </Head>
+      <Component {...pageProps} />
+    </PersistGate>
+  </Provider>
+);
+
+export default App;
+```
+</CodeBlock>
+
+`Provider` 로 기존의 내용물을 감싸주고, `store` 를 전달해줍니다. 그 안에서는 `persistStore` 함수에 인자로 `store` 를 넘겨주고 얻은 `persistor` 를 `PersistGate` 에 전달해주면 됩니다. 코드상에서 보이는대로 설정하면 모든 준비는 끝난겁니다. 이제 컴포넌트 분할하러 가봅시다.
+
+# 컴포넌트 분할의 이유
+컴포넌트를 분할하는 이유는 하나의 컴포넌트에서 여러가지의 일을 처리하면 혼선이 올 수도 있고 보기에도 좋지 않기 때문도 있고 가장 큰 건 재사용성이지만 굳이 재사용성이 아니더라도 컴포넌트를 분리하는 것을 통해서 그 부분만 신경쓰고 관리할 수 있기 때문에 가독성도 좋아지고 편의성이 향상되기 때문인 듯합니다.
+
+그래서 이 프로젝트는 세개의 컴포넌트를 추가로 만들어서 그 안에 각각의 내용을 채워넣도록 할 겁니다. 썸네일이 될 화면을 분리하고, 텍스트 설정 부분을 분리하고, 배경 설정 부분을 분리하면 될 것 같습니다.
+
+시작하기 전에 기존의 `index.tsx` 를 보고 시작하도록 하겠습니다. 코드는 접힌 상태이므로 버튼을 클릭해서 펼쳐서 보시면 됩니다.
+
+<CodeBlock title='index.tsx' fold>
+```tsx
+import React, {
+  ChangeEvent, useCallback, useState
+} from 'react';
+import tw, { css } from 'twin.macro';
+
+export default function IndexPage() {
+  const [ title, setTitle, ] = useState('제목을 입력하세요.');
+  const [ subTitle, setSubTitle, ] = useState('부제');
+
+  const onChangeTitle = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setTitle(event.target.value);
+    },
+    []
+  );
+
+  const onChangeSubTitle = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setSubTitle(event.target.value);
+    },
+    []
+  );
+
+  const style = {
+    default: css([
+      tw` w-[1280px] mx-auto `,
+    ]),
+    frame: css([
+      tw` box-content border border-black-base aspect-video mb-10 relative `,
+    ]),
+    inputs: css([
+      tw` space-y-2 `,
+    ]),
+    input: css([
+      tw` flex flex-col gap-1 `,
+      tw` [span]:( font-semibold text-normal text-black-base ) `,
+      tw` [input]:( p-2 outline-none text-normal bg-black-100 text-black-base placeholder:text-black-300 border-b-[2px] border-transparent transition-colors duration-200 ) `,
+      tw` [input]:( focus:( border-blue-500 ) ) `,
+    ]),
+    colors: tw` flex mt-10 `,
+    colorTab: css([
+      tw` [&[data-selected="true"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-white text-black-base text-center ) `,
+      tw` [&[data-selected="false"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-black-300 text-black-600 text-center ) `,
+    ]),
+    colorTabBottom: css([
+      tw` border border-black-300 border-t-0 p-3 bg-white mb-10 `,
+    ]),
+    buttons: css([
+      tw` flex gap-5 `,
+      tw` [button]:( flex-1 shrink-0 bg-blue-400 text-white p-3 hover:( bg-blue-600 ) ) `,
+    ]),
+    titles: css([
+      tw` absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] text-center w-full `,
+    ]),
+    title: css([
+      tw` text-[4rem] font-black whitespace-pre-line `,
+    ]),
+    subTitle: css([
+      tw` text-[3rem] font-semibold `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.default}>
+        <div id='th-frame' css={style.frame}>
+          <div id='th-titles' css={style.titles}>
+            <h1 id='th-title' css={style.title}>
+              {title.split('\\n').map((item, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <React.Fragment key={`${item}-${index}`}>{item}<br /></React.Fragment>
+              ))}
+            </h1>
+            <h2 id='th-sub-title' css={style.subTitle}>{subTitle}</h2>
+          </div>
+        </div>
+
+        <div css={style.inputs}>
+          <label htmlFor='title' css={style.input}>
+            <span>제목</span>
+            <input
+              type='text'
+              id='title'
+              placeholder='제목'
+              value={title}
+              onChange={onChangeTitle}
+            />
+          </label>
+          <label htmlFor='sub-title' css={style.input}>
+            <span>부제</span>
+            <input
+              type='text'
+              id='sub-title'
+              placeholder='부제'
+              value={subTitle}
+              onChange={onChangeSubTitle}
+            />
+          </label>
+        </div>
+
+        <div css={style.colors}>
+          <button css={style.colorTab} data-type='color'>단색 배경</button>
+          <button css={style.colorTab} data-type='image'>이미지 배경</button>
+        </div>
+
+        <div css={style.colorTabBottom}>
+          <input type='range' min={0} max={255} defaultValue={50} id='hex-red' />
+          <input type='range' min={0} max={255} defaultValue={50} id='hex-blue' />
+          <input type='range' min={0} max={255} defaultValue={50} id='hex-green' />
+        </div>
+
+        <div css={style.colorTabBottom}>
+          <input type='text' id='image-src' placeholder='이미지 주소를 입력하세요' css={style.input} />
+        </div>
+
+        <div css={style.buttons}>
+          <button>초기화</button>
+          <button>이미지로 저장</button>
+        </div>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+## 썸네일 부분 분리하기 => Thumbnail
+
+<Image src='https://drive.google.com/file/d/14bTfA-2J5hpuZgSA7xbM4g3UB9xN21vH/view?usp=drive_link' alt='컴포넌트 폴더 구조' drive />
+
+`components` 폴더를 만들고 그 안에 세개의 파일을 만들겁니다. `Thumbnail.tsx`, `TextConfig.tsx`, `BackgroundConfig.tsx` 입니다. 이 세가지의 파일이 각각 썸네일, 텍스트 설정, 배경 설정 부분이 될 겁니다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx
+import React from 'react';
+import tw, { css } from 'twin.macro';
+import { useAppSelector } from '@/hooks/rtk';
+
+export function Thumbnail() {
+  const { title, subTitle, } = useAppSelector((state) => state.app);
+
+  const style = {
+    frame: css([
+      tw` box-content border border-black-base aspect-video mb-10 relative `,
+    ]),
+    titles: css([
+      tw` absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] text-center w-full `,
+    ]),
+    title: css([
+      tw` text-[4rem] font-black whitespace-pre-line `,
+    ]),
+    subTitle: css([
+      tw` text-[3rem] font-semibold `,
+    ]),
+  };
+
+  return (
+    <>
+      <div id='th-frame' css={style.frame}>
+        <div id='th-titles' css={style.titles}>
+          <h1 id='th-title' css={style.title}>
+            {title.split('\\n').map((item, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <React.Fragment key={`${item}-${index}`}>{item}<br /></React.Fragment>
+            ))}
+          </h1>
+          <h2 id='th-sub-title' css={style.subTitle}>{subTitle}</h2>
+        </div>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+썸네일 부분을 그대로 옮겨왔는데, 중요한 것은 `useAppSelector` 함수를 통해서 중앙 저장소에 저장되어있는 `title`, `subTitle` 스테이트를 가져오는 점이 달라졌다는 것입니다. 이런 식으로 편리하고 간단하게 스테이트를 끌어다가 사용할 수 있습니다.
+
+## 텍스트 설정 부분 분리하기 => TextConfig
+<CodeBlock title='TextConfig.tsx'>
+```tsx
+import React, { ChangeEvent, useCallback } from 'react';
+import tw, { css } from 'twin.macro';
+import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
+import { setSubTitle, setTitle } from '@/redux';
+
+export function TextConfig() {
+  const { title, subTitle, } = useAppSelector(
+    (state) => state.app
+  );
+
+  const dispatch = useAppDispatch();
+
+  const onChangeTitle = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      dispatch(setTitle({
+        value: event.target.value,
+      }));
+    },
+    []
+  );
+
+  const onChangeSubTitle = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      dispatch(setSubTitle({
+        value: event.target.value,
+      }));
+    },
+    []
+  );
+
+  const style = {
+    inputs: css([
+      tw` space-y-2 `,
+    ]),
+    input: css([
+      tw` flex flex-col gap-1 `,
+      tw` [span]:( font-semibold text-normal text-black-base ) `,
+      tw` [input]:( p-2 outline-none text-normal bg-black-100 text-black-base placeholder:text-black-300 border-b-[2px] border-transparent transition-colors duration-200 ) `,
+      tw` [input]:( focus:( border-blue-500 ) ) `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.inputs}>
+        <label htmlFor='title' css={style.input}>
+          <span>제목</span>
+          <input
+            type='text'
+            id='title'
+            placeholder='제목'
+            value={title}
+            onChange={onChangeTitle}
+          />
+        </label>
+        <label htmlFor='sub-title' css={style.input}>
+          <span>부제</span>
+          <input
+            type='text'
+            id='sub-title'
+            placeholder='부제'
+            value={subTitle}
+            onChange={onChangeSubTitle}
+          />
+        </label>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+텍스트를 설정하는 부분도 크게 달라진 건 없지만 `useState` 함수를 이용해서 스테이트를 변경하는 부분에서 리덕스를 사용해서 스테이트를 변경하는 부분으로 바뀌었습니다. 리덕스에서 스테이트를 변경하기 위해서는 `dispatch` 를 사용해야합니다. `dispatch` 함수 안에서 액션을 사용하는 것입니다.
+
+<CodeBlock title=''>
+```tsx
+const [ title, setTitle, ] = useState('제목을 입력하세요.');
+const [ subTitle, setSubTitle, ] = useState('부제');
+
+const onChangeTitle = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value);
+  },
+  []
+);
+
+const onChangeSubTitle = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setSubTitle(event.target.value);
+  },
+  []
+);
+```
+</CodeBlock>
+
+이게 기존의 방법이었습니다. 스테이트를 컴포넌트에서 만들고, 그걸 변경하는 것이었죠. 하지만 리덕스를 도입한 후에는 아래처럼 바뀝니다.
+
+<CodeBlock title=''>
+```tsx
+const { title, subTitle, } = useAppSelector(
+  (state) => state.app
+);
+
+const dispatch = useAppDispatch();
+
+const onChangeTitle = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setTitle({
+      value: event.target.value,
+    }));
+  },
+  []
+);
+
+const onChangeSubTitle = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSubTitle({
+      value: event.target.value,
+    }));
+  },
+  []
+);
+```
+</CodeBlock>
+
+중앙 저장소에서 스테이트를 가져온 후에, `dispatch` 를 통해서 액션을 실행시킵니다. 여기서 실행되는 액션은 두가지죠. `setTitle` 과 `setSubTitle` 입니다.
+
+## 배경 설정 부분 분리하기 => BackgroundConfig
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx
+import React from 'react';
+import tw, { css } from 'twin.macro';
+
+export function BackgroundConfig() {
+  const style = {
+    colors: tw` flex mt-10 `,
+    colorTab: css([
+      tw` [&[data-selected="true"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-white text-black-base text-center ) `,
+      tw` [&[data-selected="false"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-black-300 text-black-600 text-center ) `,
+    ]),
+    colorTabBottom: css([
+      tw` border border-black-300 border-t-0 p-3 bg-white mb-10 `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.colors}>
+        <button css={style.colorTab} data-type='color'>단색 배경</button>
+        <button css={style.colorTab} data-type='image'>이미지 배경</button>
+      </div>
+
+      <div css={style.colorTabBottom}>
+        <input type='range' min={0} max={255} defaultValue={50} id='hex-red' />
+        <input type='range' min={0} max={255} defaultValue={50} id='hex-blue' />
+        <input type='range' min={0} max={255} defaultValue={50} id='hex-green' />
+      </div>
+
+      <div css={style.colorTabBottom}>
+        <input type='text' id='image-src' placeholder='이미지 주소를 입력하세요' />
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+배경을 설정하는 부분은 아직 작업을 한 게 없어서 딱히 달라진 건 없습니다. 이제 다음글에서는 여기를 건드리게 되겠죠. 이제 마지막으로 분리한 후의 `index.tsx` 를 보면서 마치도록 하겠습니다.
+
+<CodeBlock title='index.tsx'>
+```tsx
+import React from 'react';
+import tw, { css } from 'twin.macro';
+import { BackgroundConfig, TextConfig, Thumbnail } from '@/components';
+
+export default function IndexPage() {
+  const style = {
+    default: css([
+      tw` w-[1280px] mx-auto `,
+    ]),
+    buttons: css([
+      tw` flex gap-5 `,
+      tw` [button]:( flex-1 shrink-0 bg-blue-400 text-white p-3 hover:( bg-blue-600 ) ) `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.default}>
+        <Thumbnail />
+        <TextConfig />
+        <BackgroundConfig />
+
+        <div css={style.buttons}>
+          <button>초기화</button>
+          <button>이미지로 저장</button>
+        </div>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+# 마치며
+이번 글에서는 리덕스를 도입하고 컴포넌트를 분리하는 작업을 해봤습니다. 실제로 적용하는 건 그렇게 대단한 게 아닌데 글로 작성하니까 상당히 길어진 느낌이 없지 않네요. 이제 다음 글에서는 원래 이번 글에서 진행했어야 했던 배경 설정 부분을 개발하도록 하겠습니다.
