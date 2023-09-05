@@ -1,7 +1,7 @@
 ---
 id: 6
 title: '썸네일 생성기(5) 배경 설정 구현하기(1)'
-description: '리액트를 이용해서 간단한 기능을 가진 썸네일 생성기를 만들어보도록 합시다. 이번 글에서는 배경 설정을 구현해보는 시간을 가집니다.'
+description: '리액트를 이용해서 간단한 기능을 가진 썸네일 생성기를 만들어보도록 합시다. 이번 글에서는 배경 설정 컴포넌트 개발을 진행해보도록 하겠습니다.'
 cover: ''
 category: 'JavaScript'
 tags: ['썸네일 생성기', '자바스크립트', 'thumbnail', 'JavaScript', '리액트', 'React', '구글 API', '구글 클라우드 콘솔', 'Googleapis']
@@ -10,12 +10,53 @@ series:
   order: 5
 created: 2023-09-05 09:45:00+09:00
 updated: 2023-09-05 09:45:00+09:00
-published: no
+published: yes
 ---
 
 # 개요
+이번 글에서는 썸네일 배경 설정을 구현해보도록 합시다. 배경은 이미지 배경이 있고 색상 배경이 있는데 색상 배경을 먼저 개발하도록 하겠습니다. 색상 배경의 경우에는 사용자가 RGB 컬러를 선택하면 적용되는 방향으로 생각하고 있습니다. 저번 글에서 컴포넌트를 분리한 후 배경 설정 컴포넌트는 아무것도 건드리지 않았었는데 차근 차근 진행해보도록 합시다.
+
+글의 분량이 괜찮다 싶으면 이미지 배경 설정 구현까지 진행해보도록 하겠습니다. 그럼 이제 시작해봅시다.
 
 # 배경 설정 시작하기
 
+<CodeBlock title='BackgroundConfig.tsx' fold>
+```tsx
+import React from 'react';
+import tw, { css } from 'twin.macro';
+
+export function BackgroundConfig() {
+  const style = {
+    colors: tw` flex mt-10 `,
+    colorTab: css([
+      tw` [&[data-selected="true"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-white text-black-base text-center ) `,
+      tw` [&[data-selected="false"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-black-300 text-black-600 text-center ) `,
+    ]),
+    colorTabBottom: css([
+      tw` border border-black-300 border-t-0 p-3 bg-white mb-10 `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.colors}>
+        <button css={style.colorTab} data-type='color'>단색 배경</button>
+        <button css={style.colorTab} data-type='image'>이미지 배경</button>
+      </div>
+
+      <div css={style.colorTabBottom}>
+        <input type='range' min={0} max={255} defaultValue={50} id='hex-red' />
+        <input type='range' min={0} max={255} defaultValue={50} id='hex-blue' />
+        <input type='range' min={0} max={255} defaultValue={50} id='hex-green' />
+      </div>
+
+      <div css={style.colorTabBottom}>
+        <input type='text' id='image-src' placeholder='이미지 주소를 입력하세요' />
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
 
 # 마치며
