@@ -14,12 +14,11 @@
   "homepage": "https://github.com/nihilog/nihilncunia.dev#readme",
   "scripts": {
     "remove": "rm -rf node_modules/.cache .next/ .contentlayer/",
-    "serve": "yarn run remove && yarn run open && next dev",
-    "start": "yarn run remove && yarn run build && yarn run open && next start",
+    "serve": "yarn run remove && next dev",
+    "start": "yarn run remove && yarn run build && next start",
     "build": "yarn run remove && next build",
     "postbuild": "next-sitemap",
     "clean": "yarn cache clean",
-    "open": "start http://localhost:3000",
     "vercel": "vercel build && vercel --prod"
   },
   "keywords": [],

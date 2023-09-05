@@ -1,9 +1,23 @@
-import { Post, allPosts } from '@/.contentlayer/generated';
+import { Post, allPosts } from 'contentlayer/generated';
 
-interface MappedPosts extends Partial<Post> {}
+interface CustomPost {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  cover: string;
+  tags: string[];
+  series: {
+    name: string;
+    order: number;
+  };
+  created: Date;
+  updated: Date;
+  published: boolean;
+}
 
 export const getListMetadata = (start: number = 0, end: number = 0) => {
-  const mappedPosts: MappedPosts[] = allPosts
+  const mappedPosts: CustomPost[] = allPosts
     .filter((post) => post.published.includes('yes'))
     .map((post) => ({
       id: post.id,
@@ -19,7 +33,7 @@ export const getListMetadata = (start: number = 0, end: number = 0) => {
       },
       created: post.created,
       updated: post.updated,
-      published: post.published,
+      published: post.published === 'yes' ? true : false,
     }))
     .sort((a, b) => {
       return b.id - a.id;

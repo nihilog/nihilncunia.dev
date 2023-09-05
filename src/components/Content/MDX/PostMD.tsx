@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { useMDXComponent } from 'next-contentlayer/hooks';
@@ -13,6 +13,7 @@ import { Ad, OtherPosts, PostItem } from '../Main';
 import { useAppSelector } from '@/src/hooks/rtk';
 import { getListMetadata } from '@/src/utils/mdx';
 import { Fb } from '../Post';
+import { useRouter } from 'next/router';
 
 interface Props {
   post: Post;
@@ -21,6 +22,15 @@ interface Props {
 }
 
 export function PostMD({ post, content, styles, }: Props) {
+  const router = useRouter();
+  
+  useEffect(() => {
+    console.log(post);
+    if (!post.published) {
+      router.push('/posts');
+    }
+  }, []);
+
   const isDark = useAppSelector(
     (state) => state.dark.isDark
   );
