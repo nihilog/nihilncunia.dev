@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { A } from '@/src/components/Base';
 
 interface Props {
   number: number;
@@ -12,30 +11,17 @@ interface Props {
 }
 
 export function PageNumber({ number, currentPage, styles, }: Props) {
-  // const [ path, setPath, ] = useState('');
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const postsCond = /^(\/posts)/g;
-  //   const categoriesCond = /^\/categories/g;
-  //   const tagsCond = /^\/tags/g;
-
-  //   console.log(router.pathname.match(postsCond));
-
-  //   // if (router.pathname.match(postsCond)) {
-
-  //   // }
-  // }, []);
-
   const path = useMemo(() => {
-    const postsCond = /^(\/posts)/g;
-    const categoriesCond = /^\/categories/g;
-    const tagsCond = /^\/tags/g;
-
-    // if () {
-
-    // }
-  }, []);
+    if (router.asPath.includes('posts')) {
+      return '/posts';
+    } else if (router.asPath.includes('categories')) {
+      return `/categories/${router.query.category}`;
+    } else if (router.asPath.includes('tags')) {
+      return `/tags/${router.query.tag}`;
+    }
+  }, [ router.asPath, router.query, ]);
 
   const style = {
     default: css([
@@ -48,7 +34,7 @@ export function PageNumber({ number, currentPage, styles, }: Props) {
   return (
     <>
       <Link
-        href={`${router.pathname}?pageNumber=${number}`}
+        href={`${path}?pageNumber=${number}`}
         css={style.default}
       >
         {number}

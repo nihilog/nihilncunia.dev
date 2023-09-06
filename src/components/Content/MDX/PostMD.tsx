@@ -5,6 +5,7 @@ import { useMDXComponent } from 'next-contentlayer/hooks';
 import Giscus from '@giscus/react';
 import { Icon } from '@iconify/react';
 import { Post } from 'contentlayer/generated';
+import { useRouter } from 'next/router';
 import { CustomMDX } from './CustomMDX';
 import { A, H } from '@/src/components/Base';
 import { dateFormat } from '@/src/utils/date';
@@ -13,7 +14,6 @@ import { Ad, OtherPosts, PostItem } from '../Main';
 import { useAppSelector } from '@/src/hooks/rtk';
 import { getListMetadata } from '@/src/utils/mdx';
 import { Fb } from '../Post';
-import { useRouter } from 'next/router';
 
 interface Props {
   post: Post;
@@ -23,9 +23,8 @@ interface Props {
 
 export function PostMD({ post, content, styles, }: Props) {
   const router = useRouter();
-  
+
   useEffect(() => {
-    console.log(post);
     if (!post.published) {
       router.push('/posts');
     }

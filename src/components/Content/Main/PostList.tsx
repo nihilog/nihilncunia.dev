@@ -4,16 +4,15 @@ import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { Icon } from '@iconify/react';
-import { Post } from 'contentlayer/generated';
-import { configData } from '@/src/data';
 import { A, H } from '@/src/components/Base';
 import { Pagination } from './Pagination';
 import { PostItem } from './PostItem';
 import { setCover } from '@/src/utils';
 import { Ad } from './Ad';
+import { ICustomPost } from '@/src/utils/mdx';
 
 interface Props {
-  posts: Partial<Post>[];
+  posts: ICustomPost[];
   listName: string;
   page?: ('index' | 'list');
   series?: boolean;
@@ -40,7 +39,7 @@ export function PostList({
   }, [ query, ]);
 
   const endPost = useMemo(() => {
-    return configData.postPerPage * (+query.pageNumber || 1);
+    return 5 * (+query.pageNumber || 1);
   }, [ query, ]);
 
   const style = {

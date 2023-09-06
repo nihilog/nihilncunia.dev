@@ -1,15 +1,15 @@
 import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { Icon } from '@iconify/react';
-import { Post } from 'contentlayer/generated';
 import { SerializedStyles } from '@emotion/react';
 import { useReSize } from '@/src/hooks';
 import { A, H } from '@/src/components/Base';
 import { setCover } from '@/src/utils';
 import { setDate } from '@/src/utils/date';
+import { ICustomPost } from '@/src/utils/mdx';
 
 interface Props {
-  post: Partial<Post>;
+  post: ICustomPost;
   direction?: ('left' | 'right');
   styles?: TwStyle | SerializedStyles;
 }

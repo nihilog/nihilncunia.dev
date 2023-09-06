@@ -1,53 +1,36 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Icon } from '@iconify/react';
-import { Post } from 'contentlayer/generated';
-import { useRouter } from 'next/router';
 import { A } from '@/src/components/Base';
 import { PageNumber } from './PageNumber';
-import { configData } from '@/src/data';
 import { PostPageQuery } from './PostList';
 import { textStyles } from '@/src/styles';
+import { ICustomPost, getPageArray } from '@/src/utils/mdx';
 
 interface Props {
-  posts: Partial<Post>[];
+  posts: ICustomPost[];
   query: PostPageQuery;
   styles?: TwStyle | SerializedStyles;
 }
 
 export function Pagination({ posts, query, styles, }: Props) {
-  const router = useRouter();
+  const [ currentPageArray, setCurrentPageArray, ] = useState<number[]>([]);
 
   const firstPage = 1;
-  const lastPage = useMemo(() => {
-    return Math.floor(((posts.length - 1) / configData.postPerPage) + 1);
-  }, []);
+  const lastPage = getPageArray().totalPage;
 
   const currentPage = +query.pageNumber || 1;
   const isFirst = currentPage === firstPage;
   const isLast = currentPage === lastPage;
 
-  const pageNumbers = useMemo(() => {
-    const groupStart = ((currentPage - 1) * configData.postPerPage) + 1;
-    const groupEnd = () => {
-      const end = currentPage * configData.postPerPage;
-
-      if (end > lastPage) {
-        return lastPage;
-      }
-
-      return end;
-    };
-
-    const numbers: number[] = [];
-
-    for (let i = groupStart; i <= groupEnd(); i++) {
-      numbers.push(i);
+  useEffect(() => {
+    if (currentPage % 5 === 1) {
+      setCurrentPageArray(getPageArray().pages[Math.floor(currentPage / 5)]);
+    } else if (currentPage % 5 === 0) {
+      setCurrentPageArray(getPageArray().pages[Math.floor(currentPage / 5) - 1]);
     }
-
-    return numbers;
-  }, [ router.asPath, ]);
+  }, [ currentPage, ]);
 
   const style = {
     default: css([
@@ -102,8 +85,8 @@ export function Pagination({ posts, query, styles, }: Props) {
                 </A>
               </>
             )}
-            {pageNumbers.map((number) => (
-              <PageNumber key={number} number={number} currentPage={currentPage} />
+            {currentPageArray.map((number) => (
+              <PageNumber key={number} number={number + 1} currentPage={currentPage} />
             ))}
             {isLast ? (
               <>

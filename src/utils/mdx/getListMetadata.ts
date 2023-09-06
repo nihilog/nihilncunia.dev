@@ -1,6 +1,6 @@
-import { Post, allPosts } from 'contentlayer/generated';
+import { allPosts } from 'contentlayer/generated';
 
-interface CustomPost {
+export type ICustomPost = {
   id: number;
   title: string;
   description: string;
@@ -17,7 +17,7 @@ interface CustomPost {
 }
 
 export const getListMetadata = (start: number = 0, end: number = 0) => {
-  const mappedPosts: CustomPost[] = allPosts
+  const mappedPosts = allPosts
     .filter((post) => post.published.includes('yes'))
     .map((post) => ({
       id: post.id,
@@ -33,8 +33,8 @@ export const getListMetadata = (start: number = 0, end: number = 0) => {
       },
       created: post.created,
       updated: post.updated,
-      published: post.published === 'yes' ? true : false,
-    }))
+      published: post.published === 'yes',
+    }) as unknown as ICustomPost)
     .sort((a, b) => {
       return b.id - a.id;
     });
