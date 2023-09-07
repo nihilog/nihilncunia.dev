@@ -1,24 +1,37 @@
-import { allPosts } from 'contentlayer/generated';
+import {
+  IsoDateTimeString, MDX, Series, allPosts
+} from 'contentlayer/generated';
+
+type DocumentContentType = 'markdown' | 'mdx' | 'data'
+
+type RawDocumentData = {
+  sourceFilePath: string;
+  sourceFileName: string;
+  sourceFileDir: string;
+  contentType: DocumentContentType;
+  flattenedPath: string;
+}
 
 export type ICustomPost = {
+  _id: string;
+  _raw: RawDocumentData;
+  type: 'Post';
   id: number;
   title: string;
-  description: string;
-  category: string;
-  cover: string;
+  description?: string | undefined;
+  cover?: string | undefined;
+  category?: string | undefined;
   tags: string[];
-  series: {
-    name: string;
-    order: number;
-  };
-  created: Date;
-  updated: Date;
+  series?: Series | undefined;
+  created: IsoDateTimeString;
+  updated: IsoDateTimeString;
+  body: MDX;
   published: boolean;
-}
+};
 
 export const getListMetadata = (start: number = 0, end: number = 0) => {
   const mappedPosts = allPosts
-    .filter((post) => post.published.includes('yes'))
+    .filter((post) => post.published)
     .map((post) => ({
       id: post.id,
       title: post.title,
@@ -33,7 +46,7 @@ export const getListMetadata = (start: number = 0, end: number = 0) => {
       },
       created: post.created,
       updated: post.updated,
-      published: post.published === 'yes',
+      published: post.published,
     }) as unknown as ICustomPost)
     .sort((a, b) => {
       return b.id - a.id;

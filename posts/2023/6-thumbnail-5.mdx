@@ -1,6 +1,6 @@
 ---
 id: 6
-title: '썸네일 생성기(5) 배경 설정 구현하기(1)'
+title: '썸네일 생성기 (5) 배경 설정 구현하기 (1)'
 description: '리액트를 이용해서 간단한 기능을 가진 썸네일 생성기를 만들어보도록 합시다. 이번 글에서는 배경 설정 컴포넌트 개발을 진행해보도록 하겠습니다.'
 cover: ''
 category: 'JavaScript'
@@ -8,9 +8,9 @@ tags: ['썸네일 생성기', '자바스크립트', 'thumbnail', 'JavaScript', '
 series:
   name: '썸네일 생성기 개발'
   order: 5
+published: true
 created: 2023-09-05 09:45:00+09:00
 updated: 2023-09-05 09:45:00+09:00
-published: no
 ---
 
 # 개요
@@ -19,7 +19,7 @@ published: no
 글의 분량이 괜찮다 싶으면 이미지 배경 설정 구현까지 진행해보도록 하겠습니다. 그럼 이제 시작해봅시다.
 
 # 배경 설정 시작하기
-시작하기 전에 현재 상태의 배결 설정 컴포넌트를 살펴보고 넘어가도록 합시다.
+시작하기 전에 현재 상태의 배경 설정 컴포넌트를 살펴보고 넘어가도록 합시다.
 
 <CodeBlock title='BackgroundConfig.tsx' fold>
 ```tsx
@@ -28,13 +28,12 @@ import tw, { css } from 'twin.macro';
 
 export function BackgroundConfig() {
   const style = {
-    colors: tw` flex mt-10 `,
+    colors: tw`  `,
     colorTab: css([
-      tw` [&[data-selected="true"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-white text-black-base text-center ) `,
-      tw` [&[data-selected="false"]]:( p-3 flex-1 shrink-0 border border-black-300 border-b-0 bg-black-300 text-black-600 text-center ) `,
+      tw`  `,
     ]),
     colorTabBottom: css([
-      tw` border border-black-300 border-t-0 p-3 bg-white mb-10 `,
+      tw`  `,
     ]),
   };
 
@@ -63,6 +62,485 @@ export function BackgroundConfig() {
 배경 설정은 두가지가 있고 하나는 색상, 하나는 이미지입니다. 색상과 이미지는 탭으로 구분을 하기 때문에 둘 중 하나를 클릭하면 해당되는 내용이 활성화되도록 해야합니다. 또한 색상 설정의 경우 색상 슬라이더를 직접 만들어서 구현할 생각입니다. 대충 어떻게 할 지 감은 잡았으니 시작해보도록 합시다.
 
 ## 배경 종류 탭 구현하기
-배경 종류를 설정하는 탭부터 구현을 해봅시다.
+배경 종류를 설정하는 탭부터 구현을 해봅시다. 탭은 두개가 있고 클릭 할 때마다 해당 설정 화면이 보여야합니다. 새로고침을 했을 때에도 탭이 유지가 되게끔 만들기 위해서 이 부분에 리덕스를 적용할 생각입니다.
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx
+export default function BackgroundConfig() {
+  const bgType = useAppSelector((state) => state.app.bgType);
+  const dispatch = useAppDispatch();
+
+  const onClickColor = useCallback(
+    () => {
+      dispatch(setBgType({
+        value: 'color',
+      }));
+    },
+    []
+  );
+
+  const onClickImage = useCallback(
+    () => {
+      dispatch(setBgType({
+        value: 'image',
+      }));
+    },
+    []
+  );
+
+  const style = {
+    colors: tw` flex mt-10 border border-b-0 border-black-200 divide-x divide-black-200 `,
+    bgTypeTab: (type: string) => {
+      return css([
+        tw` p-3 flex-1 shrink-0 `,
+        bgType === type
+          ? tw` bg-white text-black-base `
+          : tw` bg-black-200 text-black-400 `,
+      ]);
+    },
+  };
+
+  return (
+    <>
+      <div css={style.colors}>
+        <button css={style.bgTypeTab('color')} onClick={onClickColor}>단색 배경</button>
+        <button css={style.bgTypeTab('image')} onClick={onClickImage}>이미지 배경</button>
+      </div>
+
+      {/* ... */}
+    </>
+  );
+}
+```
+</CodeBlock>
+
+먼저 이렇게 중앙 저장소에서 `bgType` 스테이트를 가져온 후에 `onClickColor` 함수와 `onClickImage` 함수를 만들어서 각각 `setBgType` 액션에 다른 값을 전달하는 식으로 구현해둔 상태입니다. 스타일에서는 함수로 매개변수를 받아서 `bgType` 과 `type` 을 비교하는 조건을 걸어서 참일 때와 거짓일 때에 따라서 탭의 색상이 달라지게끔 만들었습니다.
+
+<Image src='https://drive.google.com/file/d/1FWp6pPS9AWT-6U1eevuYAivtQZw8nYU2/view?usp=drive_link' alt='탭 클릭 구현' drive />
+
+이렇게만 해주면 자연스럽게 탭의 내용도 바뀌게 만들 수 있겠죠. 이 부분에 리덕스를 사용한 이유는 간단합니다. 위에서도 언급했지만 저는 이 설정 상태가 창을 껐다가 켜도 유지되었으면 좋겠거든요.
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx
+<>
+  {bgType === 'color' && (
+    <div css={style.tabBottom}>
+      색상 슬라이더
+    </div>
+  )}
+
+  {bgType === 'image' && (
+    <div css={style.tabBottom}>
+      이미지 주소 input
+    </div>
+  )}
+</>
+```
+</CodeBlock>
+
+<Image src='https://drive.google.com/file/d/1x0WX59twzsK-UVIeILbkYwagLObU2jQ2/view?usp=drive_link' alt='색상 배경 선택' drive />
+
+<Image src='https://drive.google.com/file/d/1PuADu4t3cTi9owS4wvJgl1NkxLjzdMZg/view?usp=drive_link' alt='이미지 배경 선택' drive />
+
+이런식으로 `bgType` 이 **color** 혹은 **image** 일 때 렌더링되는 부분이 달라지게끔 이렇게 만들 수 있을 것입니다. 그럼 이제 색상 슬라이더를 만들어볼 시간입니다. 색상 슬라이더는 `input` 태그의 `range` 타입을 이용해서 만들겁니다. **0부터 255까지의 값**을 설정할 수 있어야하기 때문이죠.
+
+## 색상 슬라이더 만들기
+색상 슬라이더를 만들기 전에 `BackgroundConfig.tsx` 컴포넌트에서 작업을 하면 코드가 길어지고 지저분해질 것이기 때문에 컴포넌트를 새로 만들어서 작업을 하는 것이 좋겠습니다. `ColorSlider.tsx` 컴포넌트를 만들었습니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+export default function ColorSlider() {
+  return (
+    <div>
+      <input type='range' min='0' max='255' />
+      <input type='range' min='0' max='255' />
+      <input type='range' min='0' max='255' />
+    </div>
+  );
+}
+```
+</CodeBlock>
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx
+<>
+  {bgType === 'color' && (
+    <div css={style.tabBottom}>
+      <ColorSlider />
+    </div>
+  )}
+</>
+```
+</CodeBlock>
+
+0에서 255까지의 숫자를 선택할 수 있는 `range` 타입의 `input` 세개를 만듭니다. 이녀석들이 **R, G, B**가 될 것입니다. 이녀석들에게서 값을 얻어내려면 스테이트가 필요합니다. 이 컴포넌트 내에서는 중앙 저장소의 스테이트 하나와 지역 스테이트 세개를 사용할 겁니다.
+
+`useState` 를 이용해서 스테이트 세개를 만들어줍니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+export default function ColorSlider() {
+  const [ red, setRed, ] = useState(50);
+  const [ green, setGreen, ] = useState(50);
+  const [ blue, setBlue, ] = useState(50);
+
+  return (
+    <div>
+      <input type='range' min='0' max='255' />
+      <input type='range' min='0' max='255' />
+      <input type='range' min='0' max='255' />
+    </div>
+  );
+}
+```
+</CodeBlock>
+
+기본값은 50으로 설정해두겠습니다. 스테이트를 만들었지만 아직 연결은 되지 않았습니다. 연결을 하고 `onChange` 핸들러까지 만들어주도록 합니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+export default function ColorSlider() {
+  const [ red, setRed, ] = useState(50);
+  const [ green, setGreen, ] = useState(50);
+  const [ blue, setBlue, ] = useState(50);
+
+  const onChangeRed = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setRed(+event.target.value);
+    },
+    [ green, blue, ]
+  );
+
+  const onChangeGreen = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setGreen(+event.target.value);
+    },
+    [ red, blue, ]
+  );
+
+  const onChangeBlue = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setBlue(+event.target.value);
+    },
+    [ red, green, ]
+  );
+
+  return (
+    <div>
+      <div>
+        <input type='range' min='0' max='255' value={red} onChange={onChangeRed} />
+        <span>{red}</span>
+      </div>
+      <div>
+        <input type='range' min='0' max='255' value={green} onChange={onChangeGreen} />
+        <span>{green}</span>
+      </div>
+      <div>
+        <input type='range' min='0' max='255' value={blue} onChange={onChangeBlue} />
+        <span>{blue}</span>
+      </div>
+    </div>
+  );
+}
+```
+</CodeBlock>
+
+<Image src='https://drive.google.com/file/d/151ewzccGZ3puGWAiafkd9am_kCW_JpHu/view?usp=drive_link' alt='숫자가 잘 뽑히는 모습' drive />
+
+슬라이더가 올바르게 작동하는지 각각의 값도 같이 출력해보았습니다. 수치는 잘 뽑아내고 있는 것 같습니다. 그러면 이제 이걸 색상으로 표현해야합니다. 이 숫자들을 HEX 코드로 바꾸는 작업을 해봅시다.
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx
+function convertHex(number: number) {
+  const hex = number.toString(16).toUpperCase();
+
+  return hex.length > 1
+    ? hex
+    : `0${hex}`;
+}
+
+const hexCode = useMemo(() => {
+  const hex = [ red, green, blue, ]
+    .map((color) => convertHex(color));
+
+  return `#${hex.join('')}`;
+}, [ red, green, blue, ]);
+```
+</CodeBlock>
+
+컴포넌트 내부에 두개의 함수를 만들어줍니다. `convertHex` 함수는 10진수를 16진수로 만들어주는 역할을 합니다. `hexCode` 함수는 `red`, `green`, `blue` 스테이트를 **HEX 코드로 변경**하여 최종적으로 **색상코드를 반환**합니다.
+
+그리고 이렇게 나온 HEX 코드를 배경에다가 뿌려주면 색이 나타날 겁니다. 하지만 지금은 썸네일에 바로 뿌려주는 것이 아니라 미리보기 색상 용도로 뿌려줘야 합니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+export default function ColorSlider() {
+  // ...
+
+  const hexCode = useMemo(() => {
+    const hex = [ red, green, blue, ]
+      .map((color) => convertHex(color));
+
+    return `#${hex.join('')}`;
+  }, [ red, green, blue, ]);
+
+  const style = {
+    colorView: css([
+      (css`
+        background-color: ${hexCode};
+      `),
+      tw` w-[150px] aspect-square border-2 border-[black] `,
+    ]),
+  };
+
+  return (
+    <div>
+      <div>
+        <div>
+          <input type='range' min='0' max='255' value={red} onChange={onChangeRed} />
+          <span>{red}</span>
+        </div>
+        <div>
+          <input type='range' min='0' max='255' value={green} onChange={onChangeGreen} />
+          <span>{green}</span>
+        </div>
+        <div>
+          <input type='range' min='0' max='255' value={blue} onChange={onChangeBlue} />
+          <span>{blue}</span>
+        </div>
+      </div>
+      <div css={style.colorView} />
+    </div>
+  );
+}
+```
+</CodeBlock>
+
+<Image src='https://drive.google.com/file/d/1s7jfIpnPyCk5uyjlHFs-VIJxqULQcyZi/view?usp=drive_link' alt='배경색으로 잘 들어가는 모습' drive />
+
+잘 적용되는 것을 볼 수 있습니다. 이제 이걸 이용해서 디자인을 조금 개선하고 조금 더 효율적으로 이용할 수 있도록 개선하려고 합니다. 최종적..까지는 아니더라도 개선된 모습은 아래와 같습니다.
+
+<CodeBlock title='colorSliders.tsx'>
+```tsx
+import React, {
+  ChangeEvent, useCallback, useMemo, useState
+} from 'react';
+import tw, { css } from 'twin.macro';
+import { useAppDispatch } from '@/hooks/rtk';
+import { setBgColor, setTextColor } from '@/redux';
+
+interface Props {
+  align?: ('horizontal' | 'vertical');
+  type?: ('text' | 'background');
+}
+
+export function ColorSlider({ align = 'vertical', type = 'background', }: Props) {
+  const [ red, setRed, ] = useState(50);
+  const [ green, setGreen, ] = useState(50);
+  const [ blue, setBlue, ] = useState(50);
+
+  const dispatch = useAppDispatch();
+
+  const onChangeRed = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setRed(+event.target.value);
+      setColor([ +event.target.value, green, blue, ]);
+    },
+    [ green, blue, ]
+  );
+
+  const onChangeGreen = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setGreen(+event.target.value);
+      setColor([ red, +event.target.value, blue, ]);
+    },
+    [ red, blue, ]
+  );
+
+  const onChangeBlue = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setBlue(+event.target.value);
+      setColor([ red, green, +event.target.value, ]);
+    },
+    [ red, green, ]
+  );
+
+  function convertHex(number: number) {
+    const hex = number.toString(16).toUpperCase();
+
+    return hex.length > 1
+      ? hex
+      : `0${hex}`;
+  }
+
+  function setColor(colors: number[]) {
+    const hex = colors.map((color) => convertHex(color));
+
+    if (type === 'background') {
+      dispatch(setBgColor({
+        value: `#${hex.join('')}`,
+      }));
+    } else {
+      dispatch(setTextColor({
+        value: `#${hex.join('')}`,
+      }));
+    }
+  }
+
+  const hexCode = useMemo(() => {
+    const hex = [ red, green, blue, ]
+      .map((color) => convertHex(color));
+
+    return `#${hex.join('')}`;
+  }, [ red, green, blue, ]);
+
+  const style = {
+    container: css([
+      align === 'vertical' && tw` flex w-full `,
+      align === 'horizontal' && tw` flex flex-col gap-2 w-full `,
+    ]),
+    colorSliders: css([
+      align === 'vertical' && tw` flex flex-col justify-between flex-1 shrink-0 `,
+      align === 'horizontal' && tw` order-2 flex flex-row `,
+      tw` [>div]:( flex flex-row items-center flex-1 shrink-0 ) `,
+      tw` [span]:( shrink-0 basis-[100px] text-center font-black text-black-base text-big ) `,
+    ]),
+    slider: css([
+      tw` appearance-none bg-black-100 outline-none h-10 flex-1 shrink-0 overflow-hidden `,
+      tw` [&::-webkit-slider-thumb]:( appearance-none w-10 aspect-square bg-blue-500 cursor-pointer shadow-[-520px_0_0_500px] shadow-blue-300 ) `,
+    ]),
+    colorView: css([
+      (css`
+        background-color: ${hexCode};
+      `),
+      align === 'vertical' && tw` w-[150px] aspect-square border-2 border-[black] `,
+      align === 'horizontal' && tw` w-full h-20 border-2 border-[black] order-1 `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.container}>
+        <div css={style.colorSliders}>
+          <div>
+            <input
+              type='range'
+              min={0}
+              max={255}
+              value={red}
+              onChange={onChangeRed}
+              css={style.slider}
+            />
+            <span>{red}</span>
+          </div>
+          <div>
+            <input
+              type='range'
+              min={0}
+              max={255}
+              value={green}
+              onChange={onChangeGreen}
+              css={style.slider}
+            />
+            <span>{green}</span>
+          </div>
+          <div>
+            <input
+              type='range'
+              min={0}
+              max={255}
+              value={blue}
+              onChange={onChangeBlue}
+              css={style.slider}
+            />
+            <span>{blue}</span>
+          </div>
+        </div>
+        <div css={style.colorView} />
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+`colorSliders.tsx` 컴포넌트에서는 색상이 선택될 때마다 리덕스를 통해 저장하는 방식으로 구현되었습니다. 아직 썸네일에 연결하지는 않았는데 연결하는 방법은 사실 간단합니다. 나중에 해보도록 하고 이 컴포넌트는 아래와 같이 사용하면 됩니다.
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx
+import React, { useCallback } from 'react';
+import tw, { css } from 'twin.macro';
+import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
+import { setBgType } from '@/redux';
+import { ColorSlider } from '.';
+
+export function BackgroundConfig() {
+  const bgType = useAppSelector(
+    (state) => state.app.bgType
+  );
+  const dispatch = useAppDispatch();
+
+  const onClickColor = useCallback(
+    () => {
+      dispatch(setBgType({
+        value: 'color',
+      }));
+    },
+    []
+  );
+
+  const onClickImage = useCallback(
+    () => {
+      dispatch(setBgType({
+        value: 'image',
+      }));
+    },
+    []
+  );
+
+  const style = {
+    colors: tw` flex mt-10 border border-b-0 border-black-200 divide-x divide-black-200 `,
+    bgTypeTab: (type: string) => {
+      return css([
+        tw` p-3 flex-1 shrink-0 `,
+        bgType === type
+          ? tw` bg-white text-black-base `
+          : tw` bg-black-200 text-black-400 `,
+      ]);
+    },
+    tabBottom: css([
+      tw` flex flex-row border border-black-200 border-t-0 p-5 bg-white mb-10 `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.colors}>
+        <button css={style.bgTypeTab('color')} onClick={onClickColor}>단색 배경</button>
+        <button css={style.bgTypeTab('image')} onClick={onClickImage}>이미지 배경</button>
+      </div>
+
+      {bgType === 'color' && (
+        <div css={[ style.tabBottom, tw` flex-col gap-5 `, ]}>
+          <ColorSlider type='background' align='vertical' />
+          <ColorSlider type='background' align='horizontal' />
+        </div>
+      )}
+
+      {bgType === 'image' && (
+        <div css={style.tabBottom}>
+          {/* <input type='text' id='image-src' placeholder='이미지 주소를 입력하세요' /> */}
+        </div>
+      )}
+    </>
+  );
+}
+```
+</CodeBlock>
+
+<Image src='https://drive.google.com/file/d/11pv1RpIKBrw7GLTcdLpOmnf5nGgXzOp_/view?usp=drive_link' alt='경우에 따라서 다르게 사용되는 모습' drive />
+
+`type` 프롭과 `align` 프롭을 받으면 아래처럼 모양이 바뀌기도 하고 저장되는 중앙 스테이트가 달라지기도 합니다. 색상은 텍스트와 배경 둘 다 사용될 것이기 때문에 이렇게 만들어두었습니다. 이 컴포넌트의 경우에는 기능이 조금 더 개선될 수도 있지만 아직까지는 이정도면 충분한 것 같습니다.
 
 # 마치며
+글이 너무 길어지는 것 같아서 이번 글은 이 쯤에서 마무리 하는 것으로 하고 다음 글에서부터 이어서 진행하도록 하겠습니다. 다음 글에서는 색상 배경 설정 마무리와 텍스트 색상 설정과 이미지 배경 설정을 다뤄보도록 하겠습니다.

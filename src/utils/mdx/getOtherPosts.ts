@@ -1,5 +1,4 @@
-import { Post } from '@/.contentlayer/generated';
-import { getListMetadata } from './getListMetadata';
+import { ICustomPost, getListMetadata } from './getListMetadata';
 
 export const getOtherPosts = (category: string) => {
   const posts = getListMetadata().filter((post) => (
@@ -23,7 +22,7 @@ export const getOtherPosts = (category: string) => {
     }
   }
 
-  const selectedPosts: Partial<Post>[] = [];
+  const selectedPosts: ICustomPost[] = [];
 
   postIndexs.forEach((number) => {
     selectedPosts.push(posts[number]);

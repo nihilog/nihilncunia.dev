@@ -45,14 +45,10 @@ type Params = {
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
   const post = allPosts.find((post) => post.id === +params.id);
-  const customPost = {
-    ...post,
-    published: post.published === 'yes' ? true : false,
-  };
 
   return {
     props: {
-      post: customPost,
+      post,
     },
   };
 };

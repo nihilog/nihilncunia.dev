@@ -1,12 +1,11 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
-import { Post } from 'contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { getListMetadata } from '../utils/mdx';
+import { ICustomPost, getListMetadata } from '../utils/mdx';
 
 interface Props {
-  posts: Partial<Post>[];
+  posts: ICustomPost[];
 }
 
 export default function IndexPage({ posts, }: Props) {
