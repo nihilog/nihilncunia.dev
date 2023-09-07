@@ -18,7 +18,7 @@ export function Pagination({ posts, query, styles, }: Props) {
   const [ currentPageArray, setCurrentPageArray, ] = useState<number[]>([]);
 
   const firstPage = 1;
-  const lastPage = getPageArray().totalPage;
+  const { totalPage: lastPage, pages, } = getPageArray(posts);
 
   const currentPage = +query.pageNumber || 1;
   const isFirst = currentPage === firstPage;
@@ -26,9 +26,9 @@ export function Pagination({ posts, query, styles, }: Props) {
 
   useEffect(() => {
     if (currentPage % 5 === 1) {
-      setCurrentPageArray(getPageArray().pages[Math.floor(currentPage / 5)]);
+      setCurrentPageArray(pages[Math.floor(currentPage / 5)]);
     } else if (currentPage % 5 === 0) {
-      setCurrentPageArray(getPageArray().pages[Math.floor(currentPage / 5) - 1]);
+      setCurrentPageArray(pages[Math.floor(currentPage / 5) - 1]);
     }
   }, [ currentPage, ]);
 

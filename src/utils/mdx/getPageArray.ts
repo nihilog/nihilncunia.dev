@@ -1,7 +1,7 @@
-import { getListMetadata } from './getListMetadata';
+import { ICustomPost } from './getListMetadata';
 
-export const getPageArray = () => {
-  const totalPage = Math.ceil(getListMetadata().length / 5);
+export const getPageArray = (posts: ICustomPost[]) => {
+  const totalPage = Math.ceil(posts.length / 5);
 
   let pageArray = new Array(totalPage)
     .fill(0)

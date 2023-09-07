@@ -1,12 +1,11 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Post } from 'contentlayer/generated';
-import { getArchive, getListMetadata } from '@/src/utils/mdx';
+import { ICustomPost, getArchive, getListMetadata } from '@/src/utils/mdx';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
 
 interface Props {
-  posts: Partial<Post>[];
+  posts: ICustomPost[];
   archive: string;
 }
 

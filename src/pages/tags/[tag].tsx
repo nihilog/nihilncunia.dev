@@ -1,13 +1,12 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Post } from 'contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { getListMetadata, getTags } from '@/src/utils/mdx';
+import { ICustomPost, getListMetadata, getTags } from '@/src/utils/mdx';
 
 interface Props {
   tag: string;
-  posts: Partial<Post>[];
+  posts: ICustomPost[];
 }
 
 export default function TagPage({ tag, posts, }: Props) {
