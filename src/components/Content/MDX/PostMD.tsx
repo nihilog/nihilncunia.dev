@@ -9,7 +9,9 @@ import { CustomMDX } from './CustomMDX';
 import { A, H } from '@/src/components/Base';
 import { dateFormat } from '@/src/utils/date';
 import { setCover } from '@/src/utils';
-import { Ad, OtherPosts, PostItem } from '../Main';
+import {
+  Ad, OtherPosts, PostItem, Toc
+} from '../Main';
 import { useAppSelector } from '@/src/hooks/rtk';
 import { ICustomPost, getListMetadata } from '@/src/utils/mdx';
 import { Fb } from '../Post';
@@ -129,7 +131,8 @@ export function PostMD({ post, content, styles, }: Props) {
 
         <Ad position='top' />
 
-        <div css={style.post}>
+        <div css={style.post} className='mdx-post'>
+          <Toc />
           <MDXComponent components={CustomMDX} />
         </div>
 

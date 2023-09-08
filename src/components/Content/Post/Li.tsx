@@ -12,7 +12,7 @@ interface Props {
 
 export function Li({ children, styles, }: Props) {
   const [ type, setType, ] = useState('');
-  const [ isFirst, setIsFirst, ] = useState(null);
+  const [ isFirst, setIsFirst, ] = useState<boolean>(null);
   const liRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {

@@ -1,11 +1,45 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
+type Level5 = {
+  no: number;
+  parentNo: string;
+  content: string;
+};
+
+type Level4 = {
+  no: number;
+  parentNo: string;
+  content: string;
+  child: Level5[];
+};
+
+type Level3= {
+  no: number;
+  parentNo: string;
+  content: string;
+  child: Level4[];
+};
+
+type Level2 = {
+  no: number;
+  parentNo: string;
+  content: string;
+  child: Level3[];
+};
+
+export type Level1 = {
+  no: number;
+  content: string;
+  child: Level2[];
+};
+
 interface IDarkMode {
   isDark: boolean;
   isOpen: boolean;
   width: number;
   height: number;
   headerHeight: number;
+  toc: Level1[];
 }
 
 const initialState: IDarkMode = {
@@ -14,6 +48,7 @@ const initialState: IDarkMode = {
   width: 0,
   height: 0,
   headerHeight: 0,
+  toc: [],
 };
 
 const darkModeReducer = createSlice({
@@ -36,10 +71,16 @@ const darkModeReducer = createSlice({
     setHeaderHeight(state, { payload, }: PayloadAction<{ value: number }>) {
       state.headerHeight = payload.value;
     },
+    setToc(
+      state,
+      { payload, }: PayloadAction<{value: Level1[]}>
+    ) {
+      state.toc = payload.value;
+    },
   },
 });
 
 export const {
-  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize, setHeaderHeight,
+  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize, setHeaderHeight, setToc,
 } = darkModeReducer.actions;
 export default darkModeReducer.reducer;

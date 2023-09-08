@@ -4,3 +4,4 @@ export * from './Pagination';
 export * from './PostItem';
 export * from './Ad';
 export * from './OtherPosts';
+export * from './Toc';
