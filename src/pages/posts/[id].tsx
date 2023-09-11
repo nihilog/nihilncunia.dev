@@ -2,7 +2,7 @@ import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { Post, allPosts } from 'contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
-import { PostMD } from '@/src/components/Content/MDX';
+import { ClosePost, PostMD } from '@/src/components/Content/MDX';
 
 interface Props {
   post: Post;
@@ -20,7 +20,11 @@ export default function PostPage({ post, }: Props) {
         tags={post.tags.join(',')}
         author='NIHILncunia'
       >
-        <PostMD content={post.body.code} post={post} />
+        {post.published ? (
+          <PostMD content={post.body.code} post={post} />
+        ) : (
+          <ClosePost post={post} />
+        )}
       </AppLayout>
     </>
   );

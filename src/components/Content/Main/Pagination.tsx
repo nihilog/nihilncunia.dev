@@ -24,13 +24,20 @@ export function Pagination({ posts, query, styles, }: Props) {
   const isFirst = currentPage === firstPage;
   const isLast = currentPage === lastPage;
 
+  const firstLink = '?pageNumber=1';
+  const prevLink = `?pageNumber=${currentPage - 1}`;
+  const nextLink = `?pageNumber=${currentPage + 1}`;
+  const lastLink = `?pageNumber=${lastPage}`;
+
   useEffect(() => {
+    console.log('currentPage >> ', currentPage);
+
     if (currentPage % 5 === 1) {
       setCurrentPageArray(pages[Math.floor(currentPage / 5)]);
     } else if (currentPage % 5 === 0) {
       setCurrentPageArray(pages[Math.floor(currentPage / 5) - 1]);
     }
-  }, [ currentPage, ]);
+  }, [ currentPage, posts, ]);
 
   const style = {
     default: css([
@@ -68,7 +75,7 @@ export function Pagination({ posts, query, styles, }: Props) {
             ) : (
               <>
                 <A
-                  href='?pageNumber=1'
+                  href={firstLink}
                   label='first'
                   styles={style.enable}
                 >
@@ -76,7 +83,7 @@ export function Pagination({ posts, query, styles, }: Props) {
                   <Icon icon='material-symbols:keyboard-double-arrow-left' fontSize='1.3rem' />
                 </A>
                 <A
-                  href={`?pageNumber=${currentPage - 1}`}
+                  href={prevLink}
                   label='prev'
                   styles={style.enable}
                 >
@@ -85,7 +92,7 @@ export function Pagination({ posts, query, styles, }: Props) {
                 </A>
               </>
             )}
-            {currentPageArray.map((number) => (
+            {currentPageArray?.map((number) => (
               <PageNumber key={number} number={number + 1} currentPage={currentPage} />
             ))}
             {isLast ? (
@@ -102,7 +109,7 @@ export function Pagination({ posts, query, styles, }: Props) {
             ) : (
               <>
                 <A
-                  href={`?pageNumber=${currentPage + 1}`}
+                  href={nextLink}
                   label='next'
                   styles={style.enable}
                 >
@@ -110,7 +117,7 @@ export function Pagination({ posts, query, styles, }: Props) {
                   <Icon icon='material-symbols:chevron-right' fontSize='1.3rem' />
                 </A>
                 <A
-                  href={`?pageNumber=${lastPage}`}
+                  href={lastLink}
                   label='last'
                   styles={style.enable}
                 >

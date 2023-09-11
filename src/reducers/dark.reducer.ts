@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { ICustomPost } from '../utils/mdx';
 
 type Level5 = {
   no: number;
@@ -40,6 +41,8 @@ interface IDarkMode {
   height: number;
   headerHeight: number;
   toc: Level1[];
+  keyword: string;
+  posts: ICustomPost[];
 }
 
 const initialState: IDarkMode = {
@@ -49,6 +52,8 @@ const initialState: IDarkMode = {
   height: 0,
   headerHeight: 0,
   toc: [],
+  keyword: '',
+  posts: [],
 };
 
 const darkModeReducer = createSlice({
@@ -61,14 +66,23 @@ const darkModeReducer = createSlice({
     toggleMenu(state) {
       state.isOpen = !state.isOpen;
     },
-    setIsOpen(state, { payload, }: PayloadAction<{value: boolean}>) {
+    setIsOpen(
+      state,
+      { payload, }: PayloadAction<{ value: boolean }>
+    ) {
       state.isOpen = payload.value;
     },
-    setWindowSize(state, { payload, }: PayloadAction<{ width: number; height: number; }>) {
+    setWindowSize(
+      state,
+      { payload, }: PayloadAction<{ width?: number; height?: number; }>
+    ) {
       state.width = payload.width;
       state.height = payload.height;
     },
-    setHeaderHeight(state, { payload, }: PayloadAction<{ value: number }>) {
+    setHeaderHeight(
+      state,
+      { payload, }: PayloadAction<{ value: number }>
+    ) {
       state.headerHeight = payload.value;
     },
     setToc(
@@ -77,10 +91,22 @@ const darkModeReducer = createSlice({
     ) {
       state.toc = payload.value;
     },
+    setKeyword(
+      state,
+      { payload, }: PayloadAction<{value: string}>
+    ) {
+      state.keyword = payload.value;
+    },
+    setPosts(
+      state,
+      { payload, }: PayloadAction<{value: ICustomPost[]}>
+    ) {
+      state.posts = payload.value;
+    },
   },
 });
 
 export const {
-  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize, setHeaderHeight, setToc,
+  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize, setHeaderHeight, setToc, setKeyword, setPosts,
 } = darkModeReducer.actions;
 export default darkModeReducer.reducer;

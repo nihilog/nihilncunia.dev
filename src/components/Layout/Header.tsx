@@ -13,6 +13,7 @@ import { configData } from '@/src/data';
 import { textStyles } from '@/src/styles';
 import { useScroll } from '@/src/hooks';
 import { ScrollProgressBar } from '../Content';
+import { SearchBar } from '../Content/Main';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
@@ -119,6 +120,7 @@ export function Header({ styles, }: Props) {
           </button>
         </div>
       </header>
+      <SearchBar />
     </>
   );
 }

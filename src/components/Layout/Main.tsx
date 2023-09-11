@@ -18,7 +18,7 @@ export function Main({ styles, children, }: Props) {
   const style = {
     default: css([
       size.width >= 1024 && tw` flex flex-row `,
-      tw` gap-10 mb-10 w-full `,
+      tw` gap-10 mb-10 w-full overflow-hidden `,
       (css`
         margin-top: ${headerHeight + 40}px;
       `),

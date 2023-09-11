@@ -14,12 +14,356 @@ updated: 2023-09-09 00:13:00+09:00
 ---
 
 # 개요
-내용
+지난 글에서 배경 색상 슬라이더를 만들어서 색상을 설정하는 부분까지 진행했습니다. 이번 글에서는 세가지 부분에 대해서 목표를 설정하고 진행하려고 합니다. 바로 본론으로 넘어가서 정리를 하고 시작해보도록 합시다.
 
 # 구현 목표
-## 텍스트 설정 보완
+이번 글의 목표는 세가지입니다. 첫번째는 **텍스트 색상 설정 구현**입니다. 지금은 제목과 부제만 설정하도록 되어있는데, 텍스트의 색상도 설정할 수 있게 만들 것입니다. 두 번째는 **이미지 배경 설정 구현**입니다. 마지막은 설정한 색상 혹은 이미지를 **썸네일 부분에 적용**하는 작업입니다. 배경 설정은 이번 글에서 마무리를 하고 넘어가려면 이 내용들을 해결해야 합니다.
+
+그럼 본격적으로 시작해보도록 합시다.
+
 ## 텍스트 색상 설정 구현
+<CodeBlock title='TextConfig.tsx'>
+```tsx {4, 6-7, 12, 34-37}
+export function TextConfig() {
+  const style = {
+    inputs: css([
+      tw` space-y-2 p-5 bg-white border-2 border-t-0 border-black-600 `,
+    ]),
+    h2: tw` text-h2 text-white font-black p-3 bg-black-600 `,
+    span: tw` font-semibold text-normal text-black-base `,
+  };
+
+  return (
+    <>
+      <h2 css={style.h2}>텍스트 설정</h2>
+      <div css={style.inputs}>
+        <label htmlFor='title' css={style.input}>
+          <span>제목</span>
+          <input
+            type='text'
+            id='title'
+            placeholder='제목'
+            value={title}
+            onChange={onChangeTitle}
+          />
+        </label>
+        <label htmlFor='sub-title' css={style.input}>
+          <span>부제</span>
+          <input
+            type='text'
+            id='sub-title'
+            placeholder='부제'
+            value={subTitle}
+            onChange={onChangeSubTitle}
+          />
+        </label>
+        <div>
+          <span css={style.span}>색상</span>
+          <ColorSlider type='text' />
+        </div>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+<Image src='https://drive.google.com/file/d/1fDHJow1Sy0JpueB-lJBAGNPsnrkNQu6W/view?usp=drive_link' alt='텍스트 색상 설정까지 구현 완료' drive />
+
+텍스트 색상 설정은 미리 만들어둔 `ColorSlider` 컴포넌트를 붙여주기만 하면 됩니다. 그 작업을 하면서 디자인을 살짝 수정해봤습니다. 텍스트 설정과 배경 설정 부분이 너무 구분이 가지 않아서 구분이 갈 정도로만 이렇게 수정했습니다. **4번**과 **6-7번**으로 스타일링을 하고 **12번**에 제목을 붙이고 **34-37번**에 `ColorSlider` 컴포넌트를 붙여줬습니다.
+
+`ColorSlider` 컴포넌트에서 중요한 부분은 `type` 프롭을 `text`로 설정하는 겁니다. 그리고 `ColorSlider` 컴포넌트에서는 아래와 같이 로직을 구현해둡니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx {2, 7, 15, 23, 36-48}
+export function ColorSlider({ align = 'vertical', type = 'background', }: Props) {
+  const dispatch = useAppDispatch();
+
+  const onChangeRed = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setRed(+event.target.value);
+      setColor([ +event.target.value, green, blue, ]);
+    },
+    [ green, blue, ]
+  );
+
+  const onChangeGreen = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setGreen(+event.target.value);
+      setColor([ red, +event.target.value, blue, ]);
+    },
+    [ red, blue, ]
+  );
+
+  const onChangeBlue = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setBlue(+event.target.value);
+      setColor([ red, green, +event.target.value, ]);
+    },
+    [ red, green, ]
+  );
+
+  function convertHex(number: number) {
+    const hex = number.toString(16).toUpperCase();
+
+    return hex.length > 1
+      ? hex
+      : `0${hex}`;
+  }
+
+  function setColor(colors: number[]) {
+    const hex = colors.map((color) => convertHex(color));
+
+    if (type === 'background') {
+      dispatch(setBgColor({
+        value: `#${hex.join('')}`,
+      }));
+    } else {
+      dispatch(setTextColor({
+        value: `#${hex.join('')}`,
+      }));
+    }
+  }
+
+  const hexCode = useMemo(() => {
+    const hex = [ red, green, blue, ]
+      .map((color) => convertHex(color));
+
+    return `#${hex.join('')}`;
+  }, [ red, green, blue, ]);
+
+  return (
+    <>
+      {/* 중략 */}
+    </>
+  );
+}
+```
+</CodeBlock>
+
+이로써 `type` 프롭이 `text`냐 아니냐에 따라서 배경 색상 설정 혹은 텍스트 색상 설정이 됩니다. 그리고 이 색상은 슬라이더를 조작할 때마다 값이 저장되면서 썸네일에 표시될 것입니다. 지금은 연결을 하지는 않았지만 값 자체는 저장하고 있는 상태입니다.
+
+**2번**에서 액션 실행을 위한 디스패치를 준비하고 **36-48번**에서 `type` 프롭에 따라 `bgColor` 혹은 `textColor`에 값을 저장하는 함수를 만들어뒀습니다. 그리고 이 함수는 **7번**, **15번**, **23번**에서 사용되고 슬라이더를 조작할 때마다 새로운 값이 갱신됩니다. 이 값을 연결만 하면 됩니다. 이건 가장 마지막에 해보도록 합시다.
+
 ## 이미지 배경 설정 구현
+자 이제 이미지 배경 설정을 해볼 시간입니다. 이미지 배경은 두가지 경우를 생각하고 있습니다. 하나는 이미 존재하는 이미지를 웹의 어딘가에서 가져와서 적용하는 것이고 또 다른 하나는 로컬에 있는 이미지를 이용해서 적용하는 것입니다. 전자는 이미지 주소를 붙여넣으면 되고 후자는 `FileReader`를 이용해 URL을 만들어줘야 합니다.
+
+하지만 지금은 급한대로 첫번째 경우를 우선 적용해서 만들고 후에 두번째 경우도 추가적으로 구현하는 것으로 방향을 잡고 작업을 진행하려고 합니다.
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx {2, 10-18, 24-27, 31, 34-37, 56-65}
+export function BackgroundConfig() {
+  const [ srcValue, setSrcValue, ] = useState('');
+
+  const bgType = useAppSelector(
+    (state) => state.app.bgType
+  );
+
+  const dispatch = useAppDispatch();
+
+  const onChangeSrc = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setSrcValue(event.target.value);
+      dispatch(setImg({
+        value: event.target.value,
+      }));
+    },
+    []
+  );
+
+  const style = {
+    colors: tw` flex mt-10 `,
+    bgTypeTab: (type: string) => {
+      return css([
+        tw` p-3 flex-1 shrink-0 text-h2 font-black border-2 border-b-0 `,
+        bgType === type
+          ? tw` bg-black-600 text-white border-black-600 `
+          : tw` bg-black-200 text-black-400 border-black-200 `,
+      ]);
+    },
+    tabBottom: css([
+      tw` flex flex-row border-2 border-black-600 p-5 bg-white mb-10 `,
+    ]),
+    input: css([
+      tw` flex flex-col gap-1 w-full `,
+      tw` [span]:( font-semibold text-normal text-black-base ) `,
+      tw` [input]:( p-2 outline-none text-normal bg-black-100 text-black-base placeholder:text-black-300 border-b-[2px] border-transparent transition-colors duration-200 ) `,
+      tw` [input]:( focus:( border-blue-500 ) ) `,
+    ]),
+  };
+
+  return (
+    <>
+      <div css={style.colors}>
+        <button css={style.bgTypeTab('color')} onClick={onClickColor}>단색 배경</button>
+        <button css={style.bgTypeTab('image')} onClick={onClickImage}>이미지 배경</button>
+      </div>
+
+      {bgType === 'color' && (
+        <div css={style.tabBottom}>
+          <ColorSlider type='background' align='vertical' />
+        </div>
+      )}
+
+      {bgType === 'image' && (
+        <div css={style.tabBottom}>
+          <label htmlFor='image-src' css={style.input}>
+            <span>이미지 주소</span>
+            <input
+              type='text'
+              id='image-src'
+              placeholder='이미지 주소를 입력하세요'
+              value={srcValue}
+              onChange={onChangeSrc}
+            />
+          </label>
+        </div>
+      )}
+    </>
+  );
+}
+```
+</CodeBlock>
+
+<Image src='https://drive.google.com/file/d/1fB3iszOetmo9nua7-i8Ff9YBPVUuWiHi/view?usp=drive_link' alt='단색 배경 탭' drive />
+<Image src='https://drive.google.com/file/d/1NSUFEhyqPGkeDgcb9-KJe3OcpKYVsafR/view?usp=drive_link' alt='이미지 배경 탭' drive />
+
+**56-65번**의 `input` 태그를 통해서 이미지의 주소를 입력하면 **10-18번**의 `onChangeSrc` 함수가 실행되는데, 여기서 중요한 것은 `setImg` 액션입니다. `setImg` 액션을 통해 중앙 저장소에 저장되는 구조를 갖고 있습니다. 폼 요소를 컨트롤 해야 하기 때문에 `useState` 함수로 스테이트를 만들어서 관리도 합니다. `useState` 함수를 통한 바인딩은 말 그대로 바인딩 때문에 하는 것이므로 중요도는 떨어집니다. 없으면 안되지만 말이죠.
+
+지금까지 각 컴포넌트에서 사용된 리덕스의 액션들은 컴포넌트를 넘나들면서 값을 설정하고 가장 마지막에 `Thumbnail` 컴포넌트에서 설정한 값들을 불러와 실제로 적용할 수 있게 만들어줍니다. 이제 마지막으로 썸네일에 설정을 적용하는 일만 남았습니다.
+
 ## 썸네일에 색상과 이미지 적용
+`Thumbnail.tsx` 파일을 열어봅니다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx {3}
+export function Thumbnail() {
+  const {
+    title, subTitle, bgType, imgSrc, bgColor, textColor,
+  } = useAppSelector(
+    (state) => state.app
+  );
+
+  // 생략
+}
+```
+</CodeBlock>
+
+먼저 지금까지 설정한 내용들을 사용하기 위해 전부 불러옵니다. 제목과 부제는 연결이 되어있으니까 신경 안써도 괜찮습니다. 먼저 텍스트 색상을 처리하도록 합시다. 그 전에 사용자의 정신 건강을 위해 `ColorSlider` 컴포넌트를 살짝 수정합니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx {2-4, 8-10}
+export function ColorSlider({ align = 'vertical', type = 'background', }: Props) {
+  const [ red, setRed, ] = useState(type === 'text' ? 51 : 255);
+  const [ green, setGreen, ] = useState(type === 'text' ? 51 : 255);
+  const [ blue, setBlue, ] = useState(type === 'text' ? 51 : 255);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setColor([ red, green, blue, ]);
+  }, []);
+
+  // 생략
+}
+```
+</CodeBlock>
+
+**2-4번**의 스테이트의 기본값을 `type` 프롭에 따라 설정합니다. 텍스트는 기본값이 검은색이고 배경은 기본값이 흰색입니다. 둘 다 검은색이면 귀찮으니까 이렇게 바꿔줍니다. **8-10번**은 컴포넌트가 렌더링되는 그 순간에 값을 저장하는 로직입니다.
+
+이렇게 하고 다시 `Thumbnail` 컴포넌트로 돌아갑시다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx {11-13}
+export function Thumbnail() {
+  const {
+    title, subTitle, bgType, imgSrc, bgColor, textColor,
+  } = useAppSelector(
+    (state) => state.app
+  );
+
+  const style = {
+    frame: css([
+      tw` box-content border-2 border-black-600 aspect-video mb-10 relative `,
+      (css`
+        color: ${textColor};
+      `),
+    ]),
+    titles: css([
+      tw` absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] text-center w-full `,
+    ]),
+    title: css([
+      tw` text-[4rem] font-black whitespace-pre-line `,
+    ]),
+    subTitle: css([
+      tw` text-[3rem] font-semibold `,
+    ]),
+  };
+
+  return (
+    <>
+      <div id='th-frame' css={style.frame}>
+        {/* 중략 */}
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+11-13번처럼 CSS에서 `color` 속성을 설정해주면 이제 이렇게 슬라이더를 움직이면 썸네일의 텍스트 색상도 바뀝니다.
+
+<Image src='https://drive.google.com/file/d/1l_BPmHcK3zw1fBvmNeJDSC4qC8ec-SOt/view?usp=drive_link' alt='슬라이더를 움직여봅시다' drive />
+<Image src='https://drive.google.com/file/d/1XRd-JlewWj7veR8659LcFJilrOSzGxIy/view?usp=drive_link' alt='썸네일에 적용된 모습' drive />
+
+이제 배경 설정을 해봅시다. 배경 설정은 `bgType` 에 따라서 `bgColor` 혹은 `imgSrc` 로 연결해서 설정해주면 됩니다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx {14-19}
+export function Thumbnail() {
+  const {
+    title, subTitle, bgType, imgSrc, bgColor, textColor,
+  } = useAppSelector(
+    (state) => state.app
+  );
+
+  const style = {
+    frame: css([
+      tw` box-content border-2 border-black-600 aspect-video mb-10 relative `,
+      (css`
+        color: ${textColor};
+      `),
+      bgType === 'color' && (css`
+        background-color: ${bgColor};
+      `),
+      bgType === 'image' && (css`
+        background: url(${imgSrc});
+      `),
+    ]),
+  };
+
+  return (
+    <>
+      <div id='th-frame' css={style.frame}>
+        {/* 중략 */}
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+`bgType` 이 **color**면 `background-color` 속성에 연결하고 **image**면 `background` 속성에다가 `url()` 안에 넣어주면 됩니다.
 
 # 마치며
+세세한 부분은 다음 글에서 처리를 하도록 하고 배경 설정의 결과물을 보여드리면서 이번 글은 마치도록 하겠습니다. 목적 달성은 했으니 다음 글은 정리를 좀 더 하고 다음 스텝으로 넘어가면 되겠습니다.
+
+<Image src='https://drive.google.com/file/d/1e8FGDoZBdGuitIdh837SfS3r1L21IgHC/view?usp=drive_link' alt='배경 설정 슬라이더를 움직여보자' drive />
+<Image src='https://drive.google.com/file/d/1sRz4mAkcYvtTQqqN7Vk0V6UkhfcGkS5D/view?usp=drive_link' alt='배경 색상이 적용된 모습이다' drive />
+
+슬라이더를 조작하면 잘 작동합니다.
+
+<Image src='https://drive.google.com/file/d/1RiXkiASNxRpzifG45yV_NImYeW1b3LJS/view?usp=drive_link' alt='이미지 주소를 넣어봅니다' drive />
+<Image src='https://drive.google.com/file/d/1GfUpN5L2cX6jR2Ojah5z93cfsFqkXjpb/view?usp=drive_link' alt='이미지가 배경에 잘 들어옵니다' drive />
+
+이미지 주소를 가져와서 넣어도 잘 동작합니다. 이제 이 부분은 애초부터 16:9인 이미지만 배경에 넣게 하거나 하는 등으로 제한을 두면 되지 않을까 싶기도 합니다. 아무튼 이번 글은 여기까지입니다!

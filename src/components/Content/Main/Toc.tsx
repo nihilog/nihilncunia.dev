@@ -90,8 +90,6 @@ export function Toc({ styles, }: Props) {
     dispatch(setToc({ value: tocArray, }));
   }, [ router.asPath, ]);
 
-  console.log(toc);
-
   const style = {
     default: css([
       tw`  `,

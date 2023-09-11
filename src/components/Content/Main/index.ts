@@ -5,3 +5,5 @@ export * from './PostItem';
 export * from './Ad';
 export * from './OtherPosts';
 export * from './Toc';
+export * from './SearchBar';
+export * from './GoToTop';

@@ -15,11 +15,13 @@ export function PageNumber({ number, currentPage, styles, }: Props) {
 
   const path = useMemo(() => {
     if (router.asPath.includes('posts')) {
-      return '/posts';
+      return `/posts?pageNumber=${number}`;
     } else if (router.asPath.includes('categories')) {
-      return `/categories/${router.query.category}`;
+      return `/categories/${router.query.category}?pageNumber=${number}`;
     } else if (router.asPath.includes('tags')) {
-      return `/tags/${router.query.tag}`;
+      return `/tags/${router.query.tag}?pageNumber=${number}`;
+    } else {
+      return `/search?pageNumber=${number}`;
     }
   }, [ router.asPath, router.query, ]);
 
@@ -34,7 +36,7 @@ export function PageNumber({ number, currentPage, styles, }: Props) {
   return (
     <>
       <Link
-        href={`${path}?pageNumber=${number}`}
+        href={path}
         css={style.default}
       >
         {number}

@@ -1,16 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 import Giscus from '@giscus/react';
 import { Icon } from '@iconify/react';
-import { useRouter } from 'next/router';
 import { CustomMDX } from './CustomMDX';
 import { A, H } from '@/src/components/Base';
 import { dateFormat } from '@/src/utils/date';
 import { setCover } from '@/src/utils';
 import {
-  Ad, OtherPosts, PostItem, Toc
+  Ad, GoToTop, OtherPosts, PostItem, Toc
 } from '../Main';
 import { useAppSelector } from '@/src/hooks/rtk';
 import { ICustomPost, getListMetadata } from '@/src/utils/mdx';
@@ -23,15 +22,6 @@ interface Props {
 }
 
 export function PostMD({ post, content, styles, }: Props) {
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log('post.published >> ', post.published);
-    if (!post.published) {
-      router.push('/posts');
-    }
-  }, [ post, ]);
-
   const isDark = useAppSelector(
     (state) => state.dark.isDark
   );
@@ -79,6 +69,7 @@ export function PostMD({ post, content, styles, }: Props) {
 
   return (
     <>
+      <GoToTop />
       <article css={style.default}>
         <div css={style.title}>
           <H
