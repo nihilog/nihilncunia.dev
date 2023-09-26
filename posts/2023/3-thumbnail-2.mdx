@@ -18,7 +18,7 @@ updated: 2023-08-29 19:39:00+09:00
 
 저는 제가 프로젝트를 할 때마다 사용하는 템플릿이 따로 있는데 이번에는 그걸 사용하기보다는 처음부터 환경을 만들어보려고 합니다. 그럼 시작해봅시다.
 
-## `create-next-app`을 통한 개발환경 구축
+# `create-next-app`을 통한 개발환경 구축
 <CodeBlock title=''>
 ```bash
 yarn create next-app thumbnail-generator
@@ -33,7 +33,7 @@ yarn create next-app thumbnail-generator
 
 NextJS는 pages 라우트와 app 라우트가 있는데 저는 항상 pages 라우트를 사용하기 때문에 이번에도 pages 라우트로 가도록 하겠습니다. 이 두가지가 어떤 차이가 있는지는 NextJS에 대한 포스트를 작성할 때 제대로 해보도록 하고 지금은 설정을 마저 진행하도록 하겠습니다.
 
-## Emotion 설정하기
+# Emotion 설정하기
 TailwindCSS는 설치가 되어있지만 Emotion은 직접 설치를 해야합니다. twin.macro도 같이 설치해주도록 합시다.
 
 <CodeBlock title=''>
@@ -74,7 +74,7 @@ module.exports = {
 
 이렇게 해주면 NextJS가 실행될 때 알아서 바벨 설정을 이 내용으로 덮어씌워줍니다.
 
-## 타입스크립트 관련 설정하기
+# 타입스크립트 관련 설정하기
 루트폴더에 `twin.d.ts` 파일을 만들거나 `src/types` 폴더를 만들어서 그 안에 이 파일을 만들거나 원하는대로 진행하시면 되는데 `twin.d.ts`의 내용물은 아래와 같아야 합니다.
 
 <CodeBlock title='twin.d.ts'>
@@ -157,7 +157,7 @@ declare module 'react' {
 
 Emotion과 TailwindCSS를 아주 유연하게 사용할 수 있게 됩니다.
 
-## next.config.js 설정하기
+# next.config.js 설정하기
 <CodeBlock title='next.config.js'>
 ```js
 /** @type {import('next').NextConfig} */
@@ -190,7 +190,7 @@ module.exports = config;
 
 `swcMinify`는 true로 해두면 가끔 에러를 만나서 그냥 false로 설정해서 꺼두는 편인데 자유롭게 하시면 됩니다. 사실 저 설정들은 그냥 여러분이 원하는대로 설정하면 됩니다. 이 설정은 저에게 최적화된 설정들입니다.
 
-## ESLint 설정
+# ESLint 설정
 ESLint는 개발을 하는데에 있어서 빠질 수 없는 요소중 하나입니다. 코드의 규칙을 설정할 수 있고 그 규칙에 맞지 않는 코드가 있으면 빨간색으로 에러 표시를 띄워줍니다. 타입스크립트랑 같이 사용하면 더할나위 없이 좋습니다.
 
 설정을 하기에 앞서 설치해야 하는 패키지들이 있습니다.
@@ -245,7 +245,7 @@ module.exports = {
 
 제가 리액트를 사용할 때면 항상 사용하는 규칙입니다. 코드 설정 때문에 글이 길어지는 것처럼 보이지만 사실은 정말 별거 아닌 내용인게 참 재밌는 것 같네요.
 
-## Tailwind 설정하기
+# Tailwind 설정하기
 
 아무튼 이제 마지막입니다. TailwindCSS 설정을 해야됩니다.
 
@@ -316,7 +316,7 @@ module.exports = {
 
 7번..이 맞았을겁니다. 아무튼 저 네가지가 다 있으면 됩니다. 이렇게 하면 정말로 모든 설정이 끝난겁니다. 설정이 잘 적용되었는지 이제 `next dev`를 통해서 서버를 한 번 실행시켜봅시다.
 
-## 첫 실행
+# 첫 실행
 
 <CodeBlock title=''>
 ```bash
@@ -332,7 +332,7 @@ NextJS는 app 라우트 혹은 pages 라우트를 사용하고 여기서는 page
 
 즉 `index.tsx`의 내용이 `localhost:3000` 페이지에 띄워지는 것이죠. 파일을 보면 아시겠지만 className에 덕지 덕지 붙어있는 게 바로 TailwindCSS의 스타일링 방식 입니다. 이런식으로 스타일링을 하면 편하기야 하겠지만 정말 보기에 안좋죠. 이걸 해소할 수 있는 게 바로 twin.macro인 것입니다.
 
-## twin.macro 사용해보기
+# twin.macro 사용해보기
 twin.macro를 사용한다는 것은 사실 별 거 없습니다. 그냥 Emotion이랑 TailwindCSS를 같이 사용하는 것이니까요. 테스트를 위해서 `index.tsx`의 태그들을 전부 밀어버리고 다시 작성해보겠습니다.
 
 <CodeBlock title='index.tsx'>
@@ -417,7 +417,7 @@ export default function index() {
 
 이런식으로 사용할 수가 있습니다. 저는 이걸 응용해서 객체 형식으로 스타일을 만듭니다. 그럼 이제 기본적인 기능에 대해서는 알아봤으니까 썸네일 생성기라는 주제에 맞는 개발을 시작해봅시다.
 
-## 썸네일 생성기 레이아웃 잡기
+# 썸네일 생성기 레이아웃 잡기
 저번에 만들어놓은 와이어 프레임을 어느정도 참고해서 거창한 스타일은 입히지 않은 상태의 레이아웃만 대충 잡아보도록 합시다. 기능적인 부분은 차차 잡아가기로 하고 일단은 있을 수 있는 부분만 만들어보겠습니다.
 
 <CodeBlock title='index.tsx'>

@@ -1,0 +1,732 @@
+---
+id: 8
+title: '썸네일 생성기 (7) 이미지 생성하기'
+description: '리액트를 이용해서 간단한 기능을 가진 썸네일 생성기를 만들어보도록 합시다. 이번 글에서는 설정한 썸네일을 실제 이미지로 만드는 시간을 가져봅시다.'
+cover: ''
+category: 'JavaScript'
+tags: ['썸네일 생성기', '자바스크립트', 'thumbnail', 'JavaScript', '리액트', 'React', '구글 API', '구글 클라우드 콘솔', 'Googleapis']
+series:
+  name: '썸네일 생성기 개발'
+  order: 7
+published: true
+created: 2023-09-13 22:20:00+09:00
+updated: 2023-09-13 22:20:00+09:00
+---
+
+# 개요
+저번 글에서는 배경이미지 설정까지 진행하고 글을 마쳤었습니다. 이번 글에서는 저번에 미처 신경쓰지 못한 배경 이미지 설정의 마무리를 진행하고, 색상 슬라이더를 살짝 손 볼 생각입니다. 문제가 있었거든요. 사용자가 설정한 내용이 적용된 썸네일을 이미지로 생성하는 것까지 진행하려고 합니다.
+
+# 배경 이미지 설정 보완
+<CodeBlock title='Thumbnail.tsx'>
+```tsx
+const style = {
+  frame: css([
+    tw` box-content border-2 border-black-600 aspect-video mb-10 relative `,
+    (css`
+      color: ${textColor};
+    `),
+    bgType === 'color' && (css`
+      background-color: ${bgColor};
+    `),
+    bgType === 'image' && (css`
+      background-image: url(${imgSrc});
+    `),
+  ]),
+};
+```
+</CodeBlock>
+
+`bgType` 이 **image** 일 때에는 `background-image` 를 설정하게끔 만들었었습니다. 하지만 문제가 있죠.
+
+<Image src='https://drive.google.com/file/d/1xQHaE0vJwRQfejc2GKnRY1qcYGjtL-CX/view?usp=drive_link' alt='현재 배경의 문제점' drive />
+
+`background-image` 로 배경을 넣으면 위의 스샷처럼 이미지가 바둑판처럼 반복되는 문제가 생깁니다. 우리가 원하는 건 이런 게 아니죠. 이 부분을 개선해야합니다. 처음부터 이미지를 규격에 맞는 것을 고르면 문제가 사라지지만 규격에 맞지 않아도 배경으로 사용하고 싶은 경우도 있습니다.
+
+## CSS 개선
+
+그래서 두가지 속성을 추가하려고 합니다. `background-size` 와 `background-position-y` 를 이용해서 원하는 부분을 배경으로 사용할 수 있게끔 할겁니다. 위의 코드를 아래와 같이 수정해봅시다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx
+const style = {
+  frame: css([
+    tw` box-content border-2 border-black-600 aspect-video mb-10 relative `,
+    (css`
+      color: ${textColor};
+    `),
+    bgType === 'color' && (css`
+      background-color: ${bgColor};
+    `),
+    bgType === 'image' && (css`
+      background-image: url(${imgSrc});
+      background-size: cover;
+      background-position-y: -220px;
+    `),
+  ]),
+};
+```
+</CodeBlock>
+
+이렇게 하면 더이상 바둑판처럼 보이지 않고 화면을 꽉 채우기 때문에 조금 더 보기 좋아지죠. 그리고 Y 좌표를 조작해서 원하는 부분을 볼 수 있습니다. 위의 코드상으로는 **-220px** 이라고 되어있는데 220 픽셀만큼 아래로 내리겠다 라는 의미입니다.
+
+문제는 여기서 220을 우리가 원하는 값으로 바꿀 수 있어야합니다. 중앙 저장소에 스테이트를 하나 추가하고 새롭게 관리하도록 하면 되겠죠.
+
+## 리듀서에서 스테이트와 액션 추가하기
+
+<CodeBlock title='app.reducer.ts'>
+```ts {8, 18, 32, 34-39, 44}
+type AppState = {
+  bgType: ('color' | 'image');
+  title: string;
+  subTitle: string;
+  textColor: string;
+  bgColor: string;
+  imgSrc: string;
+  imageY: number;
+}
+
+const initialState: AppState = {
+  bgType: 'color',
+  title: '제목을 입력하세요',
+  subTitle: '',
+  textColor: '#333333',
+  bgColor: '#FFFFFF',
+  imgSrc: '',
+  imageY: 0,
+};
+
+const appReducer = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    initState(state) {
+      state.bgType = 'color';
+      state.title = '제목을 입력하세요';
+      state.subTitle = '';
+      state.textColor = '#333333';
+      state.bgColor = '#FFFFFF';
+      state.imgSrc = '';
+      state.imageY = 0;
+    },
+    setY(
+      state,
+      { payload, }: PayloadAction<{value: number}>
+    ) {
+      state.imageY = payload.value;
+    },
+  },
+});
+
+export const {
+  initState, setBgType, setTitle, setSubTitle, setTextColor, setBgColor, setImg, setY,
+} = appReducer.actions;
+```
+</CodeBlock>
+
+`AppState` 타입에 `imageY`를 추가하고 `initialState`에도 추가를 해줍니다. `initState` 액션에서 `imageY`를 초기화하는 부분을 추가하고 `setY` 액션을 만들어서 내보냅니다. 자 이제 `BackgroundConfig` 컴포넌트로 가서 추가 로직을 구현해봅시다.
+
+## 새롭게 추가한 좌표 스테이트 적용하기
+
+<CodeBlock title='BackgroundConfig.tsx'>
+```tsx
+import { setY as setImageY } from '@/redux';
+
+export function BackgroundConfig() {
+  const [ y, setY, ] = useState(0);
+
+  const onChangeY = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setY(+event.target.value);
+      dispatch(setImageY({
+        value: +event.target.value,
+      }));
+    },
+    []
+  );
+
+  return (
+    <>
+      {/* --- */}
+      {bgType === 'image' && (
+        <div css={style.tabBottom}>
+          {/* --- */}
+
+          <label htmlFor='image-y' css={style.input}>
+            <span>Y좌표</span>
+            <input
+              type='text'
+              id='image-y'
+              placeholder='원하는 좌표를 입력하세요'
+              value={y}
+              onChange={onChangeY}
+            />
+          </label>
+        </div>
+      )}
+    </>
+  );
+}
+```
+</CodeBlock>
+
+<Image src='https://drive.google.com/file/d/1sN-U2AR27Zw_S9cOSeQuYrRtNRjF-ZG_/view?usp=drive_link' alt='좌표를 설정할 수 있게 개선' drive />
+
+y 좌표는 숫자를 입력하면 입력한 만큼 아래로 내리는 역할을 하게 됩니다. 기본값은 0이고 그 이후에는 원하는 값을 입력하면 되겠죠. `setY` 로는 컴포넌트 내에서 저장을 하고, `setImageY` 액션으로는 중앙 저장소에 저장을 해둡니다.
+
+자 모든 준비가 끝났습니다. 그럼 이제 마지막으로 `Thumbnail` 컴포넌트에서 적용해보도록 합시다. CSS만 살짝 건드리면 됩니다.
+
+<CodeBlock title='title'>
+```tsx {14}
+const style = {
+  frame: css([
+    tw` box-content border-2 border-black-600 aspect-video mb-10 relative `,
+    (css`
+      color: ${textColor};
+    `),
+    bgType === 'color' && (css`
+      background-color: ${bgColor};
+    `),
+    bgType === 'image' && (css`
+      background-image: url(${imgSrc});
+      background-size: cover;
+      /* background-position-y: -220px; */
+      background-position-y: -${imageY}px;
+    `),
+  ]),
+}
+```
+</CodeBlock>
+
+숫자 220이 들어가 있던 자리에 변수를 넣어서 대체합니다. **-** 기호를 남겨두는 이유는 매번 - 기호를 입력하는 것보다 그냥 숫자만 입력하는 게 더 사용하기에 편하기 때문입니다. 이렇게 하면 원하는 값을 입력했을 때 썸네일에도 그대로 적용되겠죠.
+
+<Image src='https://drive.google.com/file/d/1d6x6zT4DKZkfZrnzTK_ADk7LipHJyTMs/view?usp=drive_link' alt='350을 입력함' drive />
+<Image src='https://drive.google.com/file/d/1srcRb_oRo8tWuXKMMXtrwePPcV-KTW86/view?usp=drive_link' alt='원하는 위치를 선택할 수 있다!' drive />
+
+# 색상 슬라이더 보완하기
+색상 슬라이더에 문제가 있었습니다. 미리 테스트를 해봤는데 초기화 버튼을 클릭해도 슬라이더의 상태는 초기화되지 않았던 것입니다. 이건 문제가 있기 때문에 해결해야합니다. 해결을 위해 생각을 해본 결과 색상코드 자체를 저장하는 게 아니라 빨간색, 초록색, 파란색 정보를 따로 저장하는 것이 좋겠다라는 결론에 이르렀습니다.
+
+이를 위해 리듀서를 수정해야합니다.
+
+## 리듀서 수정하기
+<CodeBlock title='app.reducer.ts'>
+```ts {1-5, 11-12, 21-30}
+type Color = {
+  red: number;
+  green: number;
+  blue: number;
+}
+
+type AppState = {
+  bgType: ('color' | 'image');
+  title: string;
+  subTitle: string;
+  textColor: Color;
+  bgColor: Color;
+  imgSrc: string;
+  imageY: number;
+}
+
+const initialState: AppState = {
+  bgType: 'color',
+  title: '제목을 입력하세요',
+  subTitle: '',
+  textColor: {
+    red: 51,
+    green: 51,
+    blue: 51,
+  },
+  bgColor: {
+    red: 255,
+    green: 255,
+    blue: 255,
+  },
+  imgSrc: '',
+  imageY: 0,
+};
+```
+</CodeBlock>
+
+이런식으로 숫자값 자체를 저장하게 만들어뒀습니다. 이렇게 하지 않으면 값을 인식 못하는 것 같더군요. 그럼 이제 액션도 수정을 해야합니다. 액션도 뭐 간단합니다.
+
+<CodeBlock title='app.reducer.ts'>
+```ts {9-18, 24, 26, 30, 32}
+const appReducer = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    initState(state) {
+      state.bgType = 'color';
+      state.title = '제목을 입력하세요';
+      state.subTitle = '';
+      state.textColor = {
+        red: 51,
+        green: 51,
+        blue: 51,
+      };
+      state.bgColor = {
+        red: 255,
+        green: 255,
+        blue: 255,
+      };
+      state.imgSrc = '';
+      state.imageY = 0;
+    },
+    setTextColor(
+      state,
+      { payload, }: PayloadAction<{value: Color}>
+    ) {
+      state.textColor = payload.value;
+    },
+    setBgColor(
+      state,
+      { payload, }: PayloadAction<{value: Color}>
+    ) {
+      state.bgColor = payload.value;
+    },
+  },
+});
+```
+</CodeBlock>
+
+이런식으로 기존의 문자열이 아니라 객체를 받게끔 만들어줬습니다. 이렇게 하면 값을 하나 하나 받기 때문에 뿌릴 때에도 하나 하나 뿌려줄 수가 있을 겁니다.
+
+## ColorSlider 컴포넌트 수정하기
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+export default function ColorSlider() {
+  const [ red, setRed, ] = useState(type === 'text' ? 51 : 255);
+  const [ green, setGreen, ] = useState(type === 'text' ? 51 : 255);
+  const [ blue, setBlue, ] = useState(type === 'text' ? 51 : 255);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setColor([ red, green, blue, ]);
+  }, []);
+
+  const onChangeRed = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setRed(+event.target.value);
+      setColor([ +event.target.value, green, blue, ]);
+    },
+    [ green, blue, ]
+  );
+
+  const onChangeGreen = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setGreen(+event.target.value);
+      setColor([ red, +event.target.value, blue, ]);
+    },
+    [ red, blue, ]
+  );
+
+  const onChangeBlue = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setBlue(+event.target.value);
+      setColor([ red, green, +event.target.value, ]);
+    },
+    [ red, green, ]
+  );
+
+  function convertHex(number: number) {
+    const hex = number.toString(16).toUpperCase();
+
+    return hex.length > 1
+      ? hex
+      : `0${hex}`;
+  }
+
+  function setColor(colors: number[]) {
+    const hex = colors.map((color) => convertHex(color));
+
+    if (type === 'background') {
+      dispatch(setBgColor({
+        value: `#${hex.join('')}`,
+      }));
+    } else {
+      dispatch(setTextColor({
+        value: `#${hex.join('')}`,
+      }));
+    }
+  }
+
+  const hexCode = useMemo(() => {
+    const hex = [ red, green, blue, ]
+      .map((color) => convertHex(color));
+
+    return `#${hex.join('')}`;
+  }, [ red, green, blue, ]);
+
+  return (
+    // 생략
+  );
+}
+```
+</CodeBlock>
+
+이 코드는 기존의 상태 관리를 하던 로직인데 이제 기존의 스테이트는 필요가 없습니다. 과감하게 지워버리고 다시 작성해봅시다. hex로 변환하는 과정도 이제는 필요가 없죠. 따라서 이 함수들도 지워버려도 됩니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+// 변경전
+const [ red, setRed, ] = useState(type === 'text' ? 51 : 255);
+const [ green, setGreen, ] = useState(type === 'text' ? 51 : 255);
+const [ blue, setBlue, ] = useState(type === 'text' ? 51 : 255);
+
+// 변경후
+const { textColor, bgColor, } = useAppSelector(
+  (state) => state.app
+);
+
+const color = useMemo(() => {
+  return type === 'text'
+    ? textColor
+    : bgColor;
+}, [ textColor, bgColor, ]);
+```
+</CodeBlock>
+
+스테이트 부분은 이렇게 처리를 했습니다. 여전히 `type` 프롭에 따라서 결정되긴 하지만 중앙 저장소에서 직접 가져오게끔 설정해줬습니다.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+// 변경전
+useEffect(() => {
+  setColor([ red, green, blue, ]);
+}, []);
+
+// 변경후
+useEffect(() => {
+  setColor([ color.red, color.green, color.blue, ]);
+}, []);
+```
+</CodeBlock>
+
+`useEffect` 훅 부분은 그냥 변수 호출만 바꿔주면 되죠.
+
+<CodeBlock title='ColorSlider.tsx'>
+```tsx
+// 변경전
+const onChangeRed = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setRed(+event.target.value);
+    setColor([ +event.target.value, green, blue, ]);
+  },
+  [ green, blue, ]
+);
+
+const onChangeGreen = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setGreen(+event.target.value);
+    setColor([ red, +event.target.value, blue, ]);
+  },
+  [ red, blue, ]
+);
+
+const onChangeBlue = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setBlue(+event.target.value);
+    setColor([ red, green, +event.target.value, ]);
+  },
+  [ red, green, ]
+);
+
+function convertHex(number: number) {
+  const hex = number.toString(16).toUpperCase();
+
+  return hex.length > 1
+    ? hex
+    : `0${hex}`;
+}
+
+function setColor(colors: number[]) {
+  const hex = colors.map((color) => convertHex(color));
+
+  if (type === 'background') {
+    dispatch(setBgColor({
+      value: `#${hex.join('')}`,
+    }));
+  } else {
+    dispatch(setTextColor({
+      value: `#${hex.join('')}`,
+    }));
+  }
+}
+
+const hexCode = useMemo(() => {
+  const hex = [ red, green, blue, ]
+    .map((color) => convertHex(color));
+
+  return `#${hex.join('')}`;
+}, [ red, green, blue, ]);
+
+// 변경후
+const onChangeRed = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setColor([ +event.target.value, color.green, color.blue, ]);
+  },
+  [ color.green, color.blue, ]
+);
+
+const onChangeGreen = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setColor([ color.red, +event.target.value, color.blue, ]);
+  },
+  [ color.red, color.blue, ]
+);
+
+const onChangeBlue = useCallback(
+  (event: ChangeEvent<HTMLInputElement>) => {
+    setColor([ color.red, color.green, +event.target.value, ]);
+  },
+  [ color.red, color.green, ]
+);
+
+function setColor(colors: number[]) {
+  if (type === 'background') {
+    dispatch(setBgColor({
+      value: {
+        red: colors[0],
+        green: colors[1],
+        blue: colors[2],
+      },
+    }));
+  } else {
+    dispatch(setTextColor({
+      value: {
+        red: colors[0],
+        green: colors[1],
+        blue: colors[2],
+      },
+    }));
+  }
+}
+```
+</CodeBlock>
+
+이런식으로 세팅을 바꿔줬더니 기능동작이 잘 되는 것을 볼 수 있었습니다. 초기화가 안되는 문제로 며칠동안 고민했었는데 이제야 해결이 되어 참 다행입니다. 며칠 더 머리아플 뻔 했습니다. 이제 수정의 마무리로 `Thumbnail` 컴포넌트의 일부를 수정하면 됩니다.
+
+## Thumbnail 컴포넌트 수정하기
+<CodeBlock title='Thumbnail.tsx'>
+```tsx
+// 변경전
+const style = {
+  frame: css([
+    (css`
+      color: ${textColor};
+    `),
+    bgType === 'color' && (css`
+      background-color: ${bgColor};
+    `),
+  ]),
+};
+
+// 변경후
+const style = {
+  frame: css([
+    (css`
+      color: rgb(${textColor.red}, ${textColor.green}, ${textColor.blue});
+    `),
+    bgType === 'color' && (css`
+      background-color: rgb(${bgColor.red}, ${bgColor.green}, ${bgColor.blue});
+    `),
+  ]),
+};
+```
+</CodeBlock>
+
+이제 슬라이더 관련해서는 더 이상 수정할 것이 없습니다. 다음 스텝으로 넘어가봅시다.
+
+# 이미지 생성하기
+아직 많은 부분을 추가하고 보완해야겠지만 원하는 기능은 전부 존재합니다. 텍스트를 입력하고, 배경을 설정할 수 있죠. 이제 마지막, 이미지를 생성하는 일만 남았습니다. 라이브러리를 이용해서 HTML을 CANVAS로 만드는 방법도 있는 것 같고 여러가지 방법있는 것 같은데, 역시 목적 달성을 위해 라이브러리를 사용하도록 합시다.
+
+<CodeBlock title=''>
+```bash
+yarn add html2canvas
+```
+</CodeBlock>
+
+라이브러리를 설치합니다. 설치할 라이브러리의 이름은 **html2canvas** 입니다. 간단하게 HTML 요소를 캡처해서 파일로 저장할 수 있다고 합니다. 한 번 사용해봅시다. 일단 이렇게 설치를 합니다. 그리고 `index.tsx` 에서 불러와서 사용 해봅시다.
+
+설정을 한 후에 이미지로 저장 버튼을 클릭하면 이미지로 저장이 되어야합니다. 이걸 건드리면 되겠죠. 초기화 버튼은 이후에 처리하도록 하겠습니다. 일단 이미지부터 만들어봅시다. 아, 생각을 해보니까 버튼의 위치가 애매한 거 같아요. `Thumbnail` 컴포넌트 안으로 옮기도록 하겠습니다.
+
+<Image src='https://drive.google.com/file/d/1JcwRkJ__MRdK0lPxqIHpKZeINwNHawlO/view?usp=drive_link' alt='기존의 구조' drive />
+
+원래는 이런 모습이었습니다. 그런데 아래처럼 바꿨습니다. 그러면 `index.tsx` 가 아니라 `Thumbnail` 컴포넌트에서 작업을 하면 되겠죠. 하지만 뭐 코드는 뻔하니까 생략하도록 하고 아래처럼 바꿨습니다.
+
+<Image src='https://drive.google.com/file/d/1AuVjt5H_IHGBsFXPFGbmvaG4-ip79KGh/view?usp=drive_link' alt='버튼 위치 바꾸기' drive />
+
+자 아무튼 버튼의 위치를 바꿨으니까 이제 본격적으로 버튼에 기능을 붙여보도록 하겠습니다. 두개의 버튼이 있어요. 초기화 버튼과 이미지로 저장 버튼이 있죠. 이 중에서 이미지로 저장 버튼을 먼저 건드려봅시다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx
+export function Thumbnail() {
+  const [ isClick, setIsClick, ] = useState(false);
+  const thRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  const onClickDownload = useCallback(
+    () => {
+      html2canvas(thRef.current, { allowTaint: true, useCORS: true, }).then((canvas) => {
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL('image/png');
+
+        imageRef.current.innerHTML = '';
+        imageRef.current.appendChild(img);
+      });
+
+      setIsClick(true);
+    },
+    [ thRef, imageRef, ]
+  );
+
+  return (
+    <>
+      {isClick && (
+        <div css={style.image} ref={imageRef} onClick={onClickClose} />
+      )}
+      <div css={style.buttons}>
+        <button onClick={onClickDownload}>이미지로 저장</button>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+가장 먼저 `useState` 훅으로 스테이트를 하나 만듭니다. 여기서만 쓰일 것이기 때문에 중앙 저장소에 만들 필요는 없습니다. 클릭했을 때 이미지가 보이는가 아닌가에 대한 여부를 결정하는 스테이트입니다.
+
+그 후에 `html2canvas` 함수를 임포트하고 첫번째 인수에 이미지화 하려는 타겟을 넣어줍니다. `thRef.current` 를 넣어줬습니다. 두번째 인수에는 옵션이 들어갑니다. 이미지 관련해서 적용될 수 있도록 세팅을 해줬습니다. `html2canvas`는 비동기이기 때문에 `then` 을 이용해서 성공했을 때의 처리를 해줍니다.
+
+매개변수 `canvas` 에는 html이 canvas로 변환된 요소가 들어있습니다. 이 요소를 이용해서 이미지를 다운받거나 이미지를 보이게 할 수 있습니다. 저는 이미지 다운로드 쪽으로 가려고 했지만 다운로드는 직접 우클릭해서 하게 하는 게 나을 것 같아서 변환된 이미지를 보여주는 것으로 진행했습니다. 클릭하면 이미지가 나타나게 설계되어 있습니다. 그리고 이미지가 생성 되었어도 취소하고 수정을 할 수 있도록 이미지를 닫을 수 있는 기능도 마련되어 있습니다.
+
+<Image src='https://drive.google.com/file/d/1UigJi-RmIsnGW29d3tRHr-Pd38XZrEeE/view?usp=drive_link' alt='이미지 생성 성공!' drive />
+
+이제 초기화 버튼의 기능을 추가해봅시다. 여긴 간단합니다. 이전에 만들어놓은 액션 중에는 스테이트들을 초기화하는 액션도 있었습니다. 그 액션을 사용하면 됩니다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx
+export function Thumbnail() {
+  const dispatch = useAppDispatch();
+
+  const onClickReset = useCallback(
+    () => {
+      dispatch(initState());
+    },
+    []
+  );
+
+  return (
+    <>
+      {isClick && (
+        <div css={style.image} ref={imageRef} onClick={onClickClose} />
+      )}
+      <div css={style.buttons}>
+      <button onClick={onClickReset}>초기화</button>
+        <button onClick={onClickDownload}>이미지로 저장</button>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+초기화 버튼을 클릭함으로써 `onClickReset` 함수가 실행되면 `initState` 액션을 통해서 각 스테이트들을 초기화합니다. 그러면 색상이나 텍스트들이 초기화되겠죠.
+
+아래는 최종 결과물입니다.
+
+<CodeBlock title='Thumbnail.tsx'>
+```tsx
+import React, {
+  useCallback, useEffect, useRef, useState
+} from 'react';
+import tw, { css } from 'twin.macro';
+import html2canvas from 'html2canvas';
+import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
+import { initState } from '@/redux';
+
+export function Thumbnail() {
+  const [ isClick, setIsClick, ] = useState(false);
+
+  const thRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+
+  const {
+    title, subTitle, bgType, imgSrc, bgColor, textColor, imageY,
+  } = useAppSelector(
+    (state) => state.app
+  );
+
+  useEffect(() => {
+    dispatch(initState());
+  }, []);
+
+  const onClickReset = useCallback(
+    () => {
+      dispatch(initState());
+    },
+    []
+  );
+
+  const onClickDownload = useCallback(
+    () => {
+      html2canvas(thRef.current, { allowTaint: true, useCORS: true, }).then((canvas) => {
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL('image/png');
+
+        imageRef.current.innerHTML = '';
+        imageRef.current.appendChild(img);
+      });
+
+      setIsClick(true);
+    },
+    [ thRef, imageRef, ]
+  );
+
+  const onClickClose = useCallback(
+    () => {
+      setIsClick(false);
+    },
+    []
+  );
+
+  // 스타일 중략
+
+  return (
+    <>
+      {isClick && (
+        <div css={style.image} ref={imageRef} onClick={onClickClose} />
+      )}
+
+      <div id='th-container' css={style.container} ref={thRef}>
+        <div id='th-frame' css={style.frame}>
+          <div id='th-titles' css={style.titles}>
+            <h1 id='th-title' css={style.title}>
+              {title.split('\\n').map((item, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+                <React.Fragment key={`${item}-${index}`}>{item}<br /></React.Fragment>
+              ))}
+            </h1>
+            <h2 id='th-sub-title' css={style.subTitle}>{subTitle}</h2>
+          </div>
+        </div>
+      </div>
+
+      <div css={style.buttons}>
+        <button onClick={onClickReset}>초기화</button>
+        <button onClick={onClickDownload}>이미지로 저장</button>
+      </div>
+    </>
+  );
+}
+```
+</CodeBlock>
+
+이렇게 해서 이미지 생성과 초기화까지 마쳤습니다. 사실 이제야 기본적인 기능이 갖춰진 것입니다. 앞으로 보완하면서 다듬고 추가적인 기능을 붙이면 될 것 같습니다. 이미지가 생성되었을 때 닫을 수 있다는 것을 의미하는 UI도 만들어야 하겠죠. 예를 들어 X 표시를 만들어둔다던가 해서 이 모달창은 닫을 수 있습니다 라는 메시지를 텍스트 없이도 전달할 수 있겠죠.
+
+앞으로 해야할 것은 이미지를 생성했을 때 설정 정보가 저장된 json을 자신의 구글 드라이브에 저장할 수 있는 기능과 불러올 수 있는 기능입니다. 이 구글 드라이브 연동 기능도 선택에 따라서 할 수 있게끔 만들 예정입니다. 단발적으로만 사용하고 싶을 경우에는 그냥 구글 드라이브 연동 없이 이미지 생성하면 그만이고
+
+이 이미지들을 계속해서 관리하고 싶다면 json 데이터를 만들어서 구글 드라이브에 저장하면 이 저장된 데이터를 이용해서 파일들을 불러올 수 있도록 하는 것이죠. 이 프로그램 자체에 회원 관리 시스템이 없더라도 할 수 있게끔 만들어볼 생각입니다.
+
+이제 슬슬 일정 관리 프로그램도 만들기 시작해야겠습니다. 다음 글이 일정 관리 시작이 될 지 썸네일 생성기 보완이 될 지는 저도 모르겠습니다. 아무튼 이번 목표는 마쳤으니 이만 글을 줄이도록 해야겠습니다.
