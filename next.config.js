@@ -21,13 +21,18 @@ const config = {
   experimental: {
     largePageDataBytes: 128 * 100000,
   },
-  webpack(config) {
+  webpack(config, { webpack, }) {
     config.module.rules.push({
       test: /\.svg$/,
       use: [ '@svgr/webpack', ],
     });
+
+    config.resolve.fallback = {
+      fs: false,
+    };
     return config;
   },
 };
 
-module.exports = withContentlayer(config);
+module.exports = config;
+// module.exports = withContentlayer(config);

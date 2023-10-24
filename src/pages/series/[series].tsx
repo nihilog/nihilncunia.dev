@@ -1,13 +1,13 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Post } from 'contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { getListMetadata, getSeries } from '@/src/utils/mdx';
+import { createPosts, getListMetaData, getSeries } from '@/src/utils/mdx';
+import { IFrontMatter } from '@/src/types/mdx.types';
 
 interface Props {
   series: string;
-  posts: Post[];
+  posts: IFrontMatter[];
 }
 
 export default function SeriesPage({ series, posts, }: Props) {
@@ -38,7 +38,8 @@ type Params = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
-  const posts = getListMetadata()
+  createPosts();
+  const posts = getListMetaData()
     .filter((post) => post.series.name === params.series)
     .sort((a, b) => a.series.order - b.series.order);
 

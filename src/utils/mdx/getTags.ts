@@ -1,4 +1,4 @@
-import { getListMetadata } from './getListMetadata';
+import { getListMetaData } from './getListMetaData';
 
 export type ITags = {
   name: string;
@@ -6,7 +6,7 @@ export type ITags = {
 };
 
 export const getTags = () => {
-  const tagsArray = getListMetadata().map((post) => (post.tags));
+  const tagsArray = getListMetaData().map((post) => (post.tags));
   let tags: string[] = [];
 
   tagsArray.forEach((tag) => {

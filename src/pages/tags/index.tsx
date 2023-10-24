@@ -3,7 +3,7 @@ import tw, { css } from 'twin.macro';
 import { GetStaticProps } from 'next';
 import { Icon } from '@iconify/react';
 import { AppLayout } from '@/src/layouts';
-import { ITags, getTags } from '@/src/utils/mdx';
+import { ITags, createPosts, getTags } from '@/src/utils/mdx';
 import { A, H } from '@/src/components/Base';
 
 interface Props {
@@ -48,6 +48,7 @@ export default function TagCloudPage({ tags, }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  createPosts();
   const tags = getTags();
 
   return {

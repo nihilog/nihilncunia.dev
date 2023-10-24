@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import { CategoryItem, SeriesItem } from '../Content';
 import { Nav } from './Nav';
 import { linksData } from '@/src/data';
-import { getCategories, getListMetadata, getSeries } from '@/src/utils/mdx';
+import { getCategories, getListMetaData, getSeries } from '@/src/utils/mdx';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
 import { toggleMenu } from '@/src/reducers/dark.reducer';
 
@@ -17,7 +17,7 @@ interface Props {
 export function Side({ styles, }: Props) {
   const { isOpen, width, headerHeight, } = useAppSelector((state) => state.dark);
 
-  const postsCount = getListMetadata().length;
+  const postsCount = getListMetaData().length;
   const categories = getCategories();
   const serieses = getSeries();
   const dispatch = useAppDispatch();

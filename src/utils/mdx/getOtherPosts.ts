@@ -1,7 +1,8 @@
-import { ICustomPost, getListMetadata } from './getListMetadata';
+import { IFrontMatter } from '@/src/types/mdx.types';
+import { getListMetaData } from './getListMetaData';
 
 export const getOtherPosts = (category: string) => {
-  const posts = getListMetadata().filter((post) => (
+  const posts = getListMetaData().filter((post) => (
     post.category === category
   ));
 
@@ -22,7 +23,7 @@ export const getOtherPosts = (category: string) => {
     }
   }
 
-  const selectedPosts: ICustomPost[] = [];
+  const selectedPosts: IFrontMatter[] = [];
 
   postIndexs.forEach((number) => {
     selectedPosts.push(posts[number]);

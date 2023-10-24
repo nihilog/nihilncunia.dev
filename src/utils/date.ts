@@ -12,7 +12,7 @@ dayjs.locale(ko);
 
 export const useDate = dayjs;
 
-export const setDate = (date: number | string | Date) => {
+export const setDateFormat = (date: number | string | Date) => {
   // const computedDate = dayjs(date).toDate().getTime() - 32400000;
   const diff = dayjs().diff(date, 'days');
 
@@ -26,4 +26,8 @@ export const setDate = (date: number | string | Date) => {
 export const dateFormat = (date: number | string | Date, format: string) => {
   // const computedDate = dayjs(date).toDate().getTime() - 32400000;
   return dayjs(date).tz().format(format);
+};
+
+export const setDate = (date: number | string | Date) => {
+  return dayjs(date).tz('Asia/Seoul').toDate();
 };

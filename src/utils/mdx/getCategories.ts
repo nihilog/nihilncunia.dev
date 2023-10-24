@@ -1,4 +1,4 @@
-import { getListMetadata } from './getListMetadata';
+import { getListMetaData } from './getListMetaData';
 
 type ICategories = {
   name: string;
@@ -6,7 +6,8 @@ type ICategories = {
 };
 
 export const getCategories = () => {
-  const categories = getListMetadata()
+  const postList = getListMetaData();
+  const categories = postList
     .filter((post) => post.category)
     .filter((post) => post.category !== '공지사항')
     .sort((a, b) => b.id - a.id)
@@ -24,7 +25,7 @@ export const getCategories = () => {
     return pre;
   }, []);
 
-  const noneCategories = getListMetadata()
+  const noneCategories = postList
     .filter((post) => post.category === '');
 
   categoriesObj.unshift({
@@ -32,7 +33,7 @@ export const getCategories = () => {
     count: noneCategories.length,
   });
 
-  const notices = getListMetadata()
+  const notices = postList
     .filter((post) => post.category === '공지사항');
 
   categoriesObj.unshift({

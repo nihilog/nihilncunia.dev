@@ -1,27 +1,31 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Post, allPosts } from 'contentlayer/generated';
 import { AppLayout } from '@/src/layouts';
 import { ClosePost, PostMD } from '@/src/components/Content/MDX';
+import { createPosts, getListMetaData, getSinglePost } from '@/src/utils/mdx';
+import { IPost } from '@/src/types/mdx.types';
+import { dateFormat } from '@/src/utils/date';
 
 interface Props {
-  post: Post;
+  post: IPost;
 }
 
 export default function PostPage({ post, }: Props) {
+  const { frontMatter, source, } = post;
+
   return (
     <>
       <AppLayout
-        title={post.title}
+        title={frontMatter.title}
         type='article'
-        created={post.created}
-        updated={post.updated}
-        section={post.category}
-        tags={post.tags.join(',')}
+        created={`${dateFormat(frontMatter.created, 'YYYY-MM-DDTHH:mm:ss.SSS')}Z`}
+        updated={`${dateFormat(frontMatter.updated, 'YYYY-MM-DDTHH:mm:ss.SSS')}Z`}
+        section={frontMatter.category}
+        tags={frontMatter.tags.join(',')}
         author='NIHILncunia'
       >
-        {post.published ? (
-          <PostMD content={post.body.code} post={post} />
+        {frontMatter.published ? (
+          <PostMD source={source} frontMatter={frontMatter} />
         ) : (
           <ClosePost post={post} />
         )}
@@ -32,7 +36,7 @@ export default function PostPage({ post, }: Props) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: allPosts.map((post) => ({
+    paths: getListMetaData().map((post) => ({
       params: {
         id: post.id.toString(),
       },
@@ -48,7 +52,8 @@ type Params = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
-  const post = allPosts.find((post) => post.id === +params.id);
+  createPosts();
+  const post = await getSinglePost(+params.id);
 
   return {
     props: {

@@ -2,11 +2,12 @@ import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { ICustomPost, getListMetadata, getTags } from '@/src/utils/mdx';
+import { IFrontMatter } from '@/src/types/mdx.types';
+import { createPosts, getListMetaData, getTags } from '@/src/utils/mdx';
 
 interface Props {
   tag: string;
-  posts: ICustomPost[];
+  posts: IFrontMatter[];
 }
 
 export default function TagPage({ tag, posts, }: Props) {
@@ -37,7 +38,8 @@ type Params = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
-  const posts = getListMetadata()
+  createPosts();
+  const posts = getListMetaData()
     .filter((post) => post.tags.includes(params.tag))
     .sort((a, b) => b.id - a.id);
 

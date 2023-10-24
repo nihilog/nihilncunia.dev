@@ -5,7 +5,7 @@ import { SerializedStyles } from '@emotion/react';
 import { useReSize } from '@/src/hooks';
 import { A, H } from '@/src/components/Base';
 import { setCover } from '@/src/utils';
-import { setDate } from '@/src/utils/date';
+import { setDateFormat } from '@/src/utils/date';
 import { ICustomPost } from '@/src/utils/mdx';
 
 interface Props {
@@ -59,7 +59,7 @@ export function PostItem({ post, direction = 'right', styles, }: Props) {
             >
               <Icon icon='material-symbols:folder' /> {post.category || '분류없음'}
             </A>
-            <p>{setDate(post.created)}</p>
+            <p>{setDateFormat(post.created)}</p>
           </div>
         </div>
         <img

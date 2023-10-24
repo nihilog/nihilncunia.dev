@@ -1,4 +1,4 @@
-import { getListMetadata } from './getListMetadata';
+import { getListMetaData } from './getListMetaData';
 
 type ISeries = {
   name: string;
@@ -6,7 +6,8 @@ type ISeries = {
 };
 
 export const getSeries = () => {
-  const categories = getListMetadata()
+  const postList = getListMetaData();
+  const categories = postList
     .filter((post) => post.series.name)
     .sort((a, b) => b.id - a.id)
     .map((post) => post.series.name);

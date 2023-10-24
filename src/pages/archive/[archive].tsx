@@ -1,11 +1,12 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ICustomPost, getArchive, getListMetadata } from '@/src/utils/mdx';
+import { createPosts, getArchive, getListMetaData } from '@/src/utils/mdx';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
+import { IFrontMatter } from '@/src/types/mdx.types';
 
 interface Props {
-  posts: ICustomPost[];
+  posts: IFrontMatter[];
   archive: string;
 }
 
@@ -37,7 +38,8 @@ type Params = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
-  const posts = getListMetadata()
+  createPosts();
+  const posts = getListMetaData()
     .filter((post) => (
       post.created.startsWith(params.archive)
     ));

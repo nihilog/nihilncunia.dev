@@ -1,9 +1,9 @@
 import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
-import { useMDXComponent } from 'next-contentlayer/hooks';
 import Giscus from '@giscus/react';
 import { Icon } from '@iconify/react';
+import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { CustomMDX } from './CustomMDX';
 import { A, H } from '@/src/components/Base';
 import { dateFormat } from '@/src/utils/date';
@@ -12,26 +12,25 @@ import {
   Ad, GoToTop, OtherPosts, PostItem, Toc
 } from '../Main';
 import { useAppSelector } from '@/src/hooks/rtk';
-import { ICustomPost, getListMetadata } from '@/src/utils/mdx';
 import { Fb } from '../Post';
+import { IFrontMatter } from '@/src/types/mdx.types';
+import { getListMetaData } from '@/src/utils/mdx';
 
 interface Props {
-  post: ICustomPost;
-  content: string;
+  frontMatter: IFrontMatter;
+  source: MDXRemoteSerializeResult;
   styles?: TwStyle | SerializedStyles;
 }
 
-export function PostMD({ post, content, styles, }: Props) {
+export function PostMD({ frontMatter, source, styles, }: Props) {
   const isDark = useAppSelector(
     (state) => state.dark.isDark
   );
 
-  const MDXComponent = useMDXComponent(content);
+  const cover = frontMatter.cover || 'https://drive.google.com/file/d/1iF4WE-zae-TyU4A4s-yrqhHU4XQyPhfR/view?usp=drive_link';
 
-  const cover = post.cover || 'https://drive.google.com/file/d/1iF4WE-zae-TyU4A4s-yrqhHU4XQyPhfR/view?usp=drive_link';
-
-  const allPosts = getListMetadata();
-  const postIndex = allPosts.reverse().findIndex((target) => target.id === post.id);
+  const allPosts = getListMetaData();
+  const postIndex = allPosts.reverse().findIndex((target) => target.id === frontMatter.id);
 
   const prevIndex = (postIndex - 1) < 0 ? null : (postIndex - 1);
   const nextIndex = (postIndex + 1) > allPosts.length ? null : (postIndex + 1);
@@ -77,7 +76,7 @@ export function PostMD({ post, content, styles, }: Props) {
             type='normal'
             styles={tw`text-white dark:text-yellow-300 text-justify break-all flex items-center gap-2`}
           >
-            <Icon icon='mdi:comment' /> {post.title}
+            <Icon icon='mdi:comment' /> {frontMatter.title}
           </H>
         </div>
 
@@ -85,24 +84,24 @@ export function PostMD({ post, content, styles, }: Props) {
           <div>
             <img
               src={setCover(cover)}
-              alt={post.title}
+              alt={frontMatter.title}
               tw='border border-black-base/70 dark:border-white/50'
             />
           </div>
           <div css={style.section}>
             <div css={style.infoTitle}>카테고리</div>
             <A
-              href={`/categories/${post.category || '분류없음'}`}
+              href={`/categories/${frontMatter.category || '분류없음'}`}
               styles={style.category}
             >
-              <Icon icon='material-symbols:folder' /> {post.category || '분류없음'}
+              <Icon icon='material-symbols:folder' /> {frontMatter.category || '분류없음'}
             </A>
           </div>
           <div css={style.section}>
             <div css={style.infoTitle}>태그</div>
-            {post.tags.length > 0 && (
+            {frontMatter.tags.length > 0 && (
               <div tw='flex-1 shrink-0 flex items-center gap-2 flex-wrap'>
-                {post.tags.map((tag) => (
+                {frontMatter.tags.map((tag) => (
                   <A key={tag} href={`/tags/${tag}`} styles={style.tag}>
                     <Icon icon='ph:hash-bold' /> {tag}
                   </A>
@@ -112,11 +111,11 @@ export function PostMD({ post, content, styles, }: Props) {
           </div>
           <div css={style.section}>
             <div css={style.infoTitle}>작성일자</div>
-            <div>{dateFormat(post.created, 'YYYY-MM-DD HH:mm')}</div>
+            <div>{dateFormat(frontMatter.created, 'YYYY-MM-DD HH:mm')}</div>
           </div>
           <div css={style.section}>
             <div css={style.infoTitle}>수정일자</div>
-            <div>{dateFormat(post.updated, 'YYYY-MM-DD HH:mm')}</div>
+            <div>{dateFormat(frontMatter.updated, 'YYYY-MM-DD HH:mm')}</div>
           </div>
         </div>
 
@@ -124,12 +123,13 @@ export function PostMD({ post, content, styles, }: Props) {
 
         <div css={style.post} className='mdx-post'>
           <Toc />
-          <MDXComponent components={CustomMDX} />
+          <MDXRemote {...source} components={CustomMDX} />
+          {/* <MDXComponent components={CustomMDX} /> */}
         </div>
 
         <Fb />
 
-        <OtherPosts category={post.category} />
+        <OtherPosts category={frontMatter.category} />
 
         <div css={style.giscus}>
           <Giscus

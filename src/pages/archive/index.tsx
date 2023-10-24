@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 import { GetStaticProps } from 'next';
 import { AppLayout } from '@/src/layouts';
 import { A, H } from '@/src/components/Base';
-import { IArchive, getArchive } from '@/src/utils/mdx';
+import { IArchive, createPosts, getArchive } from '@/src/utils/mdx';
 
 interface Props {
   archive: IArchive[];
@@ -52,6 +52,7 @@ export default function ArchivePage({ archive, }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  createPosts();
   const archive = getArchive();
 
   return {

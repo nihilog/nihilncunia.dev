@@ -1,12 +1,12 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Post } from 'contentlayer/generated';
-import { getCategories, getListMetadata } from '@/src/utils/mdx';
+import { createPosts, getCategories, getListMetaData } from '@/src/utils/mdx';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
+import { IFrontMatter } from '@/src/types/mdx.types';
 
 interface Props {
-  posts: Post[];
+  posts: IFrontMatter[];
   category: string;
 }
 
@@ -38,7 +38,8 @@ type Params = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, }: Params) => {
-  const posts = getListMetadata()
+  createPosts();
+  const posts = getListMetaData()
     .filter((post) => (post.category || '분류없음') === params.category)
     .sort((a, b) => b.id - a.id);
 

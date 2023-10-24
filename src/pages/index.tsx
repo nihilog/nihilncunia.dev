@@ -1,14 +1,17 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
+import { IFrontMatter } from '../types/mdx.types';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { ICustomPost, getListMetadata } from '../utils/mdx';
+import { createPosts, getListMetaData } from '../utils/mdx';
 
 interface Props {
-  posts: ICustomPost[];
+  posts: IFrontMatter[];
 }
 
 export default function IndexPage({ posts, }: Props) {
+  console.log(posts);
+
   return (
     <>
       <AppLayout title='홈'>
@@ -19,7 +22,8 @@ export default function IndexPage({ posts, }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = getListMetadata(0, 6);
+  createPosts();
+  const posts = getListMetaData(0, 6);
 
   return {
     props: {

@@ -2,10 +2,11 @@ import React from 'react';
 import { GetStaticProps } from 'next';
 import { AppLayout } from '@/src/layouts';
 import { PostList } from '@/src/components/Content/Main';
-import { ICustomPost, getListMetadata } from '@/src/utils/mdx';
+import { createPosts, getListMetaData } from '@/src/utils/mdx';
+import { IFrontMatter } from '@/src/types/mdx.types';
 
 interface Props {
-  posts: ICustomPost[];
+  posts: IFrontMatter[];
 }
 
 export default function PostListPage({ posts, }: Props) {
@@ -19,7 +20,8 @@ export default function PostListPage({ posts, }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = getListMetadata(0, 6);
+  createPosts();
+  const posts = getListMetaData(0, 6);
 
   return {
     props: {

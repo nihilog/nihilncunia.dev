@@ -1,6 +1,6 @@
-import { ICustomPost } from './getListMetadata';
+import { IFrontMatter } from '@/src/types/mdx.types';
 
-export const getPageArray = (posts: ICustomPost[]) => {
+export const getPageArray = (posts: IFrontMatter[]) => {
   const totalPage = Math.ceil(posts.length / 5);
 
   let pageArray = new Array(totalPage)

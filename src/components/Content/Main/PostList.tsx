@@ -9,10 +9,10 @@ import { Pagination } from './Pagination';
 import { PostItem } from './PostItem';
 import { setCover } from '@/src/utils';
 import { Ad } from './Ad';
-import { ICustomPost } from '@/src/utils/mdx';
+import { IFrontMatter } from '@/src/types/mdx.types';
 
 interface Props {
-  posts: ICustomPost[];
+  posts: IFrontMatter[];
   listName: string;
   page?: ('index' | 'list');
   series?: boolean;
@@ -59,12 +59,12 @@ export function PostList({
           <Icon icon={series ? 'fontisto:list-1' : 'zondicons:list'} /> {listName}
         </H>
         <div css={style.list}>
-          {!series && posts.slice(startPost, endPost).map((post) => (
-            <PostItem key={post.id} post={post} />
+          {!series && posts.slice(startPost, endPost).map((frontMatter) => (
+            <PostItem key={frontMatter.id} post={frontMatter} />
           ))}
-          {series && posts.map((post, index) => (
+          {series && posts.map((frontMatter, index) => (
             <div
-              key={`${post.title}-${post.id}`}
+              key={`${frontMatter.title}-${frontMatter.id}`}
               tw='flex flex-row gap-2'
             >
               <div tw='bg-black-base dark:bg-yellow-300 basis-[50px] text-white dark:text-black-base p-2 flex items-center justify-center'>{index + 1}</div>
@@ -72,14 +72,14 @@ export function PostList({
                 <div tw='flex flex-col gap-2 flex-1 shrink-0'>
                   <div>
                     <H level='h3' type='postlist'>
-                      <A href={`/posts/${post.id}`} type='postlist'>{post.title}</A>
+                      <A href={`/posts/${frontMatter.id}`} type='postlist'>{frontMatter.title}</A>
                     </H>
                   </div>
-                  <div tw='flex-1 shrink-0 text-[90%] text-black-base dark:text-white'>{post.description}</div>
+                  <div tw='flex-1 shrink-0 text-[90%] text-black-base dark:text-white'>{frontMatter.description}</div>
                 </div>
                 <img
-                  src={setCover(post.cover || defaultCover)}
-                  alt={post.title}
+                  src={setCover(frontMatter.cover || defaultCover)}
+                  alt={frontMatter.title}
                   tw='w-[150px] aspect-video'
                 />
               </div>

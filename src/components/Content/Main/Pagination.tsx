@@ -6,10 +6,11 @@ import { A } from '@/src/components/Base';
 import { PageNumber } from './PageNumber';
 import { PostPageQuery } from './PostList';
 import { textStyles } from '@/src/styles';
-import { ICustomPost, getPageArray } from '@/src/utils/mdx';
+import { getPageArray } from '@/src/utils/mdx';
+import { IFrontMatter } from '@/src/types/mdx.types';
 
 interface Props {
-  posts: ICustomPost[];
+  posts: IFrontMatter[];
   query: PostPageQuery;
   styles?: TwStyle | SerializedStyles;
 }

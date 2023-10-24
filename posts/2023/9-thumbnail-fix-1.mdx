@@ -1,0 +1,67 @@
+---
+id: 9
+title: '썸네일 생성기 (8) 자잘한 문제 해결하기'
+description: '리액트를 이용해서 간단한 기능을 가진 썸네일 생성기를 만들어보도록 합시다. 이번 글에서는 작은 문제 하나를 해결하면서 보완하는 시간을 가져봅니다.'
+cover: ''
+category: 'JavaScript'
+tags: ['썸네일 생성기', '자바스크립트', 'thumbnail', 'JavaScript', '리액트', 'React', '구글 API', '구글 클라우드 콘솔', 'Googleapis']
+series:
+  name: '썸네일 생성기 개발'
+  order: 8
+published: true
+created: 2023-10-09 02:57:00+09:00
+updated: 2023-10-09 02:57:00+09:00
+---
+
+# 개요
+구글 드라이브와 연동하는 것을 제외하면 기본적인 기능은 완성되었습니다. 하지만 자잘한 문제가 하나 있었습니다. 이번 글에서는 이 문제를 해결하고 다음 스텝으로 나아갈 준비를 하려고 합니다.
+
+# 문제점 파악
+자 그럼 어떤 문제가 있었는지 정리해보도록 합시다. 총 두가지의 문제가 있었습니다. 둘 다 이미지 생성과 관련된 문제였습니다. 하나는 텍스트가 아래로 쏠리는 문제였고, 다른 하나는 이미지가 생성됐을 때 정상적으로 생성되지 않는 문제였습니다. 대강 문제에 대해 살펴보고 어떻게 해결했는지 남기려고 합니다.
+
+## 이미지 생성시 텍스트가 아래로 쏠리는 문제
+이 문제는 텍스트를 입력할 때에는 인지를 못하다가 이미지 생성 테스트를 여러번 해보면서 발견한 문제였습니다.
+
+<Image src='https://drive.google.com/file/d/15fZdM2rXBS7SBEx8fGlXtMs2YfirQtLW/view?usp=drive_link' alt='썸네일 미리보기에는 문제가 없다' drive />
+
+위 이미지처럼 썸네일 미리보기에는 텍스트가 올바른 위치에 있는데..
+
+<Image src='https://drive.google.com/file/d/1g0x9xkrSgT1sJdeTI2qtF_U1AxkKFpQT/view?usp=drive_link' alt='생성된 썸네일에 문제가 있다' drive />
+
+썸네일 이미지가 생성된 결과물은 그렇지가 않았던 것이죠. 잘 보면 텍스트가 미리보기랑 다르게 아래로 내려가 있던 겁니다. 의도한 모습이 아니니까 이대로 넘어갈 수가 없죠. 그래서 이것이 대체 어떤 일인가 하고 계속 검색을 해봤는데 <A href='https://github.com/niklasvh/html2canvas/issues/2775' external>깃허브 이슈</A>에서 단서를 얻었습니다.
+
+### 해결
+
+<CodeBlock>
+```tsx
+const onClickDownload = useCallback(
+  () => {
+    window.scrollTo(0, 0);
+
+    html2canvas(thRef.current, {
+      allowTaint: true,
+      useCORS: true,
+      foreignObjectRendering: true, // 이 부분 추가
+    }).then((canvas) => {
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png');
+
+      imageRef.current.innerHTML = '';
+      imageRef.current.appendChild(img);
+    });
+
+    setIsClick(true);
+  },
+  [ thRef, imageRef, ]
+);
+```
+</CodeBlock>
+
+이 코드는 이미지 생성 버튼을 눌렀을 때 실행되는 함수입니다. 이 코드에서 표시된 부분을 추가했더니 문제가 사라졌습니다. 설정 관련된 문제였던 것 같아요. 사실 구글링하다가 얻어 걸린 느낌도 있긴한데 아무튼 찾았으니 다행이었습니다. 이 프로젝트가 끝나면 구글링하면서 사용방법을 상세히 알아봐야겠습니다.
+
+## 스테이트가 초기값일 때 이미지가 정상적으로 생성되지 않는 문제
+설정을 하나 추가해서 텍스트 문제는 해결을 했는데 이렇게 추가를 하니까 문제점이 또 발생했습니다. 색상을 변경하거나 텍스트 값들이 초기값일 때에 이미지가 정상적으로 생성되지 않는 문제였습니다.
+
+<Image src='https://drive.google.com/file/d/1vJ-IY7ZfkbqrQhDYZiT9hWSXYUbtihJb/view?usp=drive_link' alt='새로운 문제...' drive />
+
+### 해결

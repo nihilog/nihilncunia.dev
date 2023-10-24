@@ -1,4 +1,4 @@
-import { getListMetadata } from './getListMetadata';
+import { getListMetaData } from './getListMetaData';
 
 export type IArchive = {
   name: string;
@@ -6,7 +6,8 @@ export type IArchive = {
 };
 
 export const getArchive = () => {
-  const createdArray = getListMetadata().map((post) => {
+  const postList = getListMetaData();
+  const createdArray = postList.map((post) => {
     return post.created.match(/(\d{4})-(\d{2})/g)[0];
   });
 
