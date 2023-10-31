@@ -9,3 +9,4 @@ export * from './getTags';
 export * from './getCategories';
 export * from './getPostContent';
 export * from './getSinglePost';
+export * from './getFrontMatter';

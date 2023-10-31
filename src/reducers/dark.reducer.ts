@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { ICustomPost } from '../utils/mdx';
+import { IFrontMatter } from '../types/mdx.types';
 
 type Level5 = {
   no: number;
@@ -42,7 +42,8 @@ interface IDarkMode {
   headerHeight: number;
   toc: Level1[];
   keyword: string;
-  posts: ICustomPost[];
+  posts: IFrontMatter[];
+  postId: number;
 }
 
 const initialState: IDarkMode = {
@@ -54,6 +55,7 @@ const initialState: IDarkMode = {
   toc: [],
   keyword: '',
   posts: [],
+  postId: 0,
 };
 
 const darkModeReducer = createSlice({
@@ -99,14 +101,20 @@ const darkModeReducer = createSlice({
     },
     setPosts(
       state,
-      { payload, }: PayloadAction<{value: ICustomPost[]}>
+      { payload, }: PayloadAction<{value: IFrontMatter[]}>
     ) {
       state.posts = payload.value;
+    },
+    setPostId(
+      state,
+      { payload, }: PayloadAction<{value: number}>
+    ) {
+      state.postId = payload.value;
     },
   },
 });
 
 export const {
-  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize, setHeaderHeight, setToc, setKeyword, setPosts,
+  toggleDarkMode, toggleMenu, setIsOpen, setWindowSize, setHeaderHeight, setToc, setKeyword, setPosts, setPostId,
 } = darkModeReducer.actions;
 export default darkModeReducer.reducer;

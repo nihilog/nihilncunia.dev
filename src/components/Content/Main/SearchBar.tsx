@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useInput } from '@/src/hooks';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
 import { setKeyword, setPosts } from '@/src/reducers/dark.reducer';
-import { getListMetadata } from '@/src/utils/mdx';
+import { getListMetaData } from '@/src/utils/mdx';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
@@ -52,7 +52,7 @@ export function SearchBar({ styles, }: Props) {
         value: keyword.data.value,
       }));
 
-      const posts = getListMetadata().filter(
+      const posts = getListMetaData().filter(
         (item) => item.title.includes(keyword.data.value)
       );
 

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Giscus from '@giscus/react';
 import { Icon } from '@iconify/react';
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { useRouter } from 'next/router';
 import { CustomMDX } from './CustomMDX';
 import { A, H } from '@/src/components/Base';
 import { dateFormat } from '@/src/utils/date';
@@ -11,10 +12,11 @@ import { setCover } from '@/src/utils';
 import {
   Ad, GoToTop, OtherPosts, PostItem, Toc
 } from '../Main';
-import { useAppSelector } from '@/src/hooks/rtk';
+import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
 import { Fb } from '../Post';
 import { IFrontMatter } from '@/src/types/mdx.types';
 import { getListMetaData } from '@/src/utils/mdx';
+import { setPostId } from '@/src/reducers/dark.reducer';
 
 interface Props {
   frontMatter: IFrontMatter;
@@ -27,6 +29,9 @@ export function PostMD({ frontMatter, source, styles, }: Props) {
     (state) => state.dark.isDark
   );
 
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const cover = frontMatter.cover || 'https://drive.google.com/file/d/1iF4WE-zae-TyU4A4s-yrqhHU4XQyPhfR/view?usp=drive_link';
 
   const allPosts = getListMetaData();
@@ -37,6 +42,17 @@ export function PostMD({ frontMatter, source, styles, }: Props) {
 
   const prevPost = allPosts[prevIndex];
   const nextPost = allPosts[nextIndex];
+
+  const editPost = useCallback(
+    () => {
+      dispatch(setPostId({
+        value: frontMatter.id,
+      }));
+
+      router.push(`/posts/${frontMatter.id}/edit`);
+    },
+    [ frontMatter.id, ]
+  );
 
   const style = {
     default: css([
@@ -63,6 +79,11 @@ export function PostMD({ frontMatter, source, styles, }: Props) {
     section: tw` flex items-center gap-2 pt-2 text-black-base dark:text-white `,
     giscus: css([
       tw` p-3 border border-black-200 shadow-md text-black-base bg-white dark:( border-black-400 bg-black-500 text-white ) `,
+    ]),
+    button: css([
+      tw` mt-5 p-2 border border-blue-200 bg-blue-100 text-blue-600 transition-all duration-200 flex items-center justify-center gap-2 `,
+      tw` hover:( border-blue-500 text-white bg-blue-500 ) `,
+      tw` dark:( border-yellow-300 text-yellow-300 bg-black-500 hover:( bg-yellow-300 text-black-base ) ) `,
     ]),
   };
 
@@ -117,6 +138,16 @@ export function PostMD({ frontMatter, source, styles, }: Props) {
             <div css={style.infoTitle}>수정일자</div>
             <div>{dateFormat(frontMatter.updated, 'YYYY-MM-DD HH:mm')}</div>
           </div>
+          {process.env.NODE_ENV === 'development' && (
+            <div css={style.section}>
+              <div css={style.infoTitle}>글 관리</div>
+              <div>
+                <button onClick={editPost} css={[ style.button, tw` mt-0 py-1 px-2 `, ]}>수정</button>
+                {/* <Link href={`/posts/add?postIndex=${frontMatter.id}`}>수정</Link> */}
+                {/* <Link href=''>삭제</Link> */}
+              </div>
+            </div>
+          )}
         </div>
 
         <Ad position='top' />
@@ -129,7 +160,7 @@ export function PostMD({ frontMatter, source, styles, }: Props) {
 
         <Fb />
 
-        <OtherPosts category={frontMatter.category} />
+        <OtherPosts category={frontMatter.category} postId={frontMatter.id} />
 
         <div css={style.giscus}>
           <Giscus

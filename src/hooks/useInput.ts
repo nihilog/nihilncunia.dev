@@ -1,12 +1,34 @@
 import { useCallback, useRef, useState } from 'react';
 
-type InputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-export const useInput = <T extends InputElement>(id: string) => {
-  const [ value, setValue, ] = useState('');
+export interface InputElementState {
+  value: any;
+  id: string;
+  onChange: () => void;
+  ref: React.MutableRefObject<HTMLInputElement>;
+}
+
+export interface TextAreaElementState {
+  value: any;
+  id: string;
+  onChange: () => void;
+  ref: React.MutableRefObject<HTMLTextAreaElement>;
+}
+
+export interface SelectElementSatate {
+  defaultValue: string;
+  value: any;
+  id: string;
+  onChange: () => void;
+  ref: React.MutableRefObject<HTMLSelectElement>;
+}
+
+// type InputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+export const useInput = <T>(id: string, init = null) => {
+  const [ value, setValue, ] = useState(init);
   const ref = useRef<T>();
 
   const onChange = useCallback(() => {
-    setValue(ref.current.value);
+    setValue((ref.current as any).value);
   }, []);
 
   return {

@@ -1,10 +1,10 @@
 import { IFrontMatter } from '@/src/types/mdx.types';
 import { getListMetaData } from './getListMetaData';
 
-export const getOtherPosts = (category: string) => {
+export const getOtherPosts = (category: string, postId: number) => {
   const posts = getListMetaData().filter((post) => (
     post.category === category
-  ));
+  )).filter((post) => post.id !== postId);
 
   const length = posts.length >= 4 ? 4 : posts.length;
 

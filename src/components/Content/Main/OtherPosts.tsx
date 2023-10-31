@@ -7,12 +7,13 @@ import { H } from '../../Base';
 
 interface Props {
   category: string;
+  postId: number;
   styles?: TwStyle | SerializedStyles;
 }
 
-export function OtherPosts({ category, styles, }: Props) {
+export function OtherPosts({ category, postId, styles, }: Props) {
   const otherPosts = useMemo(() => {
-    return getOtherPosts(category);
+    return getOtherPosts(category, postId);
   }, [ category, ]);
 
   const style = {
