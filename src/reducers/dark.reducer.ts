@@ -3,27 +3,23 @@ import { IFrontMatter } from '../types/mdx.types';
 
 type Level5 = {
   no: number;
-  parentNo: string;
   content: string;
 };
 
 type Level4 = {
   no: number;
-  parentNo: string;
   content: string;
   child: Level5[];
 };
 
 type Level3= {
   no: number;
-  parentNo: string;
   content: string;
   child: Level4[];
 };
 
 type Level2 = {
   no: number;
-  parentNo: string;
   content: string;
   child: Level3[];
 };

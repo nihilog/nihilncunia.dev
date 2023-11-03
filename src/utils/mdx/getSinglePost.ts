@@ -2,15 +2,14 @@ import { serialize } from 'next-mdx-remote/serialize';
 import remarkGfm from 'remark-gfm';
 import remarkUnwrapImages from 'remark-unwrap-images';
 import remarkCodeTitles from 'remark-code-titles';
+import remarkSlug from 'remark-slug';
 import rehypePrettyCode, { Options } from 'rehype-pretty-code';
-import { getListMetaData } from './getListMetaData';
 import { getPostContent } from './getPostContent';
+import { getFrontMatter } from './getFrontMatter';
 
 export const getSinglePost = async (postId: number) => {
-  const postList = await getListMetaData();
-  const frontMatter = postList.find((item) => item.id === postId);
-
-  const { content, } = await getPostContent(postId);
+  const frontMatter = getFrontMatter(postId);
+  const { content, } = getPostContent(postId);
 
   const options: Options = {
     theme: 'github-dark',
@@ -22,9 +21,9 @@ export const getSinglePost = async (postId: number) => {
         remarkGfm,
         remarkUnwrapImages,
         remarkCodeTitles,
+        remarkSlug,
       ],
       rehypePlugins: [
-      // [ rehypePrism, { showLineNumbers: true, }, ],
         [ rehypePrettyCode, options, ],
       ],
     },

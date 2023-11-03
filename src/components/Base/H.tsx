@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
-import { useAppSelector } from '@/src/hooks/rtk';
 
 interface Props {
   level?: ('h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6');
@@ -15,77 +14,6 @@ interface Props {
 export function H({
   level: Heading = 'h2', type = 'normal', children, styles,
 }: Props) {
-  const [ link, setLink, ] = useState('');
-  const toc = useAppSelector(
-    (state) => state.dark.toc
-  );
-
-  const hRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    if (Heading === 'h2') {
-      const lv1 = toc.find((item) => (
-        item.content === hRef.current.textContent
-      ));
-
-      setLink(`${lv1?.no}`);
-    } else if (Heading === 'h3') {
-      const lv1 = toc.filter((item) => item.child.length > 0);
-      lv1.forEach((item) => {
-        const lv2 = item.child.find((item) => (
-          item.content === hRef.current.textContent
-        ));
-
-        setLink(`${lv2?.parentNo}${lv2?.no}`);
-      });
-    } else if (Heading === 'h4') {
-      const lv1 = toc.filter((item) => item.child.length > 0);
-      lv1.forEach((lv1) => {
-        const lv2 = lv1.child.filter((item) => item.child.length > 0);
-        lv2.forEach((lv2) => {
-          const lv3 = lv2.child.find((item) => (
-            item.content === hRef.current.textContent
-          ));
-
-          setLink(`${lv3?.parentNo}${lv3?.no}`);
-        });
-      });
-    } else if (Heading === 'h5') {
-      const lv1 = toc.filter((item) => item.child.length > 0);
-      lv1.forEach((lv1) => {
-        const lv2 = lv1.child.filter((item) => item.child.length > 0);
-        lv2.forEach((lv2) => {
-          const lv3 = lv2.child.filter((item) => item.child.length > 0);
-          lv3.forEach((lv3) => {
-            const lv4 = lv3.child.find((item) => (
-              item.content === hRef.current.textContent
-            ));
-
-            setLink(`${lv4?.parentNo}${lv4?.no}`);
-          });
-        });
-      });
-    } else if (Heading === 'h6') {
-      const lv1 = toc.filter((item) => item.child.length > 0);
-      lv1.forEach((lv1) => {
-        const lv2 = lv1.child.filter((item) => item.child.length > 0);
-        lv2.forEach((lv2) => {
-          const lv3 = lv2.child.filter((item) => item.child.length > 0);
-          lv3.forEach((lv3) => {
-            const lv4 = lv3.child.filter((item) => item.child.length > 0);
-            lv4.forEach((lv4) => {
-              const lv5 = lv4.child.find((item) => (
-                item.content === hRef.current.textContent
-              ));
-
-              setLink(`${lv5?.parentNo}${lv5?.no}`);
-            });
-          });
-        });
-      });
-    }
-  }, [ toc, hRef.current, ]);
-
   const size = {
     h1: tw` text-h1 `,
     h2: tw` text-h2 `,
@@ -112,14 +40,14 @@ export function H({
 
   return (
     <>
-      <Heading css={style.default} className='mdx-heading' id={`heading-${link}`} ref={hRef}>
+      <Heading css={style.default} className='mdx-heading' id={`heading-${children}`}>
         <span>
           {children}
           {type === 'post'
-            && (hRef.current?.textContent !== '목차')
-            && (hRef.current?.textContent !== '이런 포스트도 있어요')
+            && (children !== '목차')
+            && (children !== '이런 포스트도 있어요')
             && (
-              <Link href={`#toc-${link}`} tw='text-black-300 hover:text-blue-600 dark:hover:text-yellow-300 transition-colors duration-200'>
+              <Link href={`#toc-${children}`} tw='text-black-300 hover:text-blue-600 dark:hover:text-yellow-300 transition-colors duration-200'>
                 <Icon icon='mingcute:link-fill' />
               </Link>
             )}

@@ -29,6 +29,8 @@ export function PostMD({ frontMatter, source, styles, }: Props) {
     (state) => state.dark.isDark
   );
 
+  console.log(source);
+
   const router = useRouter();
   const dispatch = useAppDispatch();
 

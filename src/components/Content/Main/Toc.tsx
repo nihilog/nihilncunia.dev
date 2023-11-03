@@ -24,7 +24,7 @@ export function Toc({ styles, }: Props) {
 
   useEffect(() => {
     const tocArray: Level1[] = [];
-    let headings = [ ...document.querySelectorAll('div.mdx-post .mdx-heading'), ];
+    let headings = [ ...document.querySelectorAll('div.mdx-post :is(h2, h3, h4, h5, h6)'), ];
 
     headings = headings
       .filter((item) => item.textContent !== '목차')
@@ -48,7 +48,6 @@ export function Toc({ styles, }: Props) {
 
         h2Item?.child.push({
           no: level2++,
-          parentNo: `${h2Item.no}.`,
           content: item.textContent,
           child: [],
         });
@@ -58,7 +57,6 @@ export function Toc({ styles, }: Props) {
 
         h3Item?.child.push({
           no: level3++,
-          parentNo: `${h2Item.no}.${h3Item.no}.`,
           content: item.textContent,
           child: [],
         });
@@ -69,7 +67,6 @@ export function Toc({ styles, }: Props) {
 
         h4Item?.child.push({
           no: level4++,
-          parentNo: `${h2Item.no}.${h3Item.no}.${h4Item.no}.`,
           content: item.textContent,
           child: [],
         });
@@ -81,7 +78,6 @@ export function Toc({ styles, }: Props) {
 
         h5Item?.child.push({
           no: level5++,
-          parentNo: `${h2Item.no}.${h3Item.no}.${h4Item.no}.${h5Item.no}.`,
           content: item.textContent,
         });
       }
@@ -107,36 +103,36 @@ export function Toc({ styles, }: Props) {
       <Ol>
         {toc?.map((level1) => (
           <li key={uuid()}>
-            <span css={style.link} id={`toc-${level1.no}`}>
+            <span css={style.link} id={`toc-${level1.content}`}>
               {level1.content}
-              <Link href={`#heading-${level1.no}`}>
+              <Link href={`#heading-${level1.content}`}>
                 <Icon icon='mingcute:link-fill' />
               </Link>
             </span>
             <Ol>
               {level1.child.map((level2) => (
                 <li key={uuid()}>
-                  <span css={style.link} id={`toc-${level2.parentNo}${level2.no}`}>
+                  <span css={style.link} id={`toc-${level2.content}`}>
                     {level2.content}
-                    <Link href={`#heading-${level2.parentNo}${level2.no}`}>
+                    <Link href={`#heading-${level2.content}`}>
                       <Icon icon='mingcute:link-fill' />
                     </Link>
                   </span>
                   <Ol>
                     {level2.child.map((level3) => (
                       <li key={uuid()}>
-                        <span css={style.link} id={`toc-${level3.parentNo}${level3.no}`}>
+                        <span css={style.link} id={`toc-${level3.content}`}>
                           {level3.content}
-                          <Link href={`#heading-${level3.parentNo}${level3.no}`}>
+                          <Link href={`#heading-${level3.content}`}>
                             <Icon icon='mingcute:link-fill' />
                           </Link>
                         </span>
                         <Ol>
                           {level3.child.map((level4) => (
                             <li key={uuid()}>
-                              <span css={style.link} id={`toc-${level4.parentNo}${level4.no}`}>
+                              <span css={style.link} id={`toc-${level4.content}`}>
                                 {level4.content}
-                                <Link href={`#heading-${level4.parentNo}${level4.no}`}>
+                                <Link href={`#heading-${level4.content}`}>
                                   <Icon icon='mingcute:link-fill' />
                                 </Link>
                               </span>
@@ -145,10 +141,10 @@ export function Toc({ styles, }: Props) {
                                   <li key={uuid()}>
                                     <span
                                       css={style.link}
-                                      id={`toc-${level5.parentNo}${level5.no}`}
+                                      id={`toc-${level5.content}`}
                                     >
                                       {level5.content}
-                                      <Link href={`#heading-${level5.parentNo}${level5.no}`}>
+                                      <Link href={`#heading-${level5.content}`}>
                                         <Icon icon='mingcute:link-fill' />
                                       </Link>
                                     </span>
