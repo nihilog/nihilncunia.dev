@@ -1,8 +1,6 @@
-const { withContentlayer, } = require('next-contentlayer');
-
 /** @type {import('next').NextConfig} */
 const config = {
-  swcMinify: false,
+  // swcMinify: false,
   // 정적 페이지의 결과물이 이 폴더에 생긴다.
   // basePath: '',
   // 결과물의 기본 경로를 설정한다.
@@ -16,11 +14,15 @@ const config = {
     NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
   },
   images: {
-    domains: [ 'https://nihilncunia.dev', ],
+    remotePatterns: [ {
+      protocol: 'https',
+      hostname: 'nihilncunia.dev',
+    }, ],
   },
   experimental: {
     largePageDataBytes: 128 * 100000,
   },
+  // eslint-disable-next-line no-unused-vars
   webpack(config, { webpack, }) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -35,4 +37,3 @@ const config = {
 };
 
 module.exports = config;
-// module.exports = withContentlayer(config);
