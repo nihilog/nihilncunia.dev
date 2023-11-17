@@ -1,0 +1,110 @@
+---
+id: 11
+title: '[썸네일 생성기] - Supabase와 연동하기 (1)'
+description: '리액트를 이용해서 간단한 기능을 가진 썸네일 생성기를 만들어보도록 합시다. 이번 글에서는 연동을 하기 전에 로그인 설정을 먼저 진행하도록 합니다.'
+cover: ''
+category: 'JavaScript'
+tags: ['썸네일 생성기', '자바스크립트', 'thumbnail', 'JavaScript', '리액트', 'React', '구글 API', '구글 클라우드 콘솔', 'Googleapis']
+series:
+  name: '썸네일 생성기 개발'
+  order: 10
+published: true
+created: 2023-11-17 20:28:00+09:00
+updated: 2023-11-17 20:28:00+09:00
+---
+
+# 개요
+이번 글에서는 로그인을 구현해보려고 합니다. 본래라면 로그인 같은 것들을 위해서 백엔드를 구현해야하지만 이번 프로젝트에서는 Supabase 라는 서비스를 이용해서 백엔드 처리를 해보려고 합니다. 그래서 로그인도 회원가입도 간단하게 진행할 수 있습니다.
+
+썸네일 생성기는 nihilapps 라는 이름의 제 프로그램들의 묶음에 포함시킬 것이고 썸네일 생성기에서 회원가입을 하면 다른 nihilapps 의 프로그램들도 사용할 수 있도록 하려고 합니다. 자 그럼 시작해봅시다.
+
+# Supabase 설정
+Supabase의 기능을 이용하기 위해서는 가장 먼저 Supabase에 가입하고 프로젝트를 생성해야 합니다. 사이트는 구글링하면 다 나올 것이라 생략하고 간략하게 이미지만 올려두도록 하겠습니다.
+
+<Image src='https://drive.google.com/file/d/1fa7XWUEGwDILuLXFwaoVcRRxozc6k0bQ/view?usp=drive_link' alt='새 프로젝트 만들기' drive />
+
+녹색 버튼을 클릭하면 새로운 프로젝트를 만들 수 있습니다. 저는 이미 만들어놔서 굳이 다시 만들 필요는 없을 것 같고 유료 플랜을 사용하지 않는 이상은 프로젝트는 3개 이상은 만들 수 없습니다. 즉 2개까지만 가능하다는 소리죠. Supabase를 사용해본 후에 괜찮다 싶으면 유료 플랜을 결제해서 사용하면 됩니다. 저는 아직 무료 플랜을 사용하고 있습니다.
+
+## 로그인 설정
+저는 이 사이트에서 구글 로그인과 깃허브 로그인 그리고 이메일 로그인을 제공할 겁니다. 그럼 이걸 설정해줘야합니다. Supabase 대시보드의 왼쪽에는 사용할 수 있는 기능들 아이콘이 모여 있는데, 마우스를 올려서 **Authentication**을 찾아서 클릭을 하면 됩니다.
+
+<Image src='https://drive.google.com/file/d/1mZGxBdvFPvTMcv8OGWZ5hg_9K8buB4_j/view?usp=drive_link' alt='가입한 사용자들의 목록이 보이는 곳' drive />
+
+클릭하면 이런 페이지가 뜨는데 여기는 사용자들의 목록을 볼 수 있는 곳입니다. 저는 테스트를 이미 한 번 해봐서 유저가 한 명 있는 것이고 원래는 비어있겠죠. 이 화면에서 왼쪽 메뉴에 Providers 를 클릭하면 지원하는 사이트들이 나옵니다.
+
+여기서 이메일은 이미 설정되어있고 깃허브와 구글을 추가로 설정을 해서 아래처럼 만들어야 합니다.
+
+<Image src='https://drive.google.com/file/d/1Cxr3IJyreVLXVTwJhnPzA-FkMnH_vLwq/view?usp=drive_link' alt='소셜 로그인 설정하기' drive />
+
+### 이메일 로그인 설정
+
+<Image src='https://drive.google.com/file/d/1j-KLgoqigXWahqE08fXZRe1jKh4jUzKz/view?usp=drive_link' alt='이메일 로그인 설정' drive />
+
+이메일의 경우 딱히 건드릴 것은 없습니다. 저같은 경우는 비밀번호 관련해서 체크를 하나 하긴 했는데 뭐 상관 없는 수준이고 진짜 중요한건 나머지 두 사이트 로그인 설정입니다.
+
+### 깃허브 로그인 설정
+<Image src='https://drive.google.com/file/d/1d-ucsG3JXI6a7OX0c4D5Izlj7oKgdKpY/view?usp=drive_link' alt='깃허브 로그인 설정' drive />
+
+깃허브 로그인을 이용하기 위해서는 깃허브에서 설정을 해줘야 할 게 있습니다. 클라이언트 아이디와 시크릿 부분을 채워줘야 합니다. 처음에는 이렇게 채워져 있지 않기 때문에 채워줘야 합니다. 먼저 깃허브에 로그인 합니다.
+
+계정 설정에 들어간 후에 Developer Settings 로 진입합니다. 여기서 OAuth Apps을 만들어줍니다. 앱의 이름, 등등은 그냥 적어주면 됩니다.
+
+<Image src='https://drive.google.com/file/d/1LoQjjc1AwLLUqteR4f1IjIym169H14Ef/view?usp=drive_link' alt='클라이언트 아이디와 시크릿 생성해두기' drive />
+
+여기서 만든 클라이언트 아이디와 시크릿을 Supabase의 깃허브 로그인 설정하는 곳에 넣으면 됩니다. 그리고 콜백 주소를 잘 보관해둡시다. 복사를 할 수 있게 되어있을겁니다. 복사를 해줍니다.
+
+깃허브에서 좀 더 진행하다보면 또 채워야 하는 부분이 있습니다.
+
+<Image src='https://drive.google.com/file/d/1g-4gqi29A9vFh8Wz_i3M7OeG94XLt3kQ/view?usp=drive_link' alt='채워넣습니다.' drive />
+
+첫번째 사각형에는 로그인을 필요로 하는 프로젝트가 배포된 주소를 입력하면 되고 두 번째 사각형에는 복사한 콜백 주소를 넣으면 됩니다. 이렇게 하고 앱을 저장하면 된 겁니다.
+
+### 구글 로그인 설정
+구글도 마찬가지로 클라이언트 아이디와 시크릿을 필요로 합니다. 구글 클라우드 플랫폼에서 프로젝트를 만들고, 클라이언트 아이디와 시크릿을 생성하면 됩니다.
+
+<Image src='https://drive.google.com/file/d/1iRtZr1Vo07TUI_JJJn-XdH70kF-hY8cu/view?usp=drive_link' alt='구글 클라우드 플랫폼 프로젝트 만들기' drive />
+
+<Image src='https://drive.google.com/file/d/11ScsHIEj2Cv-LfEu_BMQwBk7CfExbeEg/view?usp=drive_link' alt='프로젝트 정보 입력하기' drive />
+
+구글 계정을 통해서 구글 클라우드 플랫폼을 시작하면 프로젝트를 만들어줍니다. 이름은 원하는대로 입력하면 되겠죠. 그러면 프로젝트가 생성될 때까지 기다렸다가 생성이 되면 다음의 절차를 진행하면 됩니다.
+
+<Image src='https://drive.google.com/file/d/1Ph_MVOs1mme5AgD6GXSrwAH1GK2E9TZz/view?usp=drive_link' alt='API 라이브러리를 선택해야 합니다.' drive />
+
+API 라이브러리를 선택하러 가는 겁니다. 목록에서 구글 드라이브 API를 찾아서 사용하도록 설정하면 됩니다.
+
+<Image src='https://drive.google.com/file/d/1wV33L-4aNMCQCEEMjbuMTu6pQvx8kTQF/view?usp=drive_link' alt='구글 드라이브 API를 찾습니다.' drive />
+
+<Image src='https://drive.google.com/file/d/1Xe4d-nbHk-uN_tUsLq3XfZOmMX3OpveM/view?usp=drive_link' alt='사용 설정을 진행합니다.' drive />
+
+이렇게 사용하도록 설정을 한 뒤에 이렇게 진행하면 됩니다.
+
+<Image src='https://drive.google.com/file/d/17iD2rwb6wdf3UGt2t6l78TUY7jXi1RNu/view?usp=drive_link' alt='사각형을 따라가줍니다.' drive />
+
+OAuth 동의 화면으로 넘어왔으면 가장 처음에 **외부**를 선택합니다. **앱 이름**과 **사용자 지원 이메일**을 입력하면 되고 승인된 도메인에는 깃허브 쪽에서 입력했던 것과 마찬가지로 우리 서비스의 주소를 넣으면 됩니다. 테스트중이니까 localhost도 가능합니다. 개발자 연락처 정보도 입력을 해줍니다.
+
+저장 후 계속을 클릭해서 그 다음으로 넘어가면 범위 라는 것을 설정해야 합니다. 세가지를 추가하면 됩니다.
+
+<Image src='https://drive.google.com/file/d/171yX2Q0st15PAQQxOmybVJOWk4qdcvRj/view?usp=drive_link' alt='범위를 추가합니다.' drive />
+
+이미지대로 설정을 진행한 후에 다음으로 넘어가줍니다. 테스트 사용자를 등록하는 과정인데 이걸 등록하지 않으면 아예 테스트를 할 수가 없게 됩니다. 앱을 배포하기 전까지는 테스트 사용자를 등록한 후에 테스트를 진행해야 합니다.
+
+<Image src='https://drive.google.com/file/d/1-3fAzW1DuBk4fWEPPc5vu09y-tyEA9Hl/view?usp=drive_link' alt='테스트 사용자를 등록합니다.' drive />
+
+이거까지 하고 난 후에는 마지막 관문인 클라이언트 키와 시크릿을 만드는 일만 남았습니다. 좌측 메뉴에서 사용자 인증 정보로 들어갑니다.
+
+<Image src='https://drive.google.com/file/d/15ftL7uZzFjTdBz7I-zOtv1vy9O43wfEf/view?usp=drive_link' alt='클라이언트 ID 선택합니다.' drive />
+
+<Image src='https://drive.google.com/file/d/1bbr8hGRVKGseZ_OtvUkENWC-QAdXjfql/view?usp=drive_link' alt='필요 정보를 입력해줍니다.' drive />
+
+유형은 웹 애플리케이션을 선택해야 합니다. 이름은 원하는 거 입력하면 되고 리디렉션을 입력하면 되는데 여기에는 이제 Supabase에서 복사한 값을 넣으면 됩니다. 깃허브 쪽에 넣었던 것과 똑같은거 그대로 넣으면 됩니다. 이렇게 하고 만들기를 클릭하면 클라이언트 아이디와 시크릿이 만들어집니다.
+
+만들어진 것들을 복사해서 Supabase 쪽에 넣으면 됩니다.
+
+<Image src='https://drive.google.com/file/d/1qA0wa5zFbEIUVHBNfeNQSDeeHN7qMJ9T/view?usp=drive_link' alt='필요한 값들 넣어주고 save를 클릭합니다.' drive />
+
+마지막으로 save를 클릭해주면 필요한 로그인 설정은 다 끝낸겁니다. 이번 글은 별 내용은 없는데 이미지가 많아서 참 길어보일 것 같네요. 그래서 Supabase와 NextJS를 연동하는 과정은 다음 글에서 진행하도록 하겠습니다.
+
+# 마치며
+이번 글에서는 Supabase를 사용하기 위한 설정을 진행했습니다. 이메일 로그인과 구글, 깃허브 로그인을 지원할 예정이기 때문에 그 과정을 짧게 보여드렸습니다. 그냥 스킵하려고 했는데 막상 글로만 다루면 재미가 없어서 이렇게 진행을 해봤습니다.
+
+다음 글에서는 본격적으로 자바스크립트를 이용해서 Supabase와 NextJS를 연동하는 것을 진행할 예정입니다. 로그인 페이지를 간략하게 만들고, 회원가입과 로그인, 로그아웃 테스트를 진행해보도록 합시다.
