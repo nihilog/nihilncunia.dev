@@ -7,6 +7,7 @@ type CodeBlockColor = {
 };
 
 export const codeBlockColor: CodeBlockColor = {
+  TEXT: { color: '#ffffff', bgColor: '#444444', icon: 'tabler:code', },
   HTML: { color: '#ffffff', bgColor: '#e64c18', icon: 'teenyicons:html5-solid', },
   CSS: { color: '#ffffff', bgColor: '#264de4', icon: 'teenyicons:css3-solid', },
   JS: { color: '#333333', bgColor: '#f0db4f', icon: 'teenyicons:javascript-solid', },
