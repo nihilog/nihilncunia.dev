@@ -9,7 +9,6 @@ module.exports = {
   priority: 1,
   exclude: [
     '/404',
-    '/server-sitemap.xml',
   ],
   robotsTxtOptions: {
     policies: [
@@ -18,9 +17,6 @@ module.exports = {
         disallow: [ '/404', ],
       },
       { userAgent: '*', allow: '/', },
-    ],
-    additionalSitemaps: [
-      `${siteUrl}/server-sitemap.xml`,
     ],
   },
 };
